@@ -87,7 +87,7 @@ app.post('/api/ocr/scan', upload.single('image'), async (req, res) => {
       return res.status(400).json({ error: 'No image file uploaded' });
     }
     const base64Image = req.file.buffer.toString('base64');
-    const aiServiceUrl = process.env.AI_SERVICE_URL || 'http://127.0.0.1:8000';
+    const aiServiceUrl = process.env.AI_SERVICE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}/api/python` : 'http://127.0.0.1:8000');
     
     const response = await axios.post(`${aiServiceUrl}/ocr/scan`, {
       image: base64Image,
@@ -102,7 +102,7 @@ app.post('/api/ocr/scan', upload.single('image'), async (req, res) => {
 
 app.post('/api/chat', async (req, res) => {
   try {
-    const aiServiceUrl = process.env.AI_SERVICE_URL || 'http://127.0.0.1:8000';
+    const aiServiceUrl = process.env.AI_SERVICE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}/api/python` : 'http://127.0.0.1:8000');
     const response = await axios.post(`${aiServiceUrl}/chat`, req.body, {
       headers: {
         'Authorization': req.headers['authorization'] || ''
