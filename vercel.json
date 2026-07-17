@@ -3,11 +3,31 @@
   "outputDirectory": "frontend/dist",
   "rewrites": [
     {
-      "source": "/api/python/:path*",
-      "destination": "/api/python/[...path].py"
+      "source": "/api/auth/:path*",
+      "destination": "/api/index.js"
     },
     {
-      "source": "/api/:path*",
+      "source": "/api/inventory/:path*",
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/api/products/:path*",
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/api/sales/:path*",
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/api/batches/:path*",
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/api/notifications",
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/api/chat",
       "destination": "/api/index.js"
     },
     {
