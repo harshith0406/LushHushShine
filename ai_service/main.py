@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = FastAPI(
-    title="Retail Intelligence & Supply Chain AI Engine",
+    title="Shoply.ai Retail Intelligence AI Engine",
     description="Python FastAPI Microservice integrating Hugging Face Models for predictive retail analytics.",
     version="2.0.0"
 )
@@ -121,7 +121,7 @@ class ChatRequest(BaseModel):
 def read_root():
     return {
         "status": "healthy",
-        "service": "retail-intelligence-ai-engine",
+        "service": "shoply-ai-engine",
         "provider": "Hugging Face Serverless",
         "model": HF_MODEL
     }
@@ -401,7 +401,7 @@ async def chat_agent(req: Request, data: ChatRequest):
     ]
 
     prompt = (
-        f"You are Retail Intel's AI Assistant powered by Hugging Face (meta-llama/Llama-3.1-8B). "
+        f"You are Shoply.ai's AI Assistant powered by Hugging Face (meta-llama/Llama-3.1-8B). "
         f"Available database tools:\n{json.dumps(tools, indent=2)}\n\n"
         f"User message: \"{user_msg}\"\n"
         f"If you need database data to answer, reply in EXACT JSON: {{\"tool_call\": \"tool_name\"}}\n"
@@ -456,7 +456,7 @@ async def chat_agent(req: Request, data: ChatRequest):
             else:
                 messages_history.append({
                     "role": "system",
-                    "content": "You are Retail Intel's AI Assistant powered by Hugging Face (meta-llama/Llama-3.1-8B). Be helpful, conversational, and direct."
+                    "content": "You are Shoply.ai's AI Assistant powered by Hugging Face (meta-llama/Llama-3.1-8B). Be helpful, conversational, and direct."
                 })
 
             def event_generator():
@@ -493,7 +493,18 @@ async def chat_agent(req: Request, data: ChatRequest):
         return StreamingResponse(fallback_generator(), media_type="text/plain")
 
 def generate_intelligent_fallback(lower_msg: str, db_context: str = "") -> str:
-    if "capability" in lower_msg or "capabilities" in lower_msg or "what can you do" in lower_msg or "what more" in lower_msg:
+    # Clean words for strict set matching
+    cleaned_text = lower_msg.replace('?', ' ').replace('!', ' ').replace('.', ' ').replace(',', ' ')
+    words = set(cleaned_text.split())
+
+    # 1. High priority domain intent keywords
+    if "stock" in lower_msg or "inventory" in lower_msg or "reorder" in lower_msg:
+        return "📦 **Low Stock Alert**: Whole Wheat Bread is currently low (2 units remaining). I recommend reordering from Nexus Supply Co."
+    elif "expir" in lower_msg or "batch" in lower_msg:
+        return "⏳ **Expiry Alert**: According to database logs, Milk Batch `B-GEN-888` expires in 12 days. I suggest applying a 20% markdown strategy."
+    elif "vendor" in lower_msg or "contact" in lower_msg or "supplier" in lower_msg:
+        return "📞 **Supplier Directory**:\n- **Nexus Supply Co.** | Phone: 9876543210 | Email: vendor@test.com | Address: 500 Logistics Way\n- **Apex Distributions** | Phone: 6752894270 | Email: Reemagjack@gmail.com | Address: Hosahalli area"
+    elif "capability" in lower_msg or "capabilities" in lower_msg or "what can you do" in lower_msg or "what more" in lower_msg:
         return (
             "Here is everything I can do for your business:\n"
             "1. 📦 **Low Stock Alerts**: Scan inventory & pinpoint items below safety reorder points.\n"
@@ -503,20 +514,13 @@ def generate_intelligent_fallback(lower_msg: str, db_context: str = "") -> str:
             "5. 📷 **Multimodal OCR Tag Scan**: Extract catalog product data directly from tag photos.\n"
             "6. 🔮 **Zero-Shot Event Forecasting**: Evaluate weather and festival impacts on demand."
         )
-    elif "hi" in lower_msg or "hello" in lower_msg or "hey" in lower_msg or "greetings" in lower_msg:
-        return "Hello! 👋 I am your Retail AI Assistant powered by Hugging Face (Llama-3.1-8B). Ask me about low stock alerts, product expiries, sales trends, or vendor contacts!"
     elif "trend" in lower_msg or "sale" in lower_msg or "revenue" in lower_msg:
         return "📈 **Sales Velocity Summary**: Current sales throughput is growing at +8.2% vs yesterday. Master checkout invoices are logged in real-time."
-    elif "expir" in lower_msg or "batch" in lower_msg:
-        return "⏳ **Expiry Alert**: According to database logs, Milk Batch `B-GEN-888` expires in 12 days. I suggest applying a 20% markdown strategy."
-    elif "stock" in lower_msg or "inventory" in lower_msg:
-        return "📦 **Low Stock Alert**: Whole Wheat Bread is currently low (2 units remaining). I recommend reordering from Nexus Supply Co."
-    elif "vendor" in lower_msg or "contact" in lower_msg or "supplier" in lower_msg:
-        return "📞 **Supplier Directory**:\n- **Nexus Supply Co.** | Phone: 9876543210 | Email: vendor@test.com | Address: 500 Logistics Way\n- **Apex Distributions** | Phone: 6752894270 | Email: Reemagjack@gmail.com | Address: Hosahalli area"
-    elif "how to interact" in lower_msg or "help" in lower_msg:
-        return "You can type any question in plain English! Click the suggestion chips below or ask about restocks, expiries, sales velocity, or supplier phone numbers."
+    # 2. Strict word-level greeting check
+    elif any(w in words for w in ["hi", "hello", "hey", "greetings"]):
+        return "Hello! 👋 I am your Shoply.ai Assistant powered by Hugging Face (Llama-3.1-8B). Ask me about low stock alerts, product expiries, sales trends, or vendor contacts!"
     else:
-        return "I am Retail Intel's AI Assistant powered by Hugging Face. I am connected directly to your store's inventory, sales invoices, expiry tracking, and supplier contacts. Feel free to ask any question!"
+        return "I am Shoply.ai's AI Assistant powered by Hugging Face. I am connected directly to your store's inventory, sales invoices, expiry tracking, and supplier contacts. Feel free to ask any question!"
 
 if __name__ == "__main__":
     import uvicorn

@@ -312,9 +312,13 @@ const ChatbotPanel = () => {
                 borderRadius: '24px', 
                 fontFamily: 'var(--font-family)', 
                 fontSize: '0.9rem', 
-                backgroundColor: '#f8fafc',
+                backgroundColor: '#ffffff',
+                color: '#0f172a',
                 paddingLeft: '8px'
               }
+            }}
+            inputProps={{
+              style: { color: '#0f172a', fontWeight: 600 }
             }}
           />
           <IconButton 
