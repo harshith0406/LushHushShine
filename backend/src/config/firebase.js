@@ -9,10 +9,22 @@ let db;
 let auth;
 let isMock = false;
 
-// Path to save mock Firestore collections
-const DATA_DIR = process.env.VERCEL || process.env.AWS_REGION ? '/tmp/data' : path.join(__dirname, '../../data');
+const SOURCE_DATA_DIR = path.join(__dirname, '../../data');
+const DATA_DIR = process.env.VERCEL || process.env.AWS_REGION ? '/tmp/data' : SOURCE_DATA_DIR;
+
 if (!fs.existsSync(DATA_DIR)) {
   fs.mkdirSync(DATA_DIR, { recursive: true });
+}
+
+// In Vercel, copy pre-filled Read-Only JSON files into the writable /tmp directory on cold start
+if ((process.env.VERCEL || process.env.AWS_REGION) && fs.existsSync(SOURCE_DATA_DIR)) {
+  const files = fs.readdirSync(SOURCE_DATA_DIR);
+  for (const file of files) {
+    const destFile = path.join(DATA_DIR, file);
+    if (!fs.existsSync(destFile)) {
+      fs.copyFileSync(path.join(SOURCE_DATA_DIR, file), destFile);
+    }
+  }
 }
 
 // Ensure mock collection files exist
