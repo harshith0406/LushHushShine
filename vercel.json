@@ -3,11 +3,7 @@
   "outputDirectory": "frontend/dist",
   "rewrites": [
     {
-      "source": "/api/python/(.*)",
-      "destination": "/api/ai.py"
-    },
-    {
-      "source": "/api/(.*)",
+      "source": "/api/(?!python)(.*)",
       "destination": "/api/index.js"
     },
     {
