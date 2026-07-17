@@ -137,18 +137,23 @@ const DashboardLayout = () => {
         flexDirection: 'column'
       }}
     >
-      <Toolbar style={{ display: 'flex', alignItems: 'center', padding: '16px 24px' }}>
+      <Toolbar style={{ display: 'flex', alignItems: 'center', padding: '16px 20px', gap: '10px' }}>
+        <img 
+          src="/logo.png" 
+          alt="Shoply.ai Logo" 
+          style={{ width: '32px', height: '32px', objectFit: 'contain' }} 
+        />
         <Typography 
           variant="h6" 
           noWrap 
           style={{ 
             fontWeight: 800, 
-            letterSpacing: '1px',
-            color: '#38bdf8',
+            letterSpacing: '-0.02em',
+            color: '#f8fafc',
             fontFamily: 'var(--font-family)'
           }}
         >
-          RETAIL INTEL
+          Shoply<span style={{ color: '#00f2fe' }}>.ai</span>
         </Typography>
       </Toolbar>
       
