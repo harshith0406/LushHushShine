@@ -208,9 +208,12 @@ router.put('/:id/status', authenticateToken, async (req, res) => {
         const invDoc = await invDocRef.get();
         if (invDoc.exists) {
           const invData = invDoc.data();
-          const currentStock = invData.stock || 0;
+          const currentAvailable = invData.availableQty !== undefined ? invData.availableQty : (invData.stock || 0);
+          const currentTotal = invData.totalQty !== undefined ? invData.totalQty : currentAvailable;
           await invDocRef.update({
-            stock: currentStock + item.quantity,
+            availableQty: currentAvailable + item.quantity,
+            totalQty: currentTotal + item.quantity,
+            stock: currentAvailable + item.quantity,
             updatedAt: new Date().toISOString()
           });
         }

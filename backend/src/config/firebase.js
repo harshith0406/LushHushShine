@@ -181,7 +181,7 @@ class MockFirestoreDb {
 // --- Mock Auth Implementation ---
 class MockAuth {
   constructor() {
-    this.filePath = initMockFile('users');
+    this.filePath = initMockFile('login_credentials');
   }
 
   async verifyIdToken(token) {
@@ -205,7 +205,7 @@ class MockAuth {
 
   async createUser(properties) {
     const uid = properties.uid || Math.random().toString(36).substring(2, 15);
-    const filePath = initMockFile('users');
+    const filePath = initMockFile('login_credentials');
     const users = JSON.parse(fs.readFileSync(filePath, 'utf8'));
     users[uid] = {
       uid,

@@ -6,9 +6,6 @@ const { authenticateToken } = require('../middleware/auth');
 
 const AI_SERVICE_URL = process.env.AI_SERVICE_URL || 'http://127.0.0.1:8000';
 
-/**
- * Helper to fetch sales trend for a product (sums monthly/weekly sales)
- */
 const getSalesTrendForProduct = async (productId) => {
   const salesSnapshot = await db.collection('sales')
     .where('transactionType', '==', 'item_sale')
@@ -16,10 +13,9 @@ const getSalesTrendForProduct = async (productId) => {
     .get();
 
   if (salesSnapshot.empty) {
-    return [0, 0, 0]; // Default flat trend
+    return [0, 0, 0];
   }
 
-  // Group by date (simulated)
   const salesByDate = {};
   salesSnapshot.docs.forEach(doc => {
     const sale = doc.data();
@@ -27,12 +23,10 @@ const getSalesTrendForProduct = async (productId) => {
     salesByDate[dateStr] = (salesByDate[dateStr] || 0) + sale.subtotal;
   });
 
-  // Sort dates and return last 5 data points
   const sortedRevenue = Object.keys(salesByDate)
     .sort()
     .map(date => salesByDate[date]);
 
-  // Ensure we have at least 3 points
   while (sortedRevenue.length < 3) {
     sortedRevenue.unshift(0);
   }
@@ -70,7 +64,6 @@ router.post('/forecast-demand', authenticateToken, async (req, res) => {
   try {
     const history = await getSalesTrendForProduct(productId);
     
-    // Call Python AI Service
     const response = await axios.post(`${AI_SERVICE_URL}/forecast/demand`, {
       sales_history: history,
       periods
@@ -79,7 +72,6 @@ router.post('/forecast-demand', authenticateToken, async (req, res) => {
     res.json(response.data);
   } catch (err) {
     console.error('Error calling AI Service forecast:', err.message);
-    // Fallback if AI service is offline
     res.json({ forecast: [10, 12, 15].slice(0, periods), fallback: true });
   }
 });
@@ -123,7 +115,6 @@ router.post('/predict-sales', authenticateToken, async (req, res) => {
     res.json(response.data);
   } catch (err) {
     console.error('Error calling AI Service predict:', err.message);
-    // Fallback if AI service is offline
     const fallbackPredictions = Array.from({ length: days }, (_, i) => 10 + Math.sin(i) * 2);
     res.json({ predictions: fallbackPredictions, fallback: true });
   }
@@ -161,7 +152,6 @@ router.post('/optimize-inventory', authenticateToken, async (req, res) => {
     }
     const inv = invDoc.data();
 
-    // Call Python AI Service
     const response = await axios.post(`${AI_SERVICE_URL}/optimize/inventory`, {
       average_daily_sales: inv.averageDailySales || 1.0,
       lead_time_days: inv.leadTimeDays || 5,
@@ -242,7 +232,6 @@ router.post('/recommendations', authenticateToken, async (req, res) => {
  */
 router.get('/insights', authenticateToken, async (req, res) => {
   try {
-    // 1. Fetch inventory based on user role
     let invQuery = db.collection('inventory');
     if (req.user.role === 'Selling Place') {
       invQuery = invQuery.where('sellingPlaceId', '==', req.user.uid);
@@ -258,7 +247,6 @@ router.get('/insights', authenticateToken, async (req, res) => {
     const inventoryItems = [];
     const salesTrends = [];
 
-    // 2. Fetch sales trends for each product in inventory
     for (const doc of invSnapshot.docs) {
       const inv = doc.data();
       inventoryItems.push({
@@ -277,7 +265,6 @@ router.get('/insights', authenticateToken, async (req, res) => {
       });
     }
 
-    // 3. Request insights from Python AI Service
     let insights = [];
     try {
       const response = await axios.post(`${AI_SERVICE_URL}/insights`, {
@@ -287,7 +274,6 @@ router.get('/insights', authenticateToken, async (req, res) => {
       insights = response.data.insights;
     } catch (err) {
       console.error('Error calling AI Service insights endpoint:', err.message);
-      // Fallback heuristics
       inventoryItems.forEach(item => {
         if (item.stock <= item.reorder_point) {
           insights.push({
@@ -302,7 +288,6 @@ router.get('/insights', authenticateToken, async (req, res) => {
       }
     }
 
-    // 4. Cache insights in Firestore
     const insightsPayload = {
       userId: req.user.uid,
       insights,
@@ -314,6 +299,50 @@ router.get('/insights', authenticateToken, async (req, res) => {
   } catch (err) {
     console.error('Error fetching analytics insights:', err);
     res.status(500).json({ error: 'Failed to compile AI business insights' });
+  }
+});
+
+/**
+ * @swagger
+ * /api/analytics/expiry-insights:
+ *   post:
+ *     summary: Retrieve markdown discount suggestions for expiring batches
+ *     tags: [Analytics]
+ *     security:
+ *       - BearerAuth: []
+ */
+router.post('/expiry-insights', authenticateToken, async (req, res) => {
+  try {
+    const response = await axios.post(`${AI_SERVICE_URL}/expiry-insights`, req.body);
+    res.json(response.data);
+  } catch (err) {
+    console.error('Error calling AI Service expiry insights:', err.message);
+    res.json({
+      markdown_suggestion: "### Markdown Promotion Strategy (Fallback)\n- **Item Alert**: Expiring batch detected.\n- **Promo**: Apply 30% markdown for quick sale.\n- **Placement**: Place on front-end endcaps."
+    });
+  }
+});
+
+/**
+ * @swagger
+ * /api/analytics/event-forecast:
+ *   post:
+ *     summary: Zero-shot event demand forecasting classification
+ *     tags: [Analytics]
+ *     security:
+ *       - BearerAuth: []
+ */
+router.post('/event-forecast', authenticateToken, async (req, res) => {
+  try {
+    const response = await axios.post(`${AI_SERVICE_URL}/forecast`, req.body);
+    res.json(response.data);
+  } catch (err) {
+    console.error('Error calling AI Service event-forecast:', err.message);
+    res.json({
+      item_nbr: req.body.item_nbr,
+      multiplier: 1.25,
+      adjustment_reason: "Rule-based fallback: Upcoming seasonal events trigger +25% stock buffer."
+    });
   }
 });
 

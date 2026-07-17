@@ -1,1 +1,44 @@
-{}
+{
+  "TEST-SKU-0YSN": {
+    "itemNbr": "TEST-SKU-0YSN",
+    "batchNo": "B-TEST-SKU-0YSN",
+    "totalQty": 30,
+    "soldQty": 0,
+    "availableQty": 30,
+    "updatedAt": "2026-07-17T20:03:39.569Z",
+    "productId": "TEST-SKU-0YSN",
+    "productName": "Organic Whole Milk",
+    "sku": "TEST-SKU-0YSN",
+    "category": "Dairy & Alternatives",
+    "stock": 30,
+    "reorderPoint": 10,
+    "averageDailySales": 2,
+    "standardDeviation": 1,
+    "leadTimeDays": 4,
+    "sellingPlaceId": "4s7s9imdbc3",
+    "sellingPlaceName": "Test Store Inc.",
+    "vendorId": "5smfttaljk7",
+    "vendorName": "Nexus Distributors Ltd."
+  },
+  "TEST-SKU-ZM3B": {
+    "itemNbr": "TEST-SKU-ZM3B",
+    "batchNo": "B-TEST-SKU-ZM3B",
+    "totalQty": 50,
+    "soldQty": 5,
+    "availableQty": 45,
+    "updatedAt": "2026-07-17T20:03:48.473Z",
+    "productId": "TEST-SKU-ZM3B",
+    "productName": "Organic Whole Milk",
+    "sku": "TEST-SKU-ZM3B",
+    "category": "Dairy & Alternatives",
+    "stock": 45,
+    "reorderPoint": 10,
+    "averageDailySales": 2.3,
+    "standardDeviation": 1,
+    "leadTimeDays": 4,
+    "sellingPlaceId": "qsnfaze1hv",
+    "sellingPlaceName": "Test Store Inc.",
+    "vendorId": "wbuefzjzmc",
+    "vendorName": "Nexus Distributors Ltd."
+  }
+}

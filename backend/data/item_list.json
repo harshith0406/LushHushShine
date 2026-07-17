@@ -1,0 +1,30 @@
+{
+  "TEST-SKU-0YSN": {
+    "itemNbr": "TEST-SKU-0YSN",
+    "itemDesc": "Organic whole pasture milk, 1 Gallon jugs.",
+    "brand": "Nexus Distributors Ltd.",
+    "vendorId": "5smfttaljk7",
+    "sellingPrice": 4.5,
+    "name": "Organic Whole Milk",
+    "sku": "TEST-SKU-0YSN",
+    "category": "Dairy & Alternatives",
+    "vendorName": "Nexus Distributors Ltd.",
+    "sellingPlaceId": "4s7s9imdbc3",
+    "sellingPlaceName": "Test Store Inc.",
+    "createdAt": "2026-07-17T20:03:39.524Z"
+  },
+  "TEST-SKU-ZM3B": {
+    "itemNbr": "TEST-SKU-ZM3B",
+    "itemDesc": "Organic whole pasture milk, 1 Gallon jugs.",
+    "brand": "Nexus Distributors Ltd.",
+    "vendorId": "wbuefzjzmc",
+    "sellingPrice": 4.5,
+    "name": "Organic Whole Milk",
+    "sku": "TEST-SKU-ZM3B",
+    "category": "Dairy & Alternatives",
+    "vendorName": "Nexus Distributors Ltd.",
+    "sellingPlaceId": "qsnfaze1hv",
+    "sellingPlaceName": "Test Store Inc.",
+    "createdAt": "2026-07-17T20:03:48.381Z"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "vendor-analytics-platform",
+  "version": "1.0.0",
+  "description": "Unified launcher for Vendor Analytics & Retail Intelligence Platform",
+  "scripts": {
+    "start": "concurrently -n \"BACKEND,AI-SERVICE,FRONTEND\" -c \"blue.bold,magenta.bold,cyan.bold\" \"cd backend && npm start\" \"cd ai_service && uvicorn main:app --reload --port 8000\" \"cd frontend && npm run dev\"",
+    "dev": "concurrently -n \"BACKEND,AI-SERVICE,FRONTEND\" -c \"blue.bold,magenta.bold,cyan.bold\" \"cd backend && npm start\" \"cd ai_service && uvicorn main:app --reload --port 8000\" \"cd frontend && npm run dev\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

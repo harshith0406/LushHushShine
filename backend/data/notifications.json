@@ -1,1 +1,20 @@
-{}
+{
+  "o5hpgibygz8": {
+    "userId": "wbuefzjzmc",
+    "title": "New Purchase Order Received",
+    "message": "You received a new purchase order (owdx30gehnp) from Retailer 'Test Store Inc.' with 1 items.",
+    "type": "po-received",
+    "poId": "owdx30gehnp",
+    "read": false,
+    "createdAt": "2026-07-17T20:03:48.462Z"
+  },
+  "ns24nzp4zn": {
+    "userId": "wbuefzjzmc",
+    "title": "Shipment Delivered",
+    "message": "Retailer 'Test Store Inc.' confirmed delivery of purchase order (owdx30gehnp). Stock has been added to their inventory.",
+    "type": "po-completed",
+    "poId": "owdx30gehnp",
+    "read": false,
+    "createdAt": "2026-07-17T20:03:48.474Z"
+  }
+}

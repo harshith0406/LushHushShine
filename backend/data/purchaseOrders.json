@@ -1,1 +1,19 @@
-{}
+{
+  "owdx30gehnp": {
+    "sellingPlaceId": "qsnfaze1hv",
+    "sellingPlaceName": "Test Store Inc.",
+    "vendorId": "wbuefzjzmc",
+    "vendorName": "Nexus Distributors Ltd.",
+    "items": [
+      {
+        "productId": "TEST-SKU-ZM3B",
+        "productName": "Organic Whole Milk",
+        "quantity": 20,
+        "price": 3.5
+      }
+    ],
+    "status": "Completed",
+    "createdAt": "2026-07-17T20:03:48.461Z",
+    "updatedAt": "2026-07-17T20:03:48.471Z"
+  }
+}

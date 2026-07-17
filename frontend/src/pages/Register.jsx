@@ -155,6 +155,17 @@ const Register = () => {
               InputProps={{ style: { borderRadius: 'var(--border-radius-sm)' } }}
             />
 
+            <TextField
+              label="Business License ID / Certificate Number"
+              variant="outlined"
+              fullWidth
+              {...register('licenseNo', { required: 'Business License ID is required' })}
+              error={!!errors.licenseNo}
+              helperText={errors.licenseNo?.message}
+              InputLabelProps={{ style: { fontFamily: 'var(--font-family)' } }}
+              InputProps={{ style: { borderRadius: 'var(--border-radius-sm)' } }}
+            />
+
             <FormControl fullWidth error={!!errors.role}>
               <InputLabel id="role-select-label" style={{ fontFamily: 'var(--font-family)' }}>Select User Role</InputLabel>
               <Select

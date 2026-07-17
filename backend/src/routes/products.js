@@ -4,7 +4,6 @@ const Joi = require('joi');
 const { db } = require('../config/firebase');
 const { authenticateToken, requireRole } = require('../middleware/auth');
 
-// Validation schema for creating a product
 const productCreateSchema = Joi.object({
   name: Joi.string().required(),
   sku: Joi.string().required(),
@@ -15,7 +14,6 @@ const productCreateSchema = Joi.object({
   description: Joi.string().allow('').optional()
 });
 
-// Validation schema for updating a product
 const productUpdateSchema = Joi.object({
   name: Joi.string().optional(),
   sku: Joi.string().optional(),
@@ -40,13 +38,11 @@ const productUpdateSchema = Joi.object({
  */
 router.get('/', authenticateToken, async (req, res) => {
   try {
-    let query = db.collection('products');
+    let query = db.collection('item_list');
 
     if (req.user.role === 'Selling Place') {
-      // Selling Places only see their own products
       query = query.where('sellingPlaceId', '==', req.user.uid);
     } else if (req.user.role === 'Vendor') {
-      // Vendors only see products they supply
       query = query.where('vendorId', '==', req.user.uid);
     } else {
       return res.status(403).json({ error: 'Unrecognized user role' });
@@ -55,7 +51,21 @@ router.get('/', authenticateToken, async (req, res) => {
     const snapshot = await query.get();
     const products = [];
     snapshot.docs.forEach(doc => {
-      products.push({ id: doc.id, ...doc.data() });
+      const data = doc.data();
+      products.push({
+        id: doc.id,
+        name: data.name || data.itemDesc || '',
+        sku: data.sku || data.itemNbr || doc.id,
+        price: data.sellingPrice || data.price || 0,
+        category: data.category || 'General',
+        vendorId: data.vendorId || '',
+        vendorName: data.vendorName || data.brand || 'Generic Supplier',
+        brand: data.brand || 'Generic Brand',
+        description: data.itemDesc || data.description || '',
+        sellingPlaceId: data.sellingPlaceId || '',
+        sellingPlaceName: data.sellingPlaceName || '',
+        createdAt: data.createdAt
+      });
     });
 
     res.json(products);
@@ -87,22 +97,34 @@ router.get('/', authenticateToken, async (req, res) => {
  */
 router.get('/:id', authenticateToken, async (req, res) => {
   try {
-    const doc = await db.collection('products').doc(req.params.id).get();
+    const doc = await db.collection('item_list').doc(req.params.id).get();
     if (!doc.exists) {
       return res.status(404).json({ error: 'Product not found' });
     }
 
-    const product = doc.data();
+    const data = doc.data();
 
-    // Security check: Verify ownership
-    if (req.user.role === 'Selling Place' && product.sellingPlaceId !== req.user.uid) {
+    if (req.user.role === 'Selling Place' && data.sellingPlaceId !== req.user.uid) {
       return res.status(403).json({ error: 'Access Denied: Product belongs to another store.' });
     }
-    if (req.user.role === 'Vendor' && product.vendorId !== req.user.uid) {
+    if (req.user.role === 'Vendor' && data.vendorId !== req.user.uid) {
       return res.status(403).json({ error: 'Access Denied: You do not supply this product.' });
     }
 
-    res.json({ id: doc.id, ...product });
+    res.json({
+      id: doc.id,
+      name: data.name || data.itemDesc || '',
+      sku: data.sku || data.itemNbr || doc.id,
+      price: data.sellingPrice || data.price || 0,
+      category: data.category || 'General',
+      vendorId: data.vendorId || '',
+      vendorName: data.vendorName || data.brand || 'Generic Supplier',
+      brand: data.brand || 'Generic Brand',
+      description: data.itemDesc || data.description || '',
+      sellingPlaceId: data.sellingPlaceId || '',
+      sellingPlaceName: data.sellingPlaceName || '',
+      createdAt: data.createdAt
+    });
   } catch (err) {
     console.error('Error fetching product:', err);
     res.status(500).json({ error: 'Failed to fetch product details' });
@@ -143,35 +165,71 @@ router.post('/', authenticateToken, requireRole(['Selling Place']), async (req, 
   }
 
   try {
-    const productPayload = {
-      ...value,
+    const itemNbr = value.sku;
+    const brand = req.body.brand || value.vendorName || 'Generic Brand';
+
+    const itemPayload = {
+      itemNbr,
+      itemDesc: value.description || value.name,
+      brand,
+      vendorId: value.vendorId,
+      sellingPrice: value.price,
+      name: value.name,
+      sku: value.sku,
+      category: value.category,
+      vendorName: value.vendorName,
       sellingPlaceId: req.user.uid,
       sellingPlaceName: req.user.companyName,
       createdAt: new Date().toISOString()
     };
 
-    const docRef = await db.collection('products').add(productPayload);
+    await db.collection('item_list').doc(itemNbr).set(itemPayload);
 
-    // Also initialize inventory item for this product with 0 stock
+    const batchNo = 'B-GEN-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+    
     const inventoryPayload = {
-      productId: docRef.id,
+      itemNbr,
+      batchNo,
+      totalQty: 0,
+      soldQty: 0,
+      availableQty: 0,
+      updatedAt: new Date().toISOString(),
+      productId: itemNbr,
       productName: value.name,
       sku: value.sku,
       category: value.category,
       stock: 0,
-      reorderPoint: 10, // Default reorder threshold
+      reorderPoint: 10,
       averageDailySales: 0.0,
       standardDeviation: 1.0,
       leadTimeDays: 5,
       sellingPlaceId: req.user.uid,
       sellingPlaceName: req.user.companyName,
       vendorId: value.vendorId,
-      vendorName: value.vendorName,
-      updatedAt: new Date().toISOString()
+      vendorName: value.vendorName
     };
-    await db.collection('inventory').doc(docRef.id).set(inventoryPayload);
+    
+    await db.collection('inventory').doc(itemNbr).set(inventoryPayload);
 
-    res.status(201).json({ id: docRef.id, ...productPayload });
+    const today = new Date();
+    const expDate = new Date(today);
+    expDate.setMonth(today.getMonth() + 6);
+
+    await db.collection('batch_status').doc(batchNo).set({
+      batchNo,
+      itemNbr,
+      mfgDate: today.toISOString().substring(0, 10),
+      expDate: expDate.toISOString().substring(0, 10)
+    });
+
+    await db.collection('vendor_status').doc(`${value.vendorId}_${itemNbr}`).set({
+      vendorNo: value.vendorId,
+      vendorName: value.vendorName,
+      itemNbr,
+      sellerId: req.user.uid
+    });
+
+    res.status(201).json({ id: itemNbr, ...itemPayload });
   } catch (err) {
     console.error('Error creating product:', err);
     res.status(500).json({ error: 'Failed to create product' });
@@ -217,7 +275,7 @@ router.put('/:id', authenticateToken, requireRole(['Selling Place']), async (req
   }
 
   try {
-    const docRef = db.collection('products').doc(req.params.id);
+    const docRef = db.collection('item_list').doc(req.params.id);
     const doc = await docRef.get();
     if (!doc.exists) {
       return res.status(404).json({ error: 'Product not found' });
@@ -232,16 +290,23 @@ router.put('/:id', authenticateToken, requireRole(['Selling Place']), async (req
       ...value,
       updatedAt: new Date().toISOString()
     };
+    
+    if (value.description) updatedPayload.itemDesc = value.description;
+    if (value.name && !value.description) updatedPayload.itemDesc = value.name;
+    if (value.price) updatedPayload.sellingPrice = value.price;
+    if (value.vendorName) updatedPayload.brand = value.vendorName;
 
     await docRef.update(updatedPayload);
 
-    // Update corresponding inventory references if name/sku/category changed
     const invDocRef = db.collection('inventory').doc(req.params.id);
     const invDoc = await invDocRef.get();
     if (invDoc.exists) {
       const invUpdates = {};
       if (value.name) invUpdates.productName = value.name;
-      if (value.sku) invUpdates.sku = value.sku;
+      if (value.sku) {
+        invUpdates.sku = value.sku;
+        invUpdates.itemNbr = value.sku;
+      }
       if (value.category) invUpdates.category = value.category;
       if (value.vendorId) invUpdates.vendorId = value.vendorId;
       if (value.vendorName) invUpdates.vendorName = value.vendorName;
@@ -279,7 +344,7 @@ router.put('/:id', authenticateToken, requireRole(['Selling Place']), async (req
  */
 router.delete('/:id', authenticateToken, requireRole(['Selling Place']), async (req, res) => {
   try {
-    const docRef = db.collection('products').doc(req.params.id);
+    const docRef = db.collection('item_list').doc(req.params.id);
     const doc = await docRef.get();
     if (!doc.exists) {
       return res.status(404).json({ error: 'Product not found' });
@@ -291,9 +356,8 @@ router.delete('/:id', authenticateToken, requireRole(['Selling Place']), async (
     }
 
     await docRef.delete();
-
-    // Also delete inventory record
     await db.collection('inventory').doc(req.params.id).delete();
+    await db.collection('vendor_status').doc(`${product.vendorId}_${req.params.id}`).delete();
 
     res.json({ message: 'Product and inventory records deleted successfully' });
   } catch (err) {

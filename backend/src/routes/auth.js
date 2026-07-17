@@ -12,7 +12,8 @@ const registerSchema = Joi.object({
   password: Joi.string().min(6).required(),
   phone: Joi.string().required(),
   address: Joi.string().required(),
-  role: Joi.string().valid('Selling Place', 'Vendor').required()
+  role: Joi.string().valid('Selling Place', 'Vendor').required(),
+  licenseNo: Joi.string().allow('').optional()
 });
 
 // Validation schema for login (only used as a fallback/mock API)
@@ -42,6 +43,7 @@ const loginSchema = Joi.object({
  *               phone: { type: string }
  *               address: { type: string }
  *               role: { type: string, enum: [Selling Place, Vendor] }
+ *               licenseNo: { type: string }
  *     responses:
  *       201:
  *         description: User registered successfully
@@ -54,7 +56,7 @@ router.post('/register', async (req, res) => {
     return res.status(400).json({ error: error.details[0].message });
   }
 
-  const { companyName, userName, email, password, phone, address, role } = value;
+  const { companyName, userName, email, password, phone, address, role, licenseNo = '' } = value;
 
   try {
     let uid;
@@ -77,18 +79,20 @@ router.post('/register', async (req, res) => {
       uid = userRecord.uid;
     }
 
-    // Save profile attributes in Firestore (under 'users' collection)
+    // Save profile attributes in Firestore (under 'login_credentials' collection)
+    const dbRole = role === 'Selling Place' ? 'seller' : 'vendor';
     const userProfile = {
       uid,
       companyName,
-      userName,
+      name: userName,
       email,
-      phone,
+      phoneNo: phone,
       address,
-      role,
+      role: dbRole,
+      licenseNo,
       createdAt: new Date().toISOString()
     };
-    await db.collection('users').doc(uid).set(userProfile);
+    await db.collection('login_credentials').doc(uid).set(userProfile);
 
     // Also register under respective collection for easier querying
     const specificCollection = role === 'Selling Place' ? 'sellingPlaces' : 'vendors';
@@ -99,6 +103,7 @@ router.post('/register', async (req, res) => {
       email,
       phone,
       address,
+      licenseNo,
       createdAt: new Date().toISOString()
     });
 
@@ -144,7 +149,7 @@ router.post('/login', async (req, res) => {
 
   try {
     // In Mock Mode, we lookup the user by email in the mock json file
-    const usersSnapshot = await db.collection('users').where('email', '==', email).get();
+    const usersSnapshot = await db.collection('login_credentials').where('email', '==', email).get();
     if (usersSnapshot.empty) {
       return res.status(401).json({ error: 'User account not found.' });
     }
@@ -155,14 +160,19 @@ router.post('/login', async (req, res) => {
     // Generate a mock token
     const mockToken = `mock-token-${doc.id}`;
 
+    // Map database role ('seller', 'vendor') back to UI format
+    let appRole = userProfile.role;
+    if (userProfile.role === 'seller') appRole = 'Selling Place';
+    else if (userProfile.role === 'vendor') appRole = 'Vendor';
+
     res.json({
       message: 'Login successful',
       token: mockToken,
       user: {
         uid: doc.id,
         email: userProfile.email,
-        userName: userProfile.userName,
-        role: userProfile.role,
+        userName: userProfile.name || userProfile.userName || '',
+        role: appRole,
         companyName: userProfile.companyName
       }
     });

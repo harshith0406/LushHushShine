@@ -15,7 +15,7 @@ import {
   Divider,
   Paper
 } from '@mui/material';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
 
 // Icons
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
@@ -240,21 +240,29 @@ const VendorDashboard = () => {
         <Grid item xs={12} md={8}>
           <Paper className="glass-panel" style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--glass-border)', marginBottom: '32px' }}>
             <Typography variant="h6" style={{ fontWeight: 700, marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <AutoAwesomeIcon style={{ color: '#c084fc' }} /> AI Demand Prediction & Sales Forecast
+              <AutoAwesomeIcon style={{ color: '#00f2fe' }} /> AI Demand Prediction & Sales Forecast
             </Typography>
             <Box style={{ height: '300px', width: '100%' }}>
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={forecastData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                  <XAxis dataKey="date" stroke="var(--text-secondary)" />
-                  <YAxis stroke="var(--text-secondary)" label={{ value: 'Units Demanded', angle: -90, position: 'insideLeft', fill: 'var(--text-secondary)' }} />
-                  <Tooltip contentStyle={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)', color: 'var(--text-primary)' }} />
+                <AreaChart data={forecastData}>
+                  <defs>
+                    <linearGradient id="actualGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#00f2fe" stopOpacity={0.4}/>
+                      <stop offset="95%" stopColor="#00f2fe" stopOpacity={0}/>
+                    </linearGradient>
+                    <linearGradient id="foreGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#d946ef" stopOpacity={0.4}/>
+                      <stop offset="95%" stopColor="#d946ef" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+                  <XAxis dataKey="date" stroke="var(--text-secondary)" tick={{ fill: 'var(--text-secondary)', fontSize: 12 }} axisLine={false} tickLine={false} />
+                  <YAxis stroke="var(--text-secondary)" tick={{ fill: 'var(--text-secondary)', fontSize: 12 }} axisLine={false} tickLine={false} />
+                  <Tooltip contentStyle={{ backgroundColor: '#101726', borderRadius: '10px', border: '1px solid rgba(0,242,254,0.3)', color: '#fff' }} />
                   <Legend />
-                  {/* Historical Sales - Solid Line */}
-                  <Line type="monotone" dataKey="actual" name="Actual Historic Sales" stroke="var(--primary)" strokeWidth={3} dot={{ r: 4 }} connectNulls={false} />
-                  {/* Future Sales - Dashed Line */}
-                  <Line type="monotone" dataKey="forecast" name="AI Predicted Demand" stroke="var(--accent)" strokeWidth={3} strokeDasharray="5 5" dot={{ r: 4 }} />
-                </LineChart>
+                  <Area type="monotone" dataKey="actual" name="Actual Historic Sales" stroke="#00f2fe" strokeWidth={3} fillOpacity={1} fill="url(#actualGrad)" isAnimationActive={true} animationDuration={1500} connectNulls={false} />
+                  <Area type="monotone" dataKey="forecast" name="AI Predicted Demand" stroke="#d946ef" strokeWidth={3} strokeDasharray="5 5" fillOpacity={1} fill="url(#foreGrad)" isAnimationActive={true} animationDuration={1500} />
+                </AreaChart>
               </ResponsiveContainer>
             </Box>
           </Paper>
@@ -267,11 +275,17 @@ const VendorDashboard = () => {
             <Box style={{ height: '240px', width: '100%' }}>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={storeDistribution}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                  <XAxis dataKey="store" stroke="var(--text-secondary)" />
-                  <YAxis stroke="var(--text-secondary)" />
-                  <Tooltip contentStyle={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)', color: 'var(--text-primary)' }} />
-                  <Bar dataKey="revenue" fill="var(--secondary)" radius={[4, 4, 0, 0]} />
+                  <defs>
+                    <linearGradient id="vendorStoreGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#10b981" stopOpacity={1}/>
+                      <stop offset="100%" stopColor="#38bdf8" stopOpacity={0.5}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+                  <XAxis dataKey="store" stroke="var(--text-secondary)" tick={{ fill: 'var(--text-secondary)', fontSize: 12 }} axisLine={false} tickLine={false} />
+                  <YAxis stroke="var(--text-secondary)" tick={{ fill: 'var(--text-secondary)', fontSize: 12 }} axisLine={false} tickLine={false} />
+                  <Tooltip contentStyle={{ backgroundColor: '#101726', borderRadius: '10px', border: '1px solid rgba(16,185,129,0.3)', color: '#fff' }} />
+                  <Bar dataKey="revenue" fill="url(#vendorStoreGrad)" radius={[6, 6, 0, 0]} isAnimationActive={true} animationDuration={1500} />
                 </BarChart>
               </ResponsiveContainer>
             </Box>

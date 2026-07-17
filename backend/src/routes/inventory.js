@@ -4,7 +4,6 @@ const Joi = require('joi');
 const { db } = require('../config/firebase');
 const { authenticateToken, requireRole } = require('../middleware/auth');
 
-// Validation schema for updating inventory metrics
 const inventoryUpdateSchema = Joi.object({
   stock: Joi.number().integer().min(0).optional(),
   reorderPoint: Joi.number().integer().min(0).optional(),
@@ -40,7 +39,33 @@ router.get('/', authenticateToken, async (req, res) => {
     const snapshot = await query.get();
     const inventory = [];
     snapshot.docs.forEach(doc => {
-      inventory.push({ id: doc.id, ...doc.data() });
+      const data = doc.data();
+      const availableQty = data.availableQty !== undefined ? data.availableQty : (data.stock || 0);
+      const soldQty = data.soldQty || 0;
+      const totalQty = data.totalQty !== undefined ? data.totalQty : (availableQty + soldQty);
+
+      inventory.push({
+        id: doc.id,
+        itemNbr: data.itemNbr || doc.id,
+        batchNo: data.batchNo || 'B-DEFAULT',
+        totalQty,
+        soldQty,
+        availableQty,
+        updatedAt: data.updatedAt,
+        productId: data.productId || doc.id,
+        productName: data.productName || '',
+        sku: data.sku || '',
+        category: data.category || '',
+        stock: availableQty,
+        reorderPoint: data.reorderPoint !== undefined ? data.reorderPoint : 10,
+        averageDailySales: data.averageDailySales || 0.0,
+        standardDeviation: data.standardDeviation || 1.0,
+        leadTimeDays: data.leadTimeDays || 5,
+        sellingPlaceId: data.sellingPlaceId || '',
+        sellingPlaceName: data.sellingPlaceName || '',
+        vendorId: data.vendorId || '',
+        vendorName: data.vendorName || ''
+      });
     });
 
     res.json(inventory);
@@ -103,28 +128,32 @@ router.put('/:productId', authenticateToken, requireRole(['Selling Place']), asy
       updatedAt: new Date().toISOString()
     };
 
+    if (value.stock !== undefined) {
+      updatedPayload.availableQty = value.stock;
+      const currentSold = invItem.soldQty || 0;
+      updatedPayload.totalQty = value.stock + currentSold;
+      updatedPayload.stock = value.stock;
+    }
+
     await docRef.update(updatedPayload);
 
-    // Dynamic Notifications: Check if the new stock is below the reorder point
-    const currentStock = value.stock !== undefined ? value.stock : invItem.stock;
+    const currentStock = value.stock !== undefined ? value.stock : (invItem.availableQty !== undefined ? invItem.availableQty : invItem.stock);
     const currentReorderPoint = value.reorderPoint !== undefined ? value.reorderPoint : invItem.reorderPoint;
 
     if (currentStock <= currentReorderPoint) {
-      // Create a low-stock notification for the Selling Place
       await db.collection('notifications').add({
         userId: req.user.uid,
         title: 'Low Stock Alert',
-        message: `Stock for '${invItem.productName}' is at ${currentStock} units (Reorder Point: ${currentReorderPoint}). Consider ordering more units from supplied Vendor: '${invItem.vendorName}'.`,
+        message: `Stock for '${invItem.productName || 'Item'}' is at ${currentStock} units (Reorder Point: ${currentReorderPoint}). Consider ordering more units from supplied Vendor: '${invItem.vendorName || 'Vendor'}'.`,
         type: 'low-stock',
         read: false,
         createdAt: new Date().toISOString()
       });
 
-      // Create a notification for the supplying Vendor
       await db.collection('notifications').add({
         userId: invItem.vendorId,
         title: 'Retailer Low Stock Alert',
-        message: `Retailer '${req.user.companyName}' is running low on '${invItem.productName}' (Stock: ${currentStock}, Reorder Point: ${currentReorderPoint}). Demand forecasting recommends preparing a restock order.`,
+        message: `Retailer '${req.user.companyName}' is running low on '${invItem.productName || 'Item'}' (Stock: ${currentStock}, Reorder Point: ${currentReorderPoint}). Demand forecasting recommends preparing a restock order.`,
         type: 'low-stock-vendor',
         read: false,
         createdAt: new Date().toISOString()

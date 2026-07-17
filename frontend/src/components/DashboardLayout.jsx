@@ -35,6 +35,8 @@ import LogoutIcon from '@mui/icons-material/ExitToApp';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 
+import ChatbotPanel from './ChatbotPanel';
+
 const sidebarWidth = 260;
 
 const DashboardLayout = () => {
@@ -417,6 +419,7 @@ const DashboardLayout = () => {
         }}
       >
         <Outlet />
+        <ChatbotPanel />
       </Box>
     </Box>
   );

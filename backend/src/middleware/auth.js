@@ -16,20 +16,27 @@ const authenticateToken = async (req, res, next) => {
     const decodedToken = await auth.verifyIdToken(token);
     
     // Retrieve complete user profile (including company name, role, etc.) from Firestore
-    const userDoc = await db.collection('users').doc(decodedToken.uid).get();
+    const userDoc = await db.collection('login_credentials').doc(decodedToken.uid).get();
     if (!userDoc.exists) {
       return res.status(404).json({ error: 'User profile not found in database.' });
     }
 
     const userProfile = userDoc.data();
+    
+    // Map database roles ('seller', 'vendor') to UI roles ('Selling Place', 'Vendor')
+    let appRole = userProfile.role;
+    if (userProfile.role === 'seller') appRole = 'Selling Place';
+    else if (userProfile.role === 'vendor') appRole = 'Vendor';
+
     req.user = {
       uid: decodedToken.uid,
       email: decodedToken.email,
-      name: userProfile.userName || userProfile.displayName || '',
+      name: userProfile.name || userProfile.userName || userProfile.displayName || '',
       companyName: userProfile.companyName || '',
-      role: userProfile.role, // 'Selling Place' or 'Vendor'
-      phone: userProfile.phone || '',
-      address: userProfile.address || ''
+      role: appRole, // 'Selling Place' or 'Vendor'
+      phone: userProfile.phoneNo || userProfile.phone || '',
+      address: userProfile.address || '',
+      licenseNo: userProfile.licenseNo || ''
     };
 
     next();

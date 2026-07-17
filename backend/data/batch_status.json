@@ -1,0 +1,28 @@
+{
+  "B-GEN-K0K2TK": {
+    "batchNo": "B-GEN-K0K2TK",
+    "itemNbr": "TEST-SKU-0YSN",
+    "mfgDate": "2026-07-17",
+    "expDate": "2027-01-17"
+  },
+  "B-TEST-SKU-0YSN": {
+    "batchNo": "B-TEST-SKU-0YSN",
+    "itemNbr": "TEST-SKU-0YSN",
+    "mfgDate": "2026-07-10T00:00:00.000Z",
+    "expDate": "2026-10-10T00:00:00.000Z",
+    "createdAt": "2026-07-17T20:03:39.567Z"
+  },
+  "B-GEN-VFPW5R": {
+    "batchNo": "B-GEN-VFPW5R",
+    "itemNbr": "TEST-SKU-ZM3B",
+    "mfgDate": "2026-07-17",
+    "expDate": "2027-01-17"
+  },
+  "B-TEST-SKU-ZM3B": {
+    "batchNo": "B-TEST-SKU-ZM3B",
+    "itemNbr": "TEST-SKU-ZM3B",
+    "mfgDate": "2026-07-10T00:00:00.000Z",
+    "expDate": "2026-10-10T00:00:00.000Z",
+    "createdAt": "2026-07-17T20:03:48.427Z"
+  }
+}

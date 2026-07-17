@@ -1,0 +1,42 @@
+{
+  "TX-UVSG40YG": {
+    "transactionId": "TX-UVSG40YG",
+    "itemNbr": "TEST-SKU-ZM3B",
+    "totalQty": 5,
+    "totalSales": 22.5,
+    "timestamp": "2026-07-17T20:03:48.447Z",
+    "batchNo": "B-TEST-SKU-ZM3B",
+    "transactionType": "item_sale",
+    "productId": "TEST-SKU-ZM3B",
+    "productName": "Organic Whole Milk",
+    "sku": "TEST-SKU-ZM3B",
+    "quantity": 5,
+    "price": 4.5,
+    "subtotal": 22.5,
+    "sellingPlaceId": "qsnfaze1hv",
+    "sellingPlaceName": "Test Store Inc.",
+    "vendorId": "wbuefzjzmc",
+    "vendorName": "Nexus Distributors Ltd.",
+    "createdAt": "2026-07-17T20:03:48.447Z"
+  },
+  "INV-ED81X0U5": {
+    "transactionId": "INV-ED81X0U5",
+    "totalSales": 22.5,
+    "timestamp": "2026-07-17T20:03:48.448Z",
+    "transactionType": "master_invoice",
+    "sellingPlaceId": "qsnfaze1hv",
+    "sellingPlaceName": "Test Store Inc.",
+    "items": [
+      {
+        "productId": "TEST-SKU-ZM3B",
+        "productName": "Organic Whole Milk",
+        "sku": "TEST-SKU-ZM3B",
+        "quantity": 5,
+        "price": 4.5,
+        "subtotal": 22.5
+      }
+    ],
+    "totalAmount": 22.5,
+    "createdAt": "2026-07-17T20:03:48.448Z"
+  }
+}

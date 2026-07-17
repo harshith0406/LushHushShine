@@ -24,11 +24,13 @@ import {
   MenuItem,
   IconButton,
   Alert,
-  CircularProgress
+  CircularProgress,
+  FormHelperText
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
+import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 
 const Products = () => {
   const { user } = useAuth();
@@ -36,6 +38,7 @@ const Products = () => {
   const [vendors, setVendors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [ocrLoading, setOcrLoading] = useState(false);
   
   // Modal states
   const [open, setOpen] = useState(false);
@@ -55,7 +58,6 @@ const Products = () => {
   const fetchVendors = async () => {
     if (user.role !== 'Selling Place') return;
     try {
-      // Create a dummy fallback vendors list just in case
       let vendorList = [
         { id: 'v1', companyName: 'Nexus Supply Co.', userName: 'Alex' },
         { id: 'v2', companyName: 'Apex Distributions', userName: 'Sarah' }
@@ -66,7 +68,7 @@ const Products = () => {
           vendorList = response.data;
         }
       } catch (e) {
-        // Fallback to static vendors
+        // Fallback
       }
       setVendors(vendorList);
     } catch (err) {
@@ -101,6 +103,40 @@ const Products = () => {
   const handleClose = () => {
     setOpen(false);
     setEditProduct(null);
+  };
+
+  const handleOcrFileChange = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    setOcrLoading(true);
+    setError('');
+
+    const formData = new FormData();
+    formData.append('image', file);
+
+    try {
+      const response = await API.post('/api/ocr/scan', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
+      const data = response.data;
+      handleOpen();
+      // Wait for dialog state initialization before setting values
+      setTimeout(() => {
+        setValue('name', data.name || '');
+        setValue('sku', data.sku || '');
+        setValue('price', data.price || 0.0);
+        setValue('category', data.category || '');
+        setValue('description', data.description || '');
+      }, 200);
+    } catch (err) {
+      setError(err.response?.data?.error || 'OCR vision model scanner failed to analyze image.');
+    } finally {
+      setOcrLoading(false);
+    }
   };
 
   const onSubmit = async (data) => {
@@ -145,7 +181,7 @@ const Products = () => {
 
   return (
     <Box className="fade-in">
-      <Box display="flex" justifyContent="space-between" alignItems="center" marginBottom="24px">
+      <Box display="flex" justifyContent="space-between" alignItems="center" marginBottom="24px" flexWrap="wrap" gap="16px">
         <Box>
           <Typography variant="h4" style={{ fontWeight: 800, fontFamily: 'var(--font-family)' }}>
             Products Catalog
@@ -157,20 +193,48 @@ const Products = () => {
           </Typography>
         </Box>
         {user.role === 'Selling Place' && (
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<AddIcon />}
-            onClick={() => handleOpen()}
-            style={{
-              borderRadius: 'var(--border-radius-sm)',
-              textTransform: 'none',
-              fontWeight: 600,
-              backgroundColor: 'var(--primary)'
-            }}
-          >
-            Add Product
-          </Button>
+          <Box display="flex" gap="12px" alignItems="center">
+            <input
+              accept="image/*"
+              style={{ display: 'none' }}
+              id="ocr-scan-input"
+              type="file"
+              onChange={handleOcrFileChange}
+              disabled={ocrLoading}
+            />
+            <label htmlFor="ocr-scan-input">
+              <Button
+                variant="outlined"
+                color="secondary"
+                component="span"
+                disabled={ocrLoading}
+                startIcon={ocrLoading ? <CircularProgress size={16} color="inherit" /> : <PhotoCameraIcon />}
+                style={{
+                  borderRadius: 'var(--border-radius-sm)',
+                  textTransform: 'none',
+                  fontWeight: 600,
+                  borderColor: 'var(--accent)',
+                  color: 'var(--accent)'
+                }}
+              >
+                {ocrLoading ? 'Scanning...' : 'OCR Scan Tag'}
+              </Button>
+            </label>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<AddIcon />}
+              onClick={() => handleOpen()}
+              style={{
+                borderRadius: 'var(--border-radius-sm)',
+                textTransform: 'none',
+                fontWeight: 600,
+                backgroundColor: 'var(--primary)'
+              }}
+            >
+              Add Product
+            </Button>
+          </Box>
         )}
       </Box>
 

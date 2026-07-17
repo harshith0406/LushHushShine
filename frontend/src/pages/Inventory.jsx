@@ -132,6 +132,51 @@ const Inventory = () => {
     }
   };
 
+  const [vendorSearch, setVendorSearch] = useState('');
+  const [vendorsList, setVendorsList] = useState([]);
+  const [filteredVendors, setFilteredVendors] = useState([]);
+
+  const fetchVendorsList = async () => {
+    try {
+      let mockList = [
+        { id: 'v1', companyName: 'Nexus Supply Co.', userName: 'Alex', email: 'alex@nexus.com', phone: '9876543210', address: '456 Warehouse Ave' },
+        { id: 'v2', companyName: 'Apex Distributions', userName: 'Sarah', email: 'sarah@apex.com', phone: '6752894270', address: 'Hosahalli area' }
+      ];
+      try {
+        const response = await API.get('/api/auth/vendors');
+        if (response.data && response.data.length > 0) {
+          mockList = response.data;
+        }
+      } catch (e) {
+        // fallback
+      }
+      setVendorsList(mockList);
+      setFilteredVendors(mockList);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    fetchVendorsList();
+  }, []);
+
+  const handleVendorSearchChange = (e) => {
+    const term = e.target.value;
+    setVendorSearch(term);
+    if (!term.trim()) {
+      setFilteredVendors(vendorsList);
+    } else {
+      const lower = term.toLowerCase();
+      const filtered = vendorsList.filter(v => 
+        v.companyName?.toLowerCase().includes(lower) || 
+        v.userName?.toLowerCase().includes(lower) ||
+        v.address?.toLowerCase().includes(lower)
+      );
+      setFilteredVendors(filtered);
+    }
+  };
+
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh">
@@ -159,14 +204,17 @@ const Inventory = () => {
         </Alert>
       )}
 
-      <TableContainer component={Paper} className="glass-panel" style={{ backgroundColor: 'var(--glass-bg)', border: '1px solid var(--glass-border)' }}>
+      <TableContainer component={Paper} className="glass-panel" style={{ backgroundColor: 'var(--glass-bg)', border: '1px solid var(--glass-border)', marginBottom: '40px' }}>
         <Table className="custom-table">
           <TableHead>
             <TableRow>
               <TableCell style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>Product Name</TableCell>
-              <TableCell style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>SKU</TableCell>
-              <TableCell style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>Current Stock</TableCell>
-              <TableCell style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>Reorder Threshold</TableCell>
+              <TableCell style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>SKU / Item ID</TableCell>
+              <TableCell style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>Batch No</TableCell>
+              <TableCell style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>Total Stocked</TableCell>
+              <TableCell style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>Sold Units</TableCell>
+              <TableCell style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>Available Stock</TableCell>
+              <TableCell style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>Reorder Point</TableCell>
               <TableCell style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>Daily Sales Rate</TableCell>
               <TableCell style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>Stock Status</TableCell>
               {user.role === 'Selling Place' && (
@@ -177,21 +225,28 @@ const Inventory = () => {
           <TableBody>
             {inventory.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={user.role === 'Selling Place' ? 7 : 6} align="center" style={{ padding: '40px', color: 'var(--text-muted)' }}>
+                <TableCell colSpan={user.role === 'Selling Place' ? 10 : 9} align="center" style={{ padding: '40px', color: 'var(--text-muted)' }}>
                   No inventory logs found. Create a product first!
                 </TableCell>
               </TableRow>
             ) : (
               inventory.map((row) => {
-                const isOutOfStock = row.stock === 0;
-                const isLowStock = row.stock <= row.reorderPoint;
+                const isOutOfStock = row.availableQty === 0 || row.stock === 0;
+                const reorder = row.reorderPoint !== undefined ? row.reorderPoint : 10;
+                const currentStock = row.availableQty !== undefined ? row.availableQty : row.stock;
+                const isLowStock = currentStock <= reorder;
                 
                 return (
                   <TableRow key={row.id}>
                     <TableCell style={{ fontWeight: 600 }}>{row.productName}</TableCell>
-                    <TableCell>{row.sku}</TableCell>
-                    <TableCell style={{ fontWeight: 700 }}>{row.stock} units</TableCell>
-                    <TableCell>{row.reorderPoint} units</TableCell>
+                    <TableCell>{row.sku || row.itemNbr}</TableCell>
+                    <TableCell style={{ fontFamily: 'monospace', fontWeight: 600, color: 'var(--accent)' }}>
+                      {row.batchNo || 'B-DEFAULT'}
+                    </TableCell>
+                    <TableCell>{row.totalQty !== undefined ? row.totalQty : currentStock} units</TableCell>
+                    <TableCell>{row.soldQty || 0} units</TableCell>
+                    <TableCell style={{ fontWeight: 700 }}>{currentStock} units</TableCell>
+                    <TableCell>{reorder} units</TableCell>
                     <TableCell>{row.averageDailySales?.toFixed(1) || '0.0'} units/day</TableCell>
                     <TableCell>
                       {isOutOfStock ? (
@@ -226,6 +281,60 @@ const Inventory = () => {
           </TableBody>
         </Table>
       </TableContainer>
+
+      {/* Vendor Search Utility Panel */}
+      <Paper className="glass-panel" style={{ padding: '24px', backgroundColor: 'var(--glass-bg)', border: '1px solid var(--glass-border)', marginBottom: '40px' }}>
+        <Typography variant="h6" style={{ fontWeight: 700, marginBottom: '8px' }}>
+          Vendor Contacts & Physical Addresses
+        </Typography>
+        <Typography variant="body2" color="var(--text-secondary)" style={{ marginBottom: '20px' }}>
+          Quickly find supplying vendors and contact details for items requested by consumers.
+        </Typography>
+
+        <TextField
+          label="Search suppliers by name, address, or manager..."
+          variant="outlined"
+          size="small"
+          fullWidth
+          value={vendorSearch}
+          onChange={handleVendorSearchChange}
+          style={{ marginBottom: '24px' }}
+        />
+
+        <Grid container spacing={3}>
+          {filteredVendors.length === 0 ? (
+            <Grid item xs={12}>
+              <Typography variant="body2" color="var(--text-muted)" align="center" style={{ padding: '20px' }}>
+                No matching supplying vendors found in catalog database.
+              </Typography>
+            </Grid>
+          ) : (
+            filteredVendors.map(vendor => (
+              <Grid item xs={12} sm={6} md={4} key={vendor.id}>
+                <Card style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: 'var(--border-radius-sm)' }}>
+                  <CardContent>
+                    <Typography variant="subtitle1" style={{ fontWeight: 700, color: 'var(--primary)' }}>
+                      {vendor.companyName}
+                    </Typography>
+                    <Typography variant="body2" style={{ fontWeight: 550, marginTop: '8px' }}>
+                      Contact Manager: {vendor.userName}
+                    </Typography>
+                    <Typography variant="body2" color="var(--text-secondary)" style={{ marginTop: '4px' }}>
+                      Phone: {vendor.phone || 'N/A'}
+                    </Typography>
+                    <Typography variant="body2" color="var(--text-secondary)" style={{ marginTop: '2px' }}>
+                      Email: {vendor.email || 'N/A'}
+                    </Typography>
+                    <Typography variant="caption" color="var(--text-muted)" style={{ display: 'block', marginTop: '10px' }}>
+                      Warehouse Address: {vendor.address || 'N/A'}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))
+          )}
+        </Grid>
+      </Paper>
 
       {/* Edit Inventory Dialog */}
       <Dialog open={editOpen} onClose={handleEditClose} maxWidth="xs" fullWidth>

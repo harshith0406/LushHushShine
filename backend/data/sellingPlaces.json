@@ -1,0 +1,52 @@
+{
+  "mumae49sfe": {
+    "id": "mumae49sfe",
+    "companyName": "Test Store Inc.",
+    "userName": "Store Manager",
+    "email": "seller_edb0@test.com",
+    "phone": "1234567890",
+    "address": "100 Retail Plaza",
+    "licenseNo": "LIC-SELLER-999",
+    "createdAt": "2026-07-17T20:03:09.243Z"
+  },
+  "6cywae6aynv": {
+    "id": "6cywae6aynv",
+    "companyName": "Test Store Inc.",
+    "userName": "Store Manager",
+    "email": "seller_f5sz@test.com",
+    "phone": "1234567890",
+    "address": "100 Retail Plaza",
+    "licenseNo": "LIC-SELLER-999",
+    "createdAt": "2026-07-17T20:03:20.128Z"
+  },
+  "xcnm1nzuwc": {
+    "id": "xcnm1nzuwc",
+    "companyName": "Test Store Inc.",
+    "userName": "Store Manager",
+    "email": "seller_gbac@test.com",
+    "phone": "1234567890",
+    "address": "100 Retail Plaza",
+    "licenseNo": "LIC-SELLER-999",
+    "createdAt": "2026-07-17T20:03:29.650Z"
+  },
+  "4s7s9imdbc3": {
+    "id": "4s7s9imdbc3",
+    "companyName": "Test Store Inc.",
+    "userName": "Store Manager",
+    "email": "seller_ihnf@test.com",
+    "phone": "1234567890",
+    "address": "100 Retail Plaza",
+    "licenseNo": "LIC-SELLER-999",
+    "createdAt": "2026-07-17T20:03:39.496Z"
+  },
+  "qsnfaze1hv": {
+    "id": "qsnfaze1hv",
+    "companyName": "Test Store Inc.",
+    "userName": "Store Manager",
+    "email": "seller_hugr@test.com",
+    "phone": "1234567890",
+    "address": "100 Retail Plaza",
+    "licenseNo": "LIC-SELLER-999",
+    "createdAt": "2026-07-17T20:03:48.352Z"
+  }
+}
