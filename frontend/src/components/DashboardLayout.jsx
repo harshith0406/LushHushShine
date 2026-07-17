@@ -138,11 +138,13 @@ const DashboardLayout = () => {
       }}
     >
       <Toolbar style={{ display: 'flex', alignItems: 'center', padding: '16px 20px', gap: '10px' }}>
-        <img 
-          src="/logo.png" 
-          alt="Shoply.ai Logo" 
-          style={{ width: '32px', height: '32px', objectFit: 'contain' }} 
-        />
+        <Box style={{ backgroundColor: '#ffffff', borderRadius: '8px', padding: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '34px', height: '34px' }}>
+          <img 
+            src="/logo.png" 
+            alt="Shoply.ai Logo" 
+            style={{ width: '100%', height: '100%', objectFit: 'contain', mixBlendMode: 'multiply' }} 
+          />
+        </Box>
         <Typography 
           variant="h6" 
           noWrap 
