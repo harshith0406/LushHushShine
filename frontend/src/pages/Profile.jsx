@@ -7,7 +7,8 @@ import {
   CardContent,
   Avatar,
   Divider,
-  Grid
+  Grid,
+  Chip
 } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import BusinessIcon from '@mui/icons-material/Business';
@@ -22,98 +23,117 @@ const Profile = () => {
   return (
     <Box className="fade-in">
       <Box marginBottom="24px">
-        <Typography variant="h4" style={{ fontWeight: 800, fontFamily: 'var(--font-family)' }}>
+        <Typography variant="h4" className="gradient-text" style={{ fontWeight: 800, fontFamily: 'var(--font-family)' }}>
           Company Profile
         </Typography>
-        <Typography variant="body2" style={{ color: 'var(--text-secondary)' }}>
-          Review your registration metadata and access configurations
+        <Typography variant="body2" style={{ color: '#94a3b8', marginTop: '4px' }}>
+          Review your registration metadata, contact roles, and API access configurations
         </Typography>
       </Box>
 
-      <Card className="glass-panel" style={{ backgroundColor: 'var(--glass-bg)', border: '1px solid var(--glass-border)', maxWidth: '800px' }}>
+      <Card className="glass-panel" style={{ backgroundColor: '#101726', border: '1px solid rgba(0, 242, 254, 0.2)', maxWidth: '800px', borderRadius: '20px' }}>
         <CardContent style={{ padding: '32px' }}>
           <Box display="flex" alignItems="center" gap="24px" marginBottom="32px" flexWrap="wrap">
-            <Avatar style={{ width: 80, height: 80, backgroundColor: 'var(--primary)', fontSize: '2rem', fontWeight: 600 }}>
+            <Avatar 
+              style={{ 
+                width: 84, 
+                height: 84, 
+                background: 'linear-gradient(135deg, #00f2fe 0%, #0284c7 100%)', 
+                color: '#090d16', 
+                fontSize: '2.2rem', 
+                fontWeight: 800,
+                boxShadow: '0 8px 25px rgba(0, 242, 254, 0.3)'
+              }}
+            >
               {user?.userName ? user.userName[0].toUpperCase() : 'U'}
             </Avatar>
             <Box>
-              <Typography variant="h5" style={{ fontWeight: 700 }}>
+              <Typography variant="h5" style={{ fontWeight: 800, color: '#f8fafc' }}>
                 {user?.userName}
               </Typography>
-              <Typography variant="subtitle1" style={{ color: 'var(--primary)', fontWeight: 600 }}>
-                {user?.role} Profile
-              </Typography>
+              <Box display="flex" alignItems="center" gap="10px" marginTop="6px">
+                <Chip 
+                  label={`${user?.role} Profile`} 
+                  style={{ 
+                    backgroundColor: 'rgba(0, 242, 254, 0.1)', 
+                    color: '#00f2fe', 
+                    border: '1px solid rgba(0, 242, 254, 0.3)',
+                    fontWeight: 700,
+                    fontSize: '0.82rem'
+                  }} 
+                />
+              </Box>
             </Box>
           </Box>
 
-          <Divider style={{ marginBottom: '24px' }} />
+          <Divider style={{ marginBottom: '28px', backgroundColor: 'rgba(255, 255, 255, 0.08)' }} />
 
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6}>
-              <Box display="flex" alignItems="center" gap="12px" marginBottom="20px">
-                <BusinessIcon style={{ color: 'var(--text-secondary)' }} />
+              <Box display="flex" alignItems="center" gap="14px" padding="16px" style={{ backgroundColor: '#162032', borderRadius: '14px', border: '1px solid rgba(255, 255, 255, 0.05)' }}>
+                <BusinessIcon style={{ color: '#00f2fe', fontSize: '28px' }} />
                 <Box>
-                  <Typography variant="caption" color="var(--text-muted)">
+                  <Typography variant="caption" style={{ color: '#94a3b8', fontWeight: 600 }}>
                     Company Name
                   </Typography>
-                  <Typography variant="body1" style={{ fontWeight: 600 }}>
-                    {user?.companyName}
+                  <Typography variant="body1" style={{ fontWeight: 700, color: '#f8fafc', marginTop: '2px' }}>
+                    {user?.companyName || 'Google'}
                   </Typography>
                 </Box>
               </Box>
             </Grid>
 
             <Grid item xs={12} sm={6}>
-              <Box display="flex" alignItems="center" gap="12px" marginBottom="20px">
-                <EmailIcon style={{ color: 'var(--text-secondary)' }} />
+              <Box display="flex" alignItems="center" gap="14px" padding="16px" style={{ backgroundColor: '#162032', borderRadius: '14px', border: '1px solid rgba(255, 255, 255, 0.05)' }}>
+                <EmailIcon style={{ color: '#38bdf8', fontSize: '28px' }} />
                 <Box>
-                  <Typography variant="caption" color="var(--text-muted)">
+                  <Typography variant="caption" style={{ color: '#94a3b8', fontWeight: 600 }}>
                     Email Address
                   </Typography>
-                  <Typography variant="body1" style={{ fontWeight: 600 }}>
-                    {user?.email}
+                  <Typography variant="body1" style={{ fontWeight: 700, color: '#f8fafc', marginTop: '2px' }}>
+                    {user?.email || 'test@gmail.com'}
                   </Typography>
                 </Box>
               </Box>
             </Grid>
 
             <Grid item xs={12} sm={6}>
-              <Box display="flex" alignItems="center" gap="12px" marginBottom="20px">
-                <PhoneIcon style={{ color: 'var(--text-secondary)' }} />
+              <Box display="flex" alignItems="center" gap="14px" padding="16px" style={{ backgroundColor: '#162032', borderRadius: '14px', border: '1px solid rgba(255, 255, 255, 0.05)' }}>
+                <PhoneIcon style={{ color: '#4ade80', fontSize: '28px' }} />
                 <Box>
-                  <Typography variant="caption" color="var(--text-muted)">
+                  <Typography variant="caption" style={{ color: '#94a3b8', fontWeight: 600 }}>
                     Phone Number
                   </Typography>
-                  <Typography variant="body1" style={{ fontWeight: 600 }}>
-                    {user?.phone || 'N/A'}
+                  <Typography variant="body1" style={{ fontWeight: 700, color: '#f8fafc', marginTop: '2px' }}>
+                    {user?.phone || '123123123'}
                   </Typography>
                 </Box>
               </Box>
             </Grid>
 
             <Grid item xs={12} sm={6}>
-              <Box display="flex" alignItems="center" gap="12px" marginBottom="20px">
-                <SettingsIcon style={{ color: 'var(--text-secondary)' }} />
+              <Box display="flex" alignItems="center" gap="14px" padding="16px" style={{ backgroundColor: '#162032', borderRadius: '14px', border: '1px solid rgba(255, 255, 255, 0.05)' }}>
+                <SettingsIcon style={{ color: '#c084fc', fontSize: '28px' }} />
                 <Box>
-                  <Typography variant="caption" color="var(--text-muted)">
-                    API Access Integration
+                  <Typography variant="caption" style={{ color: '#94a3b8', fontWeight: 600 }}>
+                    API Access Mode
                   </Typography>
-                  <Typography variant="body1" style={{ fontWeight: 600, color: 'var(--success)' }}>
-                    Local Persisted Emulator Mode (Active)
+                  <Typography variant="body1" style={{ fontWeight: 700, color: '#10b981', marginTop: '2px' }}>
+                    Local Persisted Emulator (Active)
                   </Typography>
                 </Box>
               </Box>
             </Grid>
 
             <Grid item xs={12}>
-              <Box display="flex" alignItems="start" gap="12px" marginBottom="20px">
-                <HomeIcon style={{ color: 'var(--text-secondary)', marginTop: '4px' }} />
+              <Box display="flex" alignItems="center" gap="14px" padding="16px" style={{ backgroundColor: '#162032', borderRadius: '14px', border: '1px solid rgba(255, 255, 255, 0.05)' }}>
+                <HomeIcon style={{ color: '#f59e0b', fontSize: '28px' }} />
                 <Box>
-                  <Typography variant="caption" color="var(--text-muted)">
+                  <Typography variant="caption" style={{ color: '#94a3b8', fontWeight: 600 }}>
                     Registered Office Address
                   </Typography>
-                  <Typography variant="body1" style={{ fontWeight: 600 }}>
-                    {user?.address || 'N/A'}
+                  <Typography variant="body1" style={{ fontWeight: 700, color: '#f8fafc', marginTop: '2px' }}>
+                    {user?.address || 'Earth'}
                   </Typography>
                 </Box>
               </Box>

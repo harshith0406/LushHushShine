@@ -23,8 +23,7 @@ import {
   IconButton,
   Divider,
   Card,
-  CardContent,
-  Chip
+  CardContent
 } from '@mui/material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -47,7 +46,6 @@ const Sales = () => {
     if (user.role !== 'Selling Place') return;
     try {
       const response = await API.get('/api/products');
-      // Only display products that are in stock
       setProducts(response.data);
     } catch (err) {
       console.error(err);
@@ -57,7 +55,6 @@ const Sales = () => {
   const fetchSalesHistory = async () => {
     try {
       const response = await API.get('/api/sales');
-      // Sort: newest first
       const sorted = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       setSalesHistory(sorted);
     } catch (err) {
@@ -74,13 +71,11 @@ const Sales = () => {
     init();
   }, [user]);
 
-  // Cart operations
   const handleAddToCart = () => {
     if (!selectedProductId) return;
     const product = products.find(p => p.id === selectedProductId);
     if (!product) return;
 
-    // Check if already in cart
     const existingIndex = cart.findIndex(item => item.productId === selectedProductId);
     if (existingIndex > -1) {
       const newCart = [...cart];
@@ -98,7 +93,6 @@ const Sales = () => {
       }]);
     }
     
-    // Reset inputs
     setSelectedProductId('');
     setQuantity(1);
   };
@@ -125,7 +119,7 @@ const Sales = () => {
       setSuccess('Transaction check out completed successfully! Stock deducted.');
       setCart([]);
       fetchSalesHistory();
-      fetchProducts(); // Refresh stock variables
+      fetchProducts();
     } catch (err) {
       setError(err.response?.data?.error || 'Checkout transaction failed. Check stock levels.');
     }
@@ -146,37 +140,37 @@ const Sales = () => {
   return (
     <Box className="fade-in">
       <Box marginBottom="24px">
-        <Typography variant="h4" style={{ fontWeight: 800, fontFamily: 'var(--font-family)' }}>
+        <Typography variant="h4" className="gradient-text" style={{ fontWeight: 800, fontFamily: 'var(--font-family)' }}>
           Sales & Checkout Registers
         </Typography>
-        <Typography variant="body2" style={{ color: 'var(--text-secondary)' }}>
+        <Typography variant="body2" style={{ color: '#94a3b8', marginTop: '4px' }}>
           {user.role === 'Selling Place'
             ? 'Ring up checkout sales, record customer invoices, and update inventory rates'
             : 'Track item transaction volume and revenues supplied by your warehouse'}
         </Typography>
       </Box>
 
-      {error && <Alert severity="error" style={{ marginBottom: '24px', borderRadius: 'var(--border-radius-sm)' }}>{error}</Alert>}
-      {success && <Alert severity="success" style={{ marginBottom: '24px', borderRadius: 'var(--border-radius-sm)' }}>{success}</Alert>}
+      {error && <Alert severity="error" style={{ marginBottom: '24px', borderRadius: '10px' }}>{error}</Alert>}
+      {success && <Alert severity="success" style={{ marginBottom: '24px', borderRadius: '10px' }}>{success}</Alert>}
 
       <Grid container spacing={4}>
-        {/* Checkout Cart for Selling Place */}
         {user.role === 'Selling Place' && (
           <Grid item xs={12} md={5}>
-            <Card className="glass-panel" style={{ backgroundColor: 'var(--glass-bg)', border: '1px solid var(--glass-border)', height: '100%' }}>
+            <Card className="glass-panel" style={{ backgroundColor: '#101726', border: '1px solid rgba(0, 242, 254, 0.2)', height: '100%' }}>
               <CardContent style={{ padding: '24px', display: 'flex', flexDirection: 'column', height: '100%' }}>
-                <Typography variant="h6" style={{ fontWeight: 700, marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <AddShoppingCartIcon color="primary" /> POS Register Cart
+                <Typography variant="h6" style={{ fontWeight: 800, marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px', color: '#00f2fe' }}>
+                  <AddShoppingCartIcon /> POS Register Cart
                 </Typography>
                 
                 <Box display="flex" gap="12px" marginBottom="20px">
                   <FormControl fullWidth size="small">
-                    <InputLabel id="pos-product-label">Select Item</InputLabel>
+                    <InputLabel id="pos-product-label" style={{ color: '#94a3b8' }}>Select Item</InputLabel>
                     <Select
                       labelId="pos-product-label"
                       label="Select Item"
                       value={selectedProductId}
                       onChange={(e) => setSelectedProductId(e.target.value)}
+                      style={{ backgroundColor: '#162032', color: '#ffffff', borderRadius: '10px' }}
                     >
                       {products.map(p => (
                         <MenuItem key={p.id} value={p.id}>{p.name} (${parseFloat(p.price).toFixed(2)})</MenuItem>
@@ -188,28 +182,28 @@ const Sales = () => {
                     label="Qty"
                     type="number"
                     size="small"
-                    inputProps={{ min: 1 }}
-                    style={{ width: '80px' }}
+                    inputProps={{ min: 1, style: { color: '#ffffff' } }}
+                    style={{ width: '80px', backgroundColor: '#162032', borderRadius: '10px' }}
                     value={quantity}
                     onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value)))}
+                    InputLabelProps={{ style: { color: '#94a3b8' } }}
                   />
 
                   <Button 
                     variant="contained" 
                     onClick={handleAddToCart}
-                    style={{ textTransform: 'none', backgroundColor: 'var(--primary)', fontWeight: 600 }}
+                    style={{ textTransform: 'none', backgroundColor: '#00f2fe', color: '#090d16', fontWeight: 700, borderRadius: '10px' }}
                   >
                     Add
                   </Button>
                 </Box>
 
-                <Divider style={{ margin: '12px 0' }} />
+                <Divider style={{ margin: '12px 0', backgroundColor: 'rgba(255,255,255,0.08)' }} />
 
-                {/* Cart list */}
                 <Box style={{ flexGrow: 1, minHeight: '200px', overflowY: 'auto' }}>
                   {cart.length === 0 ? (
                     <Box display="flex" justifyContent="center" alignItems="center" height="200px">
-                      <Typography variant="body2" style={{ color: 'var(--text-muted)' }}>Cart is empty</Typography>
+                      <Typography variant="body2" style={{ color: '#94a3b8' }}>Cart is empty</Typography>
                     </Box>
                   ) : (
                     cart.map((item, index) => (
@@ -219,19 +213,19 @@ const Sales = () => {
                         justifyContent="space-between" 
                         alignItems="center" 
                         padding="10px 0"
-                        style={{ borderBottom: '1px solid var(--border-color)' }}
+                        style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}
                       >
                         <Box>
-                          <Typography variant="subtitle2" style={{ fontWeight: 600 }}>{item.productName}</Typography>
-                          <Typography variant="caption" style={{ color: 'var(--text-secondary)' }}>
+                          <Typography variant="subtitle2" style={{ fontWeight: 700, color: '#f8fafc' }}>{item.productName}</Typography>
+                          <Typography variant="caption" style={{ color: '#94a3b8' }}>
                             {item.quantity} x ${parseFloat(item.price).toFixed(2)}
                           </Typography>
                         </Box>
                         <Box display="flex" alignItems="center" gap="8px">
-                          <Typography variant="subtitle2" style={{ fontWeight: 700 }}>
+                          <Typography variant="subtitle2" style={{ fontWeight: 700, color: '#00f2fe' }}>
                             ${parseFloat(item.subtotal).toFixed(2)}
                           </Typography>
-                          <IconButton size="small" color="error" onClick={() => handleRemoveFromCart(index)}>
+                          <IconButton size="small" style={{ color: '#ff4b72' }} onClick={() => handleRemoveFromCart(index)}>
                             <DeleteIcon fontSize="small" />
                           </IconButton>
                         </Box>
@@ -240,11 +234,11 @@ const Sales = () => {
                   )}
                 </Box>
 
-                <Divider style={{ margin: '16px 0' }} />
+                <Divider style={{ margin: '16px 0', backgroundColor: 'rgba(255,255,255,0.08)' }} />
 
                 <Box display="flex" justifyContent="space-between" alignItems="center" marginBottom="20px">
-                  <Typography variant="subtitle1" style={{ fontWeight: 700 }}>Cart Total</Typography>
-                  <Typography variant="h5" style={{ fontWeight: 800, color: 'var(--primary)' }}>
+                  <Typography variant="subtitle1" style={{ fontWeight: 700, color: '#f8fafc' }}>Cart Total</Typography>
+                  <Typography variant="h5" style={{ fontWeight: 800, color: '#00f2fe' }}>
                     ${parseFloat(calculateCartTotal()).toFixed(2)}
                   </Typography>
                 </Box>
@@ -258,9 +252,11 @@ const Sales = () => {
                   style={{
                     padding: '12px',
                     textTransform: 'none',
-                    fontWeight: 700,
-                    borderRadius: 'var(--border-radius-sm)',
-                    backgroundColor: 'var(--primary)'
+                    fontWeight: 800,
+                    borderRadius: '12px',
+                    backgroundColor: '#00f2fe',
+                    color: '#090d16',
+                    boxShadow: '0 4px 15px rgba(0, 242, 254, 0.3)'
                   }}
                 >
                   Checkout Checkout Invoice
@@ -270,14 +266,13 @@ const Sales = () => {
           </Grid>
         )}
 
-        {/* Sales Logs */}
         <Grid item xs={12} md={user.role === 'Selling Place' ? 7 : 12}>
-          <TableContainer component={Paper} className="glass-panel" style={{ backgroundColor: 'var(--glass-bg)', border: '1px solid var(--glass-border)', height: '100%' }}>
+          <TableContainer component={Paper} className="glass-panel" style={{ backgroundColor: '#101726', border: '1px solid rgba(0, 242, 254, 0.2)', height: '100%' }}>
             <Box style={{ padding: '24px 24px 8px 24px' }}>
-              <Typography variant="h6" style={{ fontWeight: 700 }}>
+              <Typography variant="h6" style={{ fontWeight: 800, color: '#f8fafc' }}>
                 Transaction History
               </Typography>
-              <Typography variant="caption" style={{ color: 'var(--text-secondary)' }}>
+              <Typography variant="caption" style={{ color: '#94a3b8' }}>
                 {user.role === 'Selling Place' 
                   ? 'Historical invoice checkouts and total values' 
                   : 'Sold inventory units across registered selling stores'}
@@ -287,26 +282,26 @@ const Sales = () => {
               <TableHead>
                 {user.role === 'Selling Place' ? (
                   <TableRow>
-                    <TableCell style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>Invoice ID</TableCell>
-                    <TableCell style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>Date</TableCell>
-                    <TableCell style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>Items Count</TableCell>
-                    <TableCell style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>Total Amount</TableCell>
+                    <TableCell style={{ fontWeight: 700, color: '#94a3b8' }}>Invoice ID</TableCell>
+                    <TableCell style={{ fontWeight: 700, color: '#94a3b8' }}>Date</TableCell>
+                    <TableCell style={{ fontWeight: 700, color: '#94a3b8' }}>Items Count</TableCell>
+                    <TableCell style={{ fontWeight: 700, color: '#94a3b8' }}>Total Amount</TableCell>
                   </TableRow>
                 ) : (
                   <TableRow>
-                    <TableCell style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>Product Name</TableCell>
-                    <TableCell style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>Store Name</TableCell>
-                    <TableCell style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>Sold Units</TableCell>
-                    <TableCell style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>Unit Price</TableCell>
-                    <TableCell style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>Subtotal Revenue</TableCell>
-                    <TableCell style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>Sale Date</TableCell>
+                    <TableCell style={{ fontWeight: 700, color: '#94a3b8' }}>Product Name</TableCell>
+                    <TableCell style={{ fontWeight: 700, color: '#94a3b8' }}>Store Name</TableCell>
+                    <TableCell style={{ fontWeight: 700, color: '#94a3b8' }}>Sold Units</TableCell>
+                    <TableCell style={{ fontWeight: 700, color: '#94a3b8' }}>Unit Price</TableCell>
+                    <TableCell style={{ fontWeight: 700, color: '#94a3b8' }}>Subtotal Revenue</TableCell>
+                    <TableCell style={{ fontWeight: 700, color: '#94a3b8' }}>Sale Date</TableCell>
                   </TableRow>
                 )}
               </TableHead>
               <TableBody>
                 {salesHistory.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={user.role === 'Selling Place' ? 4 : 6} align="center" style={{ padding: '40px', color: 'var(--text-muted)' }}>
+                    <TableCell colSpan={user.role === 'Selling Place' ? 4 : 6} align="center" style={{ padding: '40px', color: '#94a3b8' }}>
                       No transactions recorded yet.
                     </TableCell>
                   </TableRow>
@@ -319,23 +314,23 @@ const Sales = () => {
                     .map((row) => (
                       user.role === 'Selling Place' ? (
                         <TableRow key={row.id}>
-                          <TableCell style={{ fontFamily: 'monospace', fontWeight: 600 }}>{row.id.substring(0, 10)}</TableCell>
-                          <TableCell>{new Date(row.createdAt).toLocaleDateString()} {new Date(row.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</TableCell>
-                          <TableCell>{row.items?.length || 0} types</TableCell>
-                          <TableCell style={{ fontWeight: 700, color: 'var(--success)' }}>
+                          <TableCell style={{ fontFamily: 'monospace', fontWeight: 600, color: '#00f2fe' }}>{row.id.substring(0, 10)}</TableCell>
+                          <TableCell style={{ color: '#94a3b8' }}>{new Date(row.createdAt).toLocaleDateString()} {new Date(row.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</TableCell>
+                          <TableCell style={{ color: '#f8fafc' }}>{row.items?.length || 0} types</TableCell>
+                          <TableCell style={{ fontWeight: 700, color: '#10b981' }}>
                             ${parseFloat(row.totalAmount).toFixed(2)}
                           </TableCell>
                         </TableRow>
                       ) : (
                         <TableRow key={row.id}>
-                          <TableCell style={{ fontWeight: 600 }}>{row.productName}</TableCell>
-                          <TableCell>{row.sellingPlaceName}</TableCell>
-                          <TableCell style={{ fontWeight: 700 }}>{row.quantity} units</TableCell>
-                          <TableCell>${parseFloat(row.price).toFixed(2)}</TableCell>
-                          <TableCell style={{ fontWeight: 700, color: 'var(--success)' }}>
+                          <TableCell style={{ fontWeight: 600, color: '#f8fafc' }}>{row.productName}</TableCell>
+                          <TableCell style={{ color: '#cbd5e1' }}>{row.sellingPlaceName}</TableCell>
+                          <TableCell style={{ fontWeight: 700, color: '#f8fafc' }}>{row.quantity} units</TableCell>
+                          <TableCell style={{ color: '#cbd5e1' }}>${parseFloat(row.price).toFixed(2)}</TableCell>
+                          <TableCell style={{ fontWeight: 700, color: '#10b981' }}>
                             ${parseFloat(row.subtotal).toFixed(2)}
                           </TableCell>
-                          <TableCell>{new Date(row.createdAt).toLocaleDateString()}</TableCell>
+                          <TableCell style={{ color: '#94a3b8' }}>{new Date(row.createdAt).toLocaleDateString()}</TableCell>
                         </TableRow>
                       )
                     ))

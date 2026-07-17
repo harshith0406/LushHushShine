@@ -123,7 +123,6 @@ const Inventory = () => {
     try {
       const payload = {
         reorderPoint: aiResult.reorder_point,
-        // Keep existing stock & metrics, just apply optimal reorder point
       };
       await API.put(`/api/inventory/${selectedItem.productId}`, payload);
       fetchInventory();
@@ -140,8 +139,8 @@ const Inventory = () => {
   const fetchVendorsList = async () => {
     try {
       let mockList = [
-        { id: 'v1', companyName: 'Nexus Supply Co.', userName: 'Alex', email: 'alex@nexus.com', phone: '9876543210', address: '456 Warehouse Ave' },
-        { id: 'v2', companyName: 'Apex Distributions', userName: 'Sarah', email: 'sarah@apex.com', phone: '6752894270', address: 'Hosahalli area' }
+        { id: 'v1', companyName: 'Nexus Supply Co.', userName: 'Alex Vendor', email: 'vendor_thwn@test.com', phone: '9876543210', address: '500 Logistics Way' },
+        { id: 'v2', companyName: 'Apex Distributions', userName: 'Shreya', email: 'Reemagjack@gmail.com', phone: '6752894270', address: 'Hosahalli area' }
       ];
       try {
         const response = await API.get('/api/auth/vendors');
@@ -189,44 +188,44 @@ const Inventory = () => {
   return (
     <Box className="fade-in">
       <Box marginBottom="24px">
-        <Typography variant="h4" style={{ fontWeight: 800, fontFamily: 'var(--font-family)' }}>
+        <Typography variant="h4" className="gradient-text" style={{ fontWeight: 800, fontFamily: 'var(--font-family)' }}>
           Inventory Management
         </Typography>
-        <Typography variant="body2" style={{ color: 'var(--text-secondary)' }}>
+        <Typography variant="body2" style={{ color: '#94a3b8', marginTop: '4px' }}>
           {user.role === 'Selling Place'
-            ? 'Monitor stock, configure safety limits, and run AI-based Economic Order Quantity (EOQ) optimizations'
+            ? 'Monitor stock buffers, safety points, and run AI Economic Order Quantity (EOQ) optimizations'
             : 'Track inventory logs of your supplied items at customer retail stores'}
         </Typography>
       </Box>
 
       {error && (
-        <Alert severity="error" style={{ marginBottom: '24px', borderRadius: 'var(--border-radius-sm)' }}>
+        <Alert severity="error" style={{ marginBottom: '24px', borderRadius: '10px' }}>
           {error}
         </Alert>
       )}
 
-      <TableContainer component={Paper} className="glass-panel" style={{ backgroundColor: 'var(--glass-bg)', border: '1px solid var(--glass-border)', marginBottom: '40px' }}>
+      <TableContainer component={Paper} className="glass-panel" style={{ backgroundColor: '#101726', border: '1px solid rgba(0, 242, 254, 0.2)', marginBottom: '40px' }}>
         <Table className="custom-table">
           <TableHead>
             <TableRow>
-              <TableCell style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>Product Name</TableCell>
-              <TableCell style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>SKU / Item ID</TableCell>
-              <TableCell style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>Batch No</TableCell>
-              <TableCell style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>Total Stocked</TableCell>
-              <TableCell style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>Sold Units</TableCell>
-              <TableCell style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>Available Stock</TableCell>
-              <TableCell style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>Reorder Point</TableCell>
-              <TableCell style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>Daily Sales Rate</TableCell>
-              <TableCell style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>Stock Status</TableCell>
+              <TableCell style={{ fontWeight: 700, color: '#94a3b8' }}>Product Name</TableCell>
+              <TableCell style={{ fontWeight: 700, color: '#94a3b8' }}>SKU / Item ID</TableCell>
+              <TableCell style={{ fontWeight: 700, color: '#94a3b8' }}>Batch No</TableCell>
+              <TableCell style={{ fontWeight: 700, color: '#94a3b8' }}>Total Stocked</TableCell>
+              <TableCell style={{ fontWeight: 700, color: '#94a3b8' }}>Sold Units</TableCell>
+              <TableCell style={{ fontWeight: 700, color: '#94a3b8' }}>Available Stock</TableCell>
+              <TableCell style={{ fontWeight: 700, color: '#94a3b8' }}>Reorder Point</TableCell>
+              <TableCell style={{ fontWeight: 700, color: '#94a3b8' }}>Daily Sales Rate</TableCell>
+              <TableCell style={{ fontWeight: 700, color: '#94a3b8' }}>Stock Status</TableCell>
               {user.role === 'Selling Place' && (
-                <TableCell align="right" style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>Actions</TableCell>
+                <TableCell align="right" style={{ fontWeight: 700, color: '#94a3b8' }}>Actions</TableCell>
               )}
             </TableRow>
           </TableHead>
           <TableBody>
             {inventory.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={user.role === 'Selling Place' ? 10 : 9} align="center" style={{ padding: '40px', color: 'var(--text-muted)' }}>
+                <TableCell colSpan={user.role === 'Selling Place' ? 10 : 9} align="center" style={{ padding: '40px', color: '#94a3b8' }}>
                   No inventory logs found. Create a product first!
                 </TableCell>
               </TableRow>
@@ -239,16 +238,16 @@ const Inventory = () => {
                 
                 return (
                   <TableRow key={row.id}>
-                    <TableCell style={{ fontWeight: 600 }}>{row.productName}</TableCell>
-                    <TableCell>{row.sku || row.itemNbr}</TableCell>
-                    <TableCell style={{ fontFamily: 'monospace', fontWeight: 600, color: 'var(--accent)' }}>
-                      {row.batchNo || 'B-DEFAULT'}
+                    <TableCell style={{ fontWeight: 600, color: '#f8fafc' }}>{row.productName}</TableCell>
+                    <TableCell style={{ color: '#cbd5e1' }}>{row.sku || row.itemNbr}</TableCell>
+                    <TableCell style={{ fontFamily: 'monospace', fontWeight: 600, color: '#d946ef' }}>
+                      {row.batchNo || 'B-GEN-888'}
                     </TableCell>
-                    <TableCell>{row.totalQty !== undefined ? row.totalQty : currentStock} units</TableCell>
-                    <TableCell>{row.soldQty || 0} units</TableCell>
-                    <TableCell style={{ fontWeight: 700 }}>{currentStock} units</TableCell>
-                    <TableCell>{reorder} units</TableCell>
-                    <TableCell>{row.averageDailySales?.toFixed(1) || '0.0'} units/day</TableCell>
+                    <TableCell style={{ color: '#f8fafc' }}>{row.totalQty !== undefined ? row.totalQty : currentStock} units</TableCell>
+                    <TableCell style={{ color: '#cbd5e1' }}>{row.soldQty || 0} units</TableCell>
+                    <TableCell style={{ fontWeight: 700, color: '#f8fafc' }}>{currentStock} units</TableCell>
+                    <TableCell style={{ color: '#f8fafc' }}>{reorder} units</TableCell>
+                    <TableCell style={{ color: '#cbd5e1' }}>{row.averageDailySales?.toFixed(1) || '0.0'} units/day</TableCell>
                     <TableCell>
                       {isOutOfStock ? (
                         <Chip label="Out of Stock" color="error" size="small" style={{ fontWeight: 600 }} />
@@ -262,14 +261,14 @@ const Inventory = () => {
                       <TableCell align="right">
                         <Tooltip title="Run AI Stock Optimization">
                           <IconButton 
-                            style={{ color: '#c084fc', marginRight: '8px' }}
+                            style={{ color: '#d946ef', marginRight: '8px' }}
                             onClick={() => handleAiOpen(row)}
                           >
                             <AutoAwesomeIcon fontSize="small" />
                           </IconButton>
                         </Tooltip>
                         <Tooltip title="Update Metrics">
-                          <IconButton color="primary" onClick={() => handleEditOpen(row)}>
+                          <IconButton style={{ color: '#00f2fe' }} onClick={() => handleEditOpen(row)}>
                             <EditIcon fontSize="small" />
                           </IconButton>
                         </Tooltip>
@@ -284,50 +283,53 @@ const Inventory = () => {
       </TableContainer>
 
       {/* Vendor Search Utility Panel */}
-      <Paper className="glass-panel" style={{ padding: '24px', backgroundColor: 'var(--glass-bg)', border: '1px solid var(--glass-border)', marginBottom: '40px' }}>
-        <Typography variant="h6" style={{ fontWeight: 700, marginBottom: '8px' }}>
+      <Paper className="glass-panel" style={{ padding: '24px', backgroundColor: '#101726', border: '1px solid rgba(0, 242, 254, 0.2)', marginBottom: '40px' }}>
+        <Typography variant="h6" style={{ fontWeight: 800, marginBottom: '4px', color: '#f8fafc' }}>
           Vendor Contacts & Physical Addresses
         </Typography>
-        <Typography variant="body2" color="var(--text-secondary)" style={{ marginBottom: '20px' }}>
-          Quickly find supplying vendors and contact details for items requested by consumers.
+        <Typography variant="body2" style={{ color: '#94a3b8', marginBottom: '20px' }}>
+          Quickly find supplying vendors and contact details for restock orders.
         </Typography>
 
         <TextField
-          label="Search suppliers by name, address, or manager..."
+          placeholder="Search suppliers by name, address, or manager..."
           variant="outlined"
           size="small"
           fullWidth
           value={vendorSearch}
           onChange={handleVendorSearchChange}
           style={{ marginBottom: '24px' }}
+          InputProps={{
+            style: { backgroundColor: '#162032', color: '#fff', borderRadius: '10px' }
+          }}
         />
 
         <Grid container spacing={3}>
           {filteredVendors.length === 0 ? (
             <Grid item xs={12}>
-              <Typography variant="body2" color="var(--text-muted)" align="center" style={{ padding: '20px' }}>
+              <Typography variant="body2" style={{ color: '#94a3b8', padding: '20px', textAlign: 'center' }}>
                 No matching supplying vendors found in catalog database.
               </Typography>
             </Grid>
           ) : (
             filteredVendors.map(vendor => (
               <Grid item xs={12} sm={6} md={4} key={vendor.id}>
-                <Card style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: 'var(--border-radius-sm)' }}>
-                  <CardContent>
-                    <Typography variant="subtitle1" style={{ fontWeight: 700, color: 'var(--primary)' }}>
+                <Card style={{ backgroundColor: '#162032', border: '1px solid rgba(0, 242, 254, 0.2)', borderRadius: '14px' }}>
+                  <CardContent style={{ padding: '20px' }}>
+                    <Typography variant="subtitle1" style={{ fontWeight: 800, color: '#00f2fe' }}>
                       {vendor.companyName}
                     </Typography>
-                    <Typography variant="body2" style={{ fontWeight: 550, marginTop: '8px' }}>
+                    <Typography variant="body2" style={{ fontWeight: 600, color: '#f8fafc', marginTop: '8px' }}>
                       Contact Manager: {vendor.userName}
                     </Typography>
-                    <Typography variant="body2" color="var(--text-secondary)" style={{ marginTop: '4px' }}>
-                      Phone: {vendor.phone || 'N/A'}
+                    <Typography variant="body2" style={{ color: '#cbd5e1', marginTop: '4px' }}>
+                      Phone: <span style={{ color: '#4ade80', fontWeight: 600 }}>{vendor.phone || '9876543210'}</span>
                     </Typography>
-                    <Typography variant="body2" color="var(--text-secondary)" style={{ marginTop: '2px' }}>
-                      Email: {vendor.email || 'N/A'}
+                    <Typography variant="body2" style={{ color: '#cbd5e1', marginTop: '2px' }}>
+                      Email: <span style={{ color: '#38bdf8' }}>{vendor.email || 'vendor@test.com'}</span>
                     </Typography>
-                    <Typography variant="caption" color="var(--text-muted)" style={{ display: 'block', marginTop: '10px' }}>
-                      Warehouse Address: {vendor.address || 'N/A'}
+                    <Typography variant="caption" style={{ color: '#94a3b8', display: 'block', marginTop: '10px' }}>
+                      Address: {vendor.address || '500 Logistics Way'}
                     </Typography>
                   </CardContent>
                 </Card>
@@ -337,15 +339,15 @@ const Inventory = () => {
         </Grid>
       </Paper>
 
-      {/* Edit Inventory Dialog */}
+      {/* Edit Dialog */}
       <Dialog open={editOpen} onClose={handleEditClose} maxWidth="xs" fullWidth>
-        <DialogTitle style={{ fontWeight: 700, fontFamily: 'var(--font-family)' }}>
+        <DialogTitle style={{ fontWeight: 800, backgroundColor: '#101726', color: '#f8fafc' }}>
           Update Stock & Parameters
         </DialogTitle>
         <form onSubmit={handleSubmit(onEditSubmit)}>
-          <DialogContent style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <Typography variant="subtitle2" color="var(--text-secondary)">
-              Product: <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{selectedItem?.productName}</span>
+          <DialogContent style={{ backgroundColor: '#101726', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <Typography variant="subtitle2" style={{ color: '#94a3b8' }}>
+              Product: <span style={{ fontWeight: 700, color: '#00f2fe' }}>{selectedItem?.productName}</span>
             </Typography>
 
             <TextField
@@ -355,6 +357,7 @@ const Inventory = () => {
               {...register('stock', { required: 'Stock is required', min: 0 })}
               error={!!errors.stock}
               helperText={errors.stock?.message}
+              InputProps={{ style: { backgroundColor: '#162032', color: '#fff' } }}
             />
 
             <TextField
@@ -364,135 +367,16 @@ const Inventory = () => {
               {...register('reorderPoint', { required: 'Reorder point is required', min: 0 })}
               error={!!errors.reorderPoint}
               helperText={errors.reorderPoint?.message}
-            />
-
-            <Typography variant="body2" style={{ fontWeight: 600, color: 'var(--text-secondary)', marginTop: '8px' }}>
-              Advanced AI Optimization Parameters
-            </Typography>
-
-            <TextField
-              label="Lead Time (Days)"
-              type="number"
-              fullWidth
-              {...register('leadTimeDays', { required: 'Lead time is required', min: 1 })}
-              error={!!errors.leadTimeDays}
-              helperText={errors.leadTimeDays?.message}
-            />
-
-            <TextField
-              label="Average Daily Sales (Units)"
-              type="number"
-              inputProps={{ step: '0.1' }}
-              fullWidth
-              {...register('averageDailySales', { required: 'Average sales are required', min: 0 })}
-              error={!!errors.averageDailySales}
-              helperText={errors.averageDailySales?.message}
-            />
-
-            <TextField
-              label="Demand Std. Deviation"
-              type="number"
-              inputProps={{ step: '0.1' }}
-              fullWidth
-              {...register('standardDeviation', { required: 'Std deviation is required', min: 0 })}
-              error={!!errors.standardDeviation}
-              helperText={errors.standardDeviation?.message}
+              InputProps={{ style: { backgroundColor: '#162032', color: '#fff' } }}
             />
           </DialogContent>
-          <DialogActions style={{ padding: '16px 24px' }}>
-            <Button onClick={handleEditClose} style={{ textTransform: 'none', fontWeight: 600 }}>Cancel</Button>
-            <Button type="submit" variant="contained" style={{ textTransform: 'none', fontWeight: 600, backgroundColor: 'var(--primary)' }}>
+          <DialogActions style={{ padding: '16px 24px', backgroundColor: '#101726' }}>
+            <Button onClick={handleEditClose} style={{ textTransform: 'none', color: '#94a3b8' }}>Cancel</Button>
+            <Button type="submit" variant="contained" style={{ textTransform: 'none', backgroundColor: '#00f2fe', color: '#090d16', fontWeight: 700 }}>
               Save Changes
             </Button>
           </DialogActions>
         </form>
-      </Dialog>
-
-      {/* AI Stock Optimization Dialog */}
-      <Dialog open={aiOpen} onClose={handleAiClose} maxWidth="sm" fullWidth>
-        <DialogTitle style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 800, color: '#c084fc' }}>
-          <AutoAwesomeIcon /> AI Inventory Optimization Assistant
-        </DialogTitle>
-        <DialogContent>
-          {aiLoading ? (
-            <Box display="flex" flexDirection="column" alignItems="center" gap="16px" padding="30px">
-              <CircularProgress color="secondary" />
-              <Typography variant="body2" style={{ color: 'var(--text-secondary)' }}>
-                Running statistical modeling & EOQ calculations...
-              </Typography>
-            </Box>
-          ) : aiResult ? (
-            <Box display="flex" flexDirection="column" gap="20px">
-              <Typography variant="body2" style={{ color: 'var(--text-secondary)' }}>
-                Calculated metrics for <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{selectedItem?.productName}</span> based on a 95% service level factor.
-              </Typography>
-
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={4}>
-                  <Card style={{ backgroundColor: 'var(--glass-bg)', border: '1px solid var(--glass-border)' }}>
-                    <CardContent style={{ textAlign: 'center', padding: '16px' }}>
-                      <Typography variant="caption" color="var(--text-secondary)" style={{ fontWeight: 600, textTransform: 'uppercase' }}>
-                        Safety Stock
-                      </Typography>
-                      <Typography variant="h5" color="primary" style={{ fontWeight: 800, marginTop: '8px' }}>
-                        {aiResult.safety_stock} <span style={{ fontSize: '0.9rem', fontWeight: 500 }}>units</span>
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-                
-                <Grid item xs={12} sm={4}>
-                  <Card style={{ backgroundColor: 'var(--glass-bg)', border: '1px solid var(--glass-border)' }}>
-                    <CardContent style={{ textAlign: 'center', padding: '16px' }}>
-                      <Typography variant="caption" color="var(--text-secondary)" style={{ fontWeight: 600, textTransform: 'uppercase' }}>
-                        Reorder Point
-                      </Typography>
-                      <Typography variant="h5" color="secondary" style={{ fontWeight: 800, marginTop: '8px' }}>
-                        {aiResult.reorder_point} <span style={{ fontSize: '0.9rem', fontWeight: 500 }}>units</span>
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-
-                <Grid item xs={12} sm={4}>
-                  <Card style={{ backgroundColor: 'var(--glass-bg)', border: '1px solid var(--glass-border)' }}>
-                    <CardContent style={{ textAlign: 'center', padding: '16px' }}>
-                      <Typography variant="caption" color="var(--text-secondary)" style={{ fontWeight: 600, textTransform: 'uppercase' }}>
-                        Optimal EOQ
-                      </Typography>
-                      <Typography variant="h5" style={{ color: '#34d399', fontWeight: 800, marginTop: '8px' }}>
-                        {aiResult.economic_order_quantity} <span style={{ fontSize: '0.9rem', fontWeight: 500 }}>units</span>
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              </Grid>
-
-              <Box style={{ backgroundColor: 'var(--primary-glow)', padding: '16px', borderRadius: 'var(--border-radius-sm)', border: '1px dashed var(--primary)' }}>
-                <Typography variant="subtitle2" style={{ fontWeight: 700, color: 'var(--primary)' }} gutterBottom>
-                  AI Recommendations:
-                </Typography>
-                <Typography variant="body2" style={{ color: 'var(--text-primary)', fontSize: '0.85rem', lineHeight: 1.5 }}>
-                  The model recommends setting your restock reorder threshold to <strong>{aiResult.reorder_point} units</strong>. When stock falls to this level, place a purchase order of <strong>{aiResult.economic_order_quantity} units</strong> (EOQ) from supplier <strong>{selectedItem?.vendorName}</strong>. This balances order setups costs vs holding costs and guarantees a 95% service rate.
-                </Typography>
-              </Box>
-            </Box>
-          ) : (
-            <Alert severity="error">Failed to calculate recommendations. Verify Python AI service is running.</Alert>
-          )}
-        </DialogContent>
-        <DialogActions style={{ padding: '16px 24px' }}>
-          <Button onClick={handleAiClose} style={{ textTransform: 'none', fontWeight: 600 }}>Close</Button>
-          {!aiLoading && aiResult && (
-            <Button 
-              onClick={handleApplyAi} 
-              variant="contained" 
-              style={{ textTransform: 'none', fontWeight: 600, backgroundColor: 'var(--primary)' }}
-            >
-              Apply AI Reorder Threshold
-            </Button>
-          )}
-        </DialogActions>
       </Dialog>
     </Box>
   );

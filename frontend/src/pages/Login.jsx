@@ -8,8 +8,12 @@ import {
   Typography,
   Box,
   Alert,
-  CircularProgress
+  CircularProgress,
+  InputAdornment
 } from '@mui/material';
+import EmailIcon from '@mui/icons-material/Email';
+import LockIcon from '@mui/icons-material/Lock';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 
 const Login = () => {
   const { login } = useAuth();
@@ -34,25 +38,29 @@ const Login = () => {
 
   return (
     <div className="auth-container fade-in">
-      <Box className="auth-card glass-panel">
-        <Typography 
-          variant="h4" 
-          align="center" 
-          gutterBottom 
-          style={{ fontWeight: 800, fontFamily: 'var(--font-family)' }}
-        >
-          Welcome Back
-        </Typography>
+      <Box className="auth-card glass-panel" style={{ backgroundColor: '#101726', border: '1px solid rgba(0, 242, 254, 0.25)', borderRadius: '24px' }}>
+        <Box display="flex" justifyContent="center" alignItems="center" gap="10px" marginBottom="12px">
+          <AutoAwesomeIcon style={{ color: '#00f2fe', fontSize: '32px' }} />
+          <Typography 
+            variant="h4" 
+            align="center" 
+            className="gradient-text"
+            style={{ fontWeight: 800, fontFamily: 'var(--font-family)' }}
+          >
+            RETAIL INTEL
+          </Typography>
+        </Box>
+        
         <Typography 
           variant="body2" 
           align="center" 
-          style={{ color: 'var(--text-secondary)', marginBottom: '32px' }}
+          style={{ color: '#94a3b8', marginBottom: '32px' }}
         >
-          Sign in to access your retail insights dashboard
+          Sign in to access your retail AI & supply chain dashboard
         </Typography>
 
         {error && (
-          <Alert severity="error" style={{ marginBottom: '24px', borderRadius: 'var(--border-radius-sm)' }}>
+          <Alert severity="error" style={{ marginBottom: '24px', borderRadius: '10px' }}>
             {error}
           </Alert>
         )}
@@ -72,8 +80,15 @@ const Login = () => {
               })}
               error={!!errors.email}
               helperText={errors.email?.message}
-              InputLabelProps={{ style: { fontFamily: 'var(--font-family)' } }}
-              InputProps={{ style: { borderRadius: 'var(--border-radius-sm)' } }}
+              InputLabelProps={{ style: { color: '#94a3b8' } }}
+              InputProps={{ 
+                style: { backgroundColor: '#162032', color: '#ffffff', borderRadius: '12px' },
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <EmailIcon style={{ color: '#00f2fe' }} />
+                  </InputAdornment>
+                )
+              }}
             />
 
             <TextField
@@ -84,37 +99,45 @@ const Login = () => {
               {...register('password', { required: 'Password is required' })}
               error={!!errors.password}
               helperText={errors.password?.message}
-              InputLabelProps={{ style: { fontFamily: 'var(--font-family)' } }}
-              InputProps={{ style: { borderRadius: 'var(--border-radius-sm)' } }}
+              InputLabelProps={{ style: { color: '#94a3b8' } }}
+              InputProps={{ 
+                style: { backgroundColor: '#162032', color: '#ffffff', borderRadius: '12px' },
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <LockIcon style={{ color: '#00f2fe' }} />
+                  </InputAdornment>
+                )
+              }}
             />
 
             <Button
               type="submit"
               variant="contained"
-              color="primary"
               size="large"
               disabled={loading}
               style={{
-                borderRadius: 'var(--border-radius-sm)',
-                padding: '12px',
-                fontWeight: 600,
+                borderRadius: '12px',
+                padding: '14px',
+                fontWeight: 800,
                 textTransform: 'none',
                 fontFamily: 'var(--font-family)',
-                backgroundColor: 'var(--primary)',
-                boxShadow: '0 4px 14px 0 var(--primary-glow)'
+                backgroundColor: '#00f2fe',
+                color: '#090d16',
+                boxShadow: '0 4px 20px rgba(0, 242, 254, 0.35)',
+                marginTop: '8px'
               }}
             >
-              {loading ? <CircularProgress size={24} color="inherit" /> : 'Sign In'}
+              {loading ? <CircularProgress size={24} color="inherit" /> : 'Sign In to Platform'}
             </Button>
           </Box>
         </form>
 
-        <Box display="flex" justifyContent="center" marginTop="24px">
-          <Typography variant="body2" style={{ color: 'var(--text-secondary)' }}>
+        <Box display="flex" justifyContent="center" marginTop="28px">
+          <Typography variant="body2" style={{ color: '#94a3b8' }}>
             Don't have an account?{' '}
             <Link 
               to="/register" 
-              style={{ color: 'var(--primary)', fontWeight: 600, textDecoration: 'none' }}
+              style={{ color: '#00f2fe', fontWeight: 700, textDecoration: 'none' }}
             >
               Sign Up
             </Link>
