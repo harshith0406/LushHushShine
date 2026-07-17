@@ -10,7 +10,7 @@ let auth;
 let isMock = false;
 
 // Path to save mock Firestore collections
-const DATA_DIR = path.join(__dirname, '../../data');
+const DATA_DIR = process.env.VERCEL || process.env.AWS_REGION ? '/tmp/data' : path.join(__dirname, '../../data');
 if (!fs.existsSync(DATA_DIR)) {
   fs.mkdirSync(DATA_DIR, { recursive: true });
 }

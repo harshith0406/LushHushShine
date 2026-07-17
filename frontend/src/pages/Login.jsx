@@ -107,15 +107,17 @@ const Login = () => {
                 })}
                 error={!!errors.email}
                 helperText={errors.email?.message}
-                InputProps={{ 
-                  style: { 
+                sx={{ 
+                  '& .MuiOutlinedInput-root': { 
                     backgroundColor: '#f5f7fa', 
                     borderRadius: '12px', 
-                    fontSize: '0.95rem',
+                    padding: '4px 8px',
                     fontFamily: 'var(--font-family)',
+                  },
+                  '& .MuiInputBase-input': {
                     color: '#0f172a',
-                    padding: '4px 8px'
-                  } 
+                    fontSize: '0.95rem'
+                  }
                 }}
               />
 
@@ -127,15 +129,7 @@ const Login = () => {
                 {...register('password', { required: 'Password is required' })}
                 error={!!errors.password}
                 helperText={errors.password?.message}
-                InputProps={{ 
-                  style: { 
-                    backgroundColor: '#f5f7fa', 
-                    borderRadius: '12px', 
-                    fontSize: '0.95rem',
-                    fontFamily: 'var(--font-family)',
-                    color: '#0f172a',
-                    padding: '4px 8px'
-                  },
+                InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
                       <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
@@ -143,6 +137,18 @@ const Login = () => {
                       </IconButton>
                     </InputAdornment>
                   )
+                }}
+                sx={{ 
+                  '& .MuiOutlinedInput-root': { 
+                    backgroundColor: '#f5f7fa', 
+                    borderRadius: '12px', 
+                    padding: '4px 8px',
+                    fontFamily: 'var(--font-family)',
+                  },
+                  '& .MuiInputBase-input': {
+                    color: '#0f172a',
+                    fontSize: '0.95rem'
+                  }
                 }}
               />
 
