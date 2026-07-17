@@ -55,14 +55,15 @@ const Register = () => {
           <Box display="flex" alignItems="center" gap="14px" marginBottom="28px">
             <Box 
               style={{ 
-                width: '46px', 
-                height: '46px', 
-                borderRadius: '12px', 
+                width: '44px', 
+                height: '44px', 
+                borderRadius: '10px', 
                 overflow: 'hidden', 
                 display: 'flex', 
                 alignItems: 'center', 
                 justifyContent: 'center',
-                backgroundColor: '#ffffff'
+                backgroundColor: '#ffffff',
+                border: '1px solid #e2e8f0'
               }}
             >
               <img 
@@ -94,31 +95,35 @@ const Register = () => {
               <Box display="flex" gap="16px" flexWrap="wrap">
                 <Box flex={1} minWidth="220px">
                   <TextField
-                    placeholder="Company Name"
+                    label="Company Name"
                     variant="outlined"
                     fullWidth
                     {...register('companyName', { required: 'Company name is required' })}
                     error={!!errors.companyName}
                     helperText={errors.companyName?.message}
-                    InputProps={{ style: { backgroundColor: '#f5f7fa', borderRadius: '12px', fontSize: '0.92rem', color: '#0f172a' } }}
+                    InputLabelProps={{ style: { color: '#475569', fontWeight: 500 } }}
+                    InputProps={{ style: { backgroundColor: '#f8fafc', borderRadius: '12px', fontSize: '0.92rem', color: '#0f172a' } }}
+                    inputProps={{ style: { color: '#0f172a', fontWeight: 600 } }}
                   />
                 </Box>
 
                 <Box flex={1} minWidth="220px">
                   <TextField
-                    placeholder="User Name"
+                    label="User Name"
                     variant="outlined"
                     fullWidth
                     {...register('userName', { required: 'User name is required' })}
                     error={!!errors.userName}
                     helperText={errors.userName?.message}
-                    InputProps={{ style: { backgroundColor: '#f5f7fa', borderRadius: '12px', fontSize: '0.92rem', color: '#0f172a' } }}
+                    InputLabelProps={{ style: { color: '#475569', fontWeight: 500 } }}
+                    InputProps={{ style: { backgroundColor: '#f8fafc', borderRadius: '12px', fontSize: '0.92rem', color: '#0f172a' } }}
+                    inputProps={{ style: { color: '#0f172a', fontWeight: 600 } }}
                   />
                 </Box>
               </Box>
 
               <TextField
-                placeholder="Email Address"
+                label="Email Address"
                 variant="outlined"
                 fullWidth
                 {...register('email', { 
@@ -130,13 +135,15 @@ const Register = () => {
                 })}
                 error={!!errors.email}
                 helperText={errors.email?.message}
-                InputProps={{ style: { backgroundColor: '#f5f7fa', borderRadius: '12px', fontSize: '0.92rem', color: '#0f172a' } }}
+                InputLabelProps={{ style: { color: '#475569', fontWeight: 500 } }}
+                InputProps={{ style: { backgroundColor: '#f8fafc', borderRadius: '12px', fontSize: '0.92rem', color: '#0f172a' } }}
+                inputProps={{ style: { color: '#0f172a', fontWeight: 600 } }}
               />
 
               <Box display="flex" gap="16px" flexWrap="wrap">
                 <Box flex={1} minWidth="220px">
                   <TextField
-                    placeholder="Password"
+                    label="Password"
                     type="password"
                     variant="outlined"
                     fullWidth
@@ -149,51 +156,59 @@ const Register = () => {
                     })}
                     error={!!errors.password}
                     helperText={errors.password?.message}
-                    InputProps={{ style: { backgroundColor: '#f5f7fa', borderRadius: '12px', fontSize: '0.92rem', color: '#0f172a' } }}
+                    InputLabelProps={{ style: { color: '#475569', fontWeight: 500 } }}
+                    InputProps={{ style: { backgroundColor: '#f8fafc', borderRadius: '12px', fontSize: '0.92rem', color: '#0f172a' } }}
+                    inputProps={{ style: { color: '#0f172a', fontWeight: 600 } }}
                   />
                 </Box>
 
                 <Box flex={1} minWidth="220px">
                   <TextField
-                    placeholder="Phone Number"
+                    label="Phone Number"
                     variant="outlined"
                     fullWidth
                     {...register('phone', { required: 'Phone number is required' })}
                     error={!!errors.phone}
                     helperText={errors.phone?.message}
-                    InputProps={{ style: { backgroundColor: '#f5f7fa', borderRadius: '12px', fontSize: '0.92rem', color: '#0f172a' } }}
+                    InputLabelProps={{ style: { color: '#475569', fontWeight: 500 } }}
+                    InputProps={{ style: { backgroundColor: '#f8fafc', borderRadius: '12px', fontSize: '0.92rem', color: '#0f172a' } }}
+                    inputProps={{ style: { color: '#0f172a', fontWeight: 600 } }}
                   />
                 </Box>
               </Box>
 
               <TextField
-                placeholder="Address"
+                label="Address"
                 variant="outlined"
                 fullWidth
                 {...register('address', { required: 'Address is required' })}
                 error={!!errors.address}
                 helperText={errors.address?.message}
-                InputProps={{ style: { backgroundColor: '#f5f7fa', borderRadius: '12px', fontSize: '0.92rem', color: '#0f172a' } }}
+                InputLabelProps={{ style: { color: '#475569', fontWeight: 500 } }}
+                InputProps={{ style: { backgroundColor: '#f8fafc', borderRadius: '12px', fontSize: '0.92rem', color: '#0f172a' } }}
+                inputProps={{ style: { color: '#0f172a', fontWeight: 600 } }}
               />
 
               <TextField
-                placeholder="Business License ID / Certificate Number"
+                label="Business License ID / Certificate Number"
                 variant="outlined"
                 fullWidth
                 {...register('licenseNo', { required: 'Business License ID is required' })}
                 error={!!errors.licenseNo}
                 helperText={errors.licenseNo?.message}
-                InputProps={{ style: { backgroundColor: '#f5f7fa', borderRadius: '12px', fontSize: '0.92rem', color: '#0f172a' } }}
+                InputLabelProps={{ style: { color: '#475569', fontWeight: 500 } }}
+                InputProps={{ style: { backgroundColor: '#f8fafc', borderRadius: '12px', fontSize: '0.92rem', color: '#0f172a' } }}
+                inputProps={{ style: { color: '#0f172a', fontWeight: 600 } }}
               />
 
               <FormControl fullWidth error={!!errors.role}>
-                <InputLabel id="role-select-label" style={{ fontFamily: 'var(--font-family)' }}>Select User Role</InputLabel>
+                <InputLabel id="role-select-label" style={{ color: '#475569', fontWeight: 500 }}>Select User Role</InputLabel>
                 <Select
                   labelId="role-select-label"
                   label="Select User Role"
                   defaultValue=""
                   {...register('role', { required: 'Role is required' })}
-                  style={{ borderRadius: '12px', backgroundColor: '#f5f7fa', color: '#0f172a' }}
+                  style={{ borderRadius: '12px', backgroundColor: '#f8fafc', color: '#0f172a', fontWeight: 600 }}
                 >
                   <MenuItem value="Selling Place">Selling Place (Supermarket / Retail Store)</MenuItem>
                   <MenuItem value="Vendor">Vendor (Product Supplier)</MenuItem>
@@ -238,7 +253,7 @@ const Register = () => {
         </Box>
       </Box>
 
-      {/* Right Column - Artistic Banner with Floating Shapes */}
+      {/* Right Column - Artistic Banner with Positioned Text */}
       <Box 
         style={{ 
           flex: '1.4', 
@@ -267,11 +282,12 @@ const Register = () => {
           }} 
         />
 
-        <Box style={{ position: 'absolute', bottom: '150px', left: '120px', width: '120px', height: '180px', borderRadius: '90px 90px 0 0', background: 'linear-gradient(180deg, #ff6b6b 0%, #ff8e8e 100%)', boxShadow: '0 20px 40px rgba(255,107,107,0.2)' }} />
-        <Box style={{ position: 'absolute', bottom: '80px', left: '260px', width: '160px', height: '80px', borderRadius: '80px 80px 0 0', transform: 'rotate(180deg)', background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' }} />
-        <Box style={{ position: 'absolute', bottom: '100px', right: '80px', width: '140px', height: '140px', borderRadius: '30px', transform: 'rotate(45deg)', background: 'linear-gradient(135deg, #b8c6db 0%, #f5f7fa 100%)', boxShadow: '0 15px 35px rgba(0,0,0,0.06)' }} />
+        <Box style={{ position: 'absolute', bottom: '120px', left: '100px', width: '120px', height: '180px', borderRadius: '90px 90px 0 0', background: 'linear-gradient(180deg, #ff6b6b 0%, #ff8e8e 100%)', boxShadow: '0 20px 40px rgba(255,107,107,0.2)' }} />
+        <Box style={{ position: 'absolute', bottom: '60px', left: '240px', width: '160px', height: '80px', borderRadius: '80px 80px 0 0', transform: 'rotate(180deg)', background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' }} />
+        <Box style={{ position: 'absolute', bottom: '80px', right: '60px', width: '140px', height: '140px', borderRadius: '30px', transform: 'rotate(45deg)', background: 'linear-gradient(135deg, #b8c6db 0%, #f5f7fa 100%)', boxShadow: '0 15px 35px rgba(0,0,0,0.06)' }} />
 
-        <Box style={{ position: 'relative', zIndex: 2, maxWidth: '520px', textAlign: 'left' }}>
+        {/* Headline Banner Text - Positioned Down and Right */}
+        <Box style={{ position: 'relative', zIndex: 2, maxWidth: '480px', textAlign: 'left', marginTop: '60px', marginLeft: '60px' }}>
           <Typography 
             variant="h2" 
             style={{ 
@@ -279,13 +295,13 @@ const Register = () => {
               fontFamily: 'var(--font-family)', 
               color: '#0f172a', 
               lineHeight: 1.15,
-              fontSize: '3rem',
+              fontSize: '2.8rem',
               letterSpacing: '-0.03em'
             }}
           >
             Changing the way retail AI runs
           </Typography>
-          <Typography variant="h6" style={{ marginTop: '20px', color: '#64748b', fontWeight: 500, fontFamily: 'var(--font-family)', lineHeight: 1.5 }}>
+          <Typography variant="h6" style={{ marginTop: '20px', color: '#64748b', fontWeight: 500, fontFamily: 'var(--font-family)', lineHeight: 1.5, fontSize: '1.05rem' }}>
             Real-time supply chain forecasting, multimodal OCR scanning, and Hugging Face inventory optimization.
           </Typography>
         </Box>

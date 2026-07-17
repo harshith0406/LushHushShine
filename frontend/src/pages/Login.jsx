@@ -236,7 +236,7 @@ const Login = () => {
         <Box style={{ position: 'absolute', bottom: '80px', left: '260px', width: '160px', height: '80px', borderRadius: '80px 80px 0 0', transform: 'rotate(180deg)', background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' }} />
         <Box style={{ position: 'absolute', bottom: '100px', right: '80px', width: '140px', height: '140px', borderRadius: '30px', transform: 'rotate(45deg)', background: 'linear-gradient(135deg, #b8c6db 0%, #f5f7fa 100%)', boxShadow: '0 15px 35px rgba(0,0,0,0.06)' }} />
 
-        <Box style={{ position: 'relative', zIndex: 2, maxWidth: '520px', textAlign: 'left' }}>
+        <Box style={{ position: 'relative', zIndex: 2, maxWidth: '480px', textAlign: 'left', marginTop: '60px', marginLeft: '60px' }}>
           <Typography 
             variant="h2" 
             style={{ 
@@ -244,13 +244,13 @@ const Login = () => {
               fontFamily: 'var(--font-family)', 
               color: '#0f172a', 
               lineHeight: 1.15,
-              fontSize: '3rem',
+              fontSize: '2.8rem',
               letterSpacing: '-0.03em'
             }}
           >
             Changing the way retail AI runs
           </Typography>
-          <Typography variant="h6" style={{ marginTop: '20px', color: '#64748b', fontWeight: 500, fontFamily: 'var(--font-family)', lineHeight: 1.5 }}>
+          <Typography variant="h6" style={{ marginTop: '20px', color: '#64748b', fontWeight: 500, fontFamily: 'var(--font-family)', lineHeight: 1.5, fontSize: '1.05rem' }}>
             Real-time supply chain forecasting, multimodal OCR scanning, and Hugging Face inventory optimization.
           </Typography>
         </Box>
