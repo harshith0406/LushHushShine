@@ -31,6 +31,11 @@ HF_BASE_URL = os.environ.get("HUGGINGFACE_BASE_URL", "https://router.huggingface
 HF_MODEL = os.environ.get("HUGGINGFACE_MODEL", "meta-llama/Llama-3.1-8B-Instruct:novita")
 
 def get_backend_url():
+    if os.environ.get("VERCEL_PROJECT_PRODUCTION_URL"):
+        return f"https://{os.environ.get('VERCEL_PROJECT_PRODUCTION_URL')}"
+    if os.environ.get("VERCEL_URL"):
+        return f"https://{os.environ.get('VERCEL_URL')}"
+        
     for port in [5000, 5002, 5001]:
         try:
             r = requests.get(f"http://localhost:{port}/", timeout=1)
