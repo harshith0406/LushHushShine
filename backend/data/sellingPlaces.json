@@ -58,5 +58,15 @@
     "address": "100 Retail Plaza",
     "licenseNo": "LIC-SELLER-999",
     "createdAt": "2026-07-18T10:55:20.915Z"
+  },
+  "k2i5rnt27q": {
+    "id": "k2i5rnt27q",
+    "companyName": "Test Store Inc.",
+    "userName": "Store Manager",
+    "email": "seller_ukfi@test.com",
+    "phone": "1234567890",
+    "address": "100 Retail Plaza",
+    "licenseNo": "LIC-SELLER-999",
+    "createdAt": "2026-07-18T12:13:43.666Z"
   }
 }

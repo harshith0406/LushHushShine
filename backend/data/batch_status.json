@@ -37,5 +37,18 @@
     "mfgDate": "2026-07-10T00:00:00.000Z",
     "expDate": "2026-10-10T00:00:00.000Z",
     "createdAt": "2026-07-18T10:55:20.968Z"
+  },
+  "B-GEN-356YHU": {
+    "batchNo": "B-GEN-356YHU",
+    "itemNbr": "TEST-SKU-10C6",
+    "mfgDate": "2026-07-18",
+    "expDate": "2027-01-18"
+  },
+  "B-TEST-SKU-10C6": {
+    "batchNo": "B-TEST-SKU-10C6",
+    "itemNbr": "TEST-SKU-10C6",
+    "mfgDate": "2026-07-10T00:00:00.000Z",
+    "expDate": "2026-10-10T00:00:00.000Z",
+    "createdAt": "2026-07-18T12:13:43.711Z"
   }
 }
