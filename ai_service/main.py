@@ -530,7 +530,15 @@ async def chat_agent(req: Request, data: ChatRequest):
                     if tool_name == "get_low_stock_items":
                         r = requests.get(f"{backend_base}/api/inventory", headers=headers, timeout=5)
                         if r.status_code == 200:
-                            low_stock = [item for item in r.json() if int(item.get("stock") or 0) <= int(item.get("reorderPoint") or 10)]
+                            low_stock = []
+                            for item in r.json():
+                                try:
+                                    s = int(float(item.get("stock") if item.get("stock") is not None else 0))
+                                    r_pt = int(float(item.get("reorderPoint") if item.get("reorderPoint") is not None else 10))
+                                    if s <= r_pt:
+                                        low_stock.append(item)
+                                except (ValueError, TypeError):
+                                    pass
                             if not low_stock:
                                 db_context = "Database checked: All inventory items are fully stocked above their reorder points. No low stock items found."
                             else:
