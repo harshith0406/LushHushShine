@@ -399,7 +399,15 @@ class PostgresDocRef {
     if (options.merge) {
       const existing = await this.get();
       if (existing.exists) {
-        finalContent = { ...existing.data(), ...content };
+        const applyOps = (ex, cur) => {
+          const fnl = { ...(ex || {}) };
+          for (const [k, v] of Object.entries(cur)) {
+            if (v && typeof v === 'object' && 'operand' in v) fnl[k] = (fnl[k] || 0) + v.operand;
+            else fnl[k] = v;
+          }
+          return fnl;
+        };
+        finalContent = applyOps(existing.data(), content);
       }
     }
     await this.sql.query(
@@ -415,7 +423,15 @@ class PostgresDocRef {
     if (!existing.exists) {
       throw new Error(`Document with ID ${this.id} does not exist in collection ${this.collectionName}`);
     }
-    const finalContent = { ...existing.data(), ...content };
+    const applyOps = (ex, cur) => {
+      const fnl = { ...(ex || {}) };
+      for (const [k, v] of Object.entries(cur)) {
+        if (v && typeof v === 'object' && 'operand' in v) fnl[k] = (fnl[k] || 0) + v.operand;
+        else fnl[k] = v;
+      }
+      return fnl;
+    };
+    const finalContent = applyOps(existing.data(), content);
     await this.sql.query(
       `UPDATE "${this.collectionName}" SET data = $2 WHERE id = $1`,
       [this.id, JSON.stringify(finalContent)]

@@ -1,1 +1,58 @@
-{}
+{
+  "p_bread": {
+    "productId": "p_bread",
+    "name": "Whole Wheat Bread",
+    "category": "Bakery",
+    "price": 3.5,
+    "unitCost": 2.1,
+    "vendorId": "mfyvtejbb4d"
+  },
+  "p_milk": {
+    "productId": "p_milk",
+    "name": "Organic Whole Milk",
+    "category": "Dairy",
+    "price": 4.8,
+    "unitCost": 3,
+    "vendorId": "wbuefzjzmc"
+  },
+  "p_oil": {
+    "productId": "p_oil",
+    "name": "Sunflower Oil 1L",
+    "category": "Pantry",
+    "price": 6.5,
+    "unitCost": 4,
+    "vendorId": "5smfttaljk7"
+  },
+  "p_nuts": {
+    "productId": "p_nuts",
+    "name": "Mixed Nuts 500g",
+    "category": "Snacks",
+    "price": 12,
+    "unitCost": 6.9,
+    "vendorId": "mfyvtejbb4d"
+  },
+  "p_paste": {
+    "productId": "p_paste",
+    "name": "Mint Toothpaste",
+    "category": "Personal Care",
+    "price": 2.5,
+    "unitCost": 1.2,
+    "vendorId": "wbuefzjzmc"
+  },
+  "p_rice": {
+    "productId": "p_rice",
+    "name": "Basmati Rice 5kg",
+    "category": "Pantry",
+    "price": 18,
+    "unitCost": 12,
+    "vendorId": "5smfttaljk7"
+  },
+  "p_oj": {
+    "productId": "p_oj",
+    "name": "Fresh Orange Juice",
+    "category": "Beverages",
+    "price": 5,
+    "unitCost": 3.2,
+    "vendorId": "mfyvtejbb4d"
+  }
+}

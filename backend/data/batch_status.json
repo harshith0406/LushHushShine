@@ -1,167 +1,152 @@
 {
-  "BATCH-DAIRY-001-A": {
-    "batchNo": "BATCH-DAIRY-001-A",
-    "productId": "SKU-DAIRY-001",
-    "productName": "Full Cream Milk 1L",
-    "mfgDate": "2026-07-01",
-    "expDate": "2026-07-22",
-    "quantity": 120,
-    "sellingPlaceId": "STORE-MAIN-001",
-    "vendorId": "VENDOR-NEXUS-001",
-    "createdAt": "2026-07-01T10:00:00.000Z"
-  },
-  "BATCH-DAIRY-002-A": {
-    "batchNo": "BATCH-DAIRY-002-A",
-    "productId": "SKU-DAIRY-002",
-    "productName": "Salted Butter 500g",
-    "mfgDate": "2026-06-20",
-    "expDate": "2026-08-20",
-    "quantity": 80,
-    "sellingPlaceId": "STORE-MAIN-001",
-    "vendorId": "VENDOR-NEXUS-001",
-    "createdAt": "2026-06-20T10:00:00.000Z"
-  },
-  "BATCH-BAKE-003-A": {
-    "batchNo": "BATCH-BAKE-003-A",
-    "productId": "SKU-BAKE-003",
-    "productName": "Whole Wheat Bread 400g",
-    "mfgDate": "2026-07-16",
-    "expDate": "2026-07-21",
-    "quantity": 60,
-    "sellingPlaceId": "STORE-MAIN-001",
-    "vendorId": "VENDOR-NEXUS-001",
-    "createdAt": "2026-07-16T10:00:00.000Z"
-  },
-  "BATCH-BEVE-004-A": {
-    "batchNo": "BATCH-BEVE-004-A",
-    "productId": "SKU-BEVE-004",
-    "productName": "Orange Juice 1L",
-    "mfgDate": "2026-07-05",
-    "expDate": "2026-08-05",
-    "quantity": 100,
-    "sellingPlaceId": "STORE-MAIN-001",
-    "vendorId": "VENDOR-NEXUS-001",
-    "createdAt": "2026-07-05T10:00:00.000Z"
-  },
-  "BATCH-SNAC-005-A": {
-    "batchNo": "BATCH-SNAC-005-A",
-    "productId": "SKU-SNAC-005",
-    "productName": "Classic Potato Chips 150g",
-    "mfgDate": "2026-06-01",
-    "expDate": "2026-11-01",
-    "quantity": 200,
-    "sellingPlaceId": "STORE-MAIN-001",
-    "vendorId": "VENDOR-APEX-002",
-    "createdAt": "2026-06-01T10:00:00.000Z"
-  },
-  "BATCH-SNAC-006-A": {
-    "batchNo": "BATCH-SNAC-006-A",
-    "productId": "SKU-SNAC-006",
-    "productName": "Mixed Nuts 250g",
-    "mfgDate": "2026-05-15",
-    "expDate": "2026-07-25",
-    "quantity": 50,
-    "sellingPlaceId": "STORE-MAIN-001",
-    "vendorId": "VENDOR-APEX-002",
-    "createdAt": "2026-05-15T10:00:00.000Z"
-  },
-  "BATCH-HYGN-007-A": {
-    "batchNo": "BATCH-HYGN-007-A",
-    "productId": "SKU-HYGN-007",
-    "productName": "Antibacterial Hand Soap 500ml",
-    "mfgDate": "2026-06-10",
-    "expDate": "2027-06-10",
-    "quantity": 90,
-    "sellingPlaceId": "STORE-MAIN-001",
-    "vendorId": "VENDOR-APEX-002",
-    "createdAt": "2026-06-10T10:00:00.000Z"
-  },
-  "BATCH-HYSE-008-A": {
-    "batchNo": "BATCH-HYSE-008-A",
-    "productId": "SKU-HYSE-008",
-    "productName": "Toothpaste Whitening 100g",
-    "mfgDate": "2026-06-01",
-    "expDate": "2027-06-01",
-    "quantity": 70,
-    "sellingPlaceId": "STORE-MAIN-001",
-    "vendorId": "VENDOR-APEX-002",
-    "createdAt": "2026-06-01T10:00:00.000Z"
-  },
-  "BATCH-GROC-009-A": {
-    "batchNo": "BATCH-GROC-009-A",
-    "productId": "SKU-GROC-009",
-    "productName": "Basmati Rice 5kg",
-    "mfgDate": "2026-04-01",
-    "expDate": "2027-04-01",
-    "quantity": 150,
-    "sellingPlaceId": "STORE-MAIN-001",
-    "vendorId": "VENDOR-NEXUS-001",
-    "createdAt": "2026-04-01T10:00:00.000Z"
-  },
-  "BATCH-GROC-010-A": {
-    "batchNo": "BATCH-GROC-010-A",
-    "productId": "SKU-GROC-010",
-    "productName": "Refined Sunflower Oil 1L",
-    "mfgDate": "2026-05-01",
-    "expDate": "2027-05-01",
-    "quantity": 130,
-    "sellingPlaceId": "STORE-MAIN-001",
-    "vendorId": "VENDOR-NEXUS-001",
-    "createdAt": "2026-05-01T10:00:00.000Z"
-  },
-  "B-TEST-SKU-0YSN": {
-    "batchNo": "B-TEST-SKU-0YSN",
-    "productId": "TEST-SKU-0YSN",
+  "STORE-MAIN-001_b_milk": {
+    "batchId": "B-MILK-0",
+    "productId": "p_milk",
     "productName": "Organic Whole Milk",
-    "mfgDate": "2026-07-10",
-    "expDate": "2026-07-28",
-    "quantity": 30,
-    "sellingPlaceId": "4s7s9imdbc3",
-    "vendorId": "5smfttaljk7",
-    "createdAt": "2026-07-10T10:00:00.000Z"
+    "expiryDate": "2026-07-25T17:41:30.018Z",
+    "initialQty": 100,
+    "remainingQty": 46,
+    "status": "active",
+    "sellingPlaceId": "STORE-MAIN-001"
   },
-  "B-TEST-SKU-ZM3B": {
-    "batchNo": "B-TEST-SKU-ZM3B",
-    "itemNbr": "TEST-SKU-ZM3B",
-    "mfgDate": "2026-07-10T00:00:00.000Z",
-    "expDate": "2026-10-10T00:00:00.000Z",
-    "createdAt": "2026-07-17T20:03:48.427Z"
+  "STORE-MAIN-001_b_bread": {
+    "batchId": "B-BREAD-0",
+    "productId": "p_bread",
+    "productName": "Whole Wheat Bread",
+    "expiryDate": "2026-07-19T17:41:30.018Z",
+    "initialQty": 50,
+    "remainingQty": 2,
+    "status": "active",
+    "sellingPlaceId": "STORE-MAIN-001"
   },
-  "B-GEN-UT11ND": {
-    "batchNo": "B-GEN-UT11ND",
-    "itemNbr": "TEST-SKU-O0JM",
-    "mfgDate": "2026-07-18",
-    "expDate": "2027-01-18"
+  "STORE-MAIN-001_b_oj": {
+    "batchId": "B-OJ-0",
+    "productId": "p_oj",
+    "productName": "Fresh Orange Juice",
+    "expiryDate": "2026-08-17T17:41:30.018Z",
+    "initialQty": 150,
+    "remainingQty": 25,
+    "status": "active",
+    "sellingPlaceId": "STORE-MAIN-001"
   },
-  "B-TEST-SKU-O0JM": {
-    "batchNo": "B-TEST-SKU-O0JM",
-    "itemNbr": "TEST-SKU-O0JM",
-    "mfgDate": "2026-07-10T00:00:00.000Z",
-    "expDate": "2026-10-10T00:00:00.000Z",
-    "createdAt": "2026-07-18T10:55:20.968Z"
+  "qsnfaze1hv_b_milk": {
+    "batchId": "B-MILK-1",
+    "productId": "p_milk",
+    "productName": "Organic Whole Milk",
+    "expiryDate": "2026-07-25T17:41:30.018Z",
+    "initialQty": 100,
+    "remainingQty": 46,
+    "status": "active",
+    "sellingPlaceId": "qsnfaze1hv"
   },
-  "B-GEN-356YHU": {
-    "batchNo": "B-GEN-356YHU",
-    "itemNbr": "TEST-SKU-10C6",
-    "mfgDate": "2026-07-18",
-    "expDate": "2027-01-18"
+  "qsnfaze1hv_b_bread": {
+    "batchId": "B-BREAD-1",
+    "productId": "p_bread",
+    "productName": "Whole Wheat Bread",
+    "expiryDate": "2026-07-19T17:41:30.018Z",
+    "initialQty": 50,
+    "remainingQty": 2,
+    "status": "active",
+    "sellingPlaceId": "qsnfaze1hv"
   },
-  "B-TEST-SKU-10C6": {
-    "batchNo": "B-TEST-SKU-10C6",
-    "itemNbr": "TEST-SKU-10C6",
-    "mfgDate": "2026-07-10T00:00:00.000Z",
-    "expDate": "2026-10-10T00:00:00.000Z",
-    "createdAt": "2026-07-18T12:13:43.711Z"
+  "qsnfaze1hv_b_oj": {
+    "batchId": "B-OJ-1",
+    "productId": "p_oj",
+    "productName": "Fresh Orange Juice",
+    "expiryDate": "2026-08-17T17:41:30.018Z",
+    "initialQty": 150,
+    "remainingQty": 25,
+    "status": "active",
+    "sellingPlaceId": "qsnfaze1hv"
   },
-  "B-EXP-001": {
-    "batchNo": "B-EXP-001",
-    "productId": "SKU-DAIRY-001",
-    "productName": "Full Cream Milk 1L",
-    "mfgDate": "2026-07-01",
-    "expDate": "2026-07-20",
-    "quantity": 25,
-    "sellingPlaceId": "STORE-MAIN-001",
-    "vendorId": "VENDOR-NEXUS-001",
-    "createdAt": "2026-07-01T10:00:00.000Z"
+  "4s7s9imdbc3_b_milk": {
+    "batchId": "B-MILK-2",
+    "productId": "p_milk",
+    "productName": "Organic Whole Milk",
+    "expiryDate": "2026-07-25T17:41:30.018Z",
+    "initialQty": 100,
+    "remainingQty": 46,
+    "status": "active",
+    "sellingPlaceId": "4s7s9imdbc3"
+  },
+  "4s7s9imdbc3_b_bread": {
+    "batchId": "B-BREAD-2",
+    "productId": "p_bread",
+    "productName": "Whole Wheat Bread",
+    "expiryDate": "2026-07-19T17:41:30.018Z",
+    "initialQty": 50,
+    "remainingQty": 2,
+    "status": "active",
+    "sellingPlaceId": "4s7s9imdbc3"
+  },
+  "4s7s9imdbc3_b_oj": {
+    "batchId": "B-OJ-2",
+    "productId": "p_oj",
+    "productName": "Fresh Orange Juice",
+    "expiryDate": "2026-08-17T17:41:30.018Z",
+    "initialQty": 150,
+    "remainingQty": 25,
+    "status": "active",
+    "sellingPlaceId": "4s7s9imdbc3"
+  },
+  "upsc89p04l_b_milk": {
+    "batchId": "B-MILK-3",
+    "productId": "p_milk",
+    "productName": "Organic Whole Milk",
+    "expiryDate": "2026-07-25T17:41:30.018Z",
+    "initialQty": 100,
+    "remainingQty": 46,
+    "status": "active",
+    "sellingPlaceId": "upsc89p04l"
+  },
+  "upsc89p04l_b_bread": {
+    "batchId": "B-BREAD-3",
+    "productId": "p_bread",
+    "productName": "Whole Wheat Bread",
+    "expiryDate": "2026-07-19T17:41:30.018Z",
+    "initialQty": 50,
+    "remainingQty": 2,
+    "status": "active",
+    "sellingPlaceId": "upsc89p04l"
+  },
+  "upsc89p04l_b_oj": {
+    "batchId": "B-OJ-3",
+    "productId": "p_oj",
+    "productName": "Fresh Orange Juice",
+    "expiryDate": "2026-08-17T17:41:30.018Z",
+    "initialQty": 150,
+    "remainingQty": 25,
+    "status": "active",
+    "sellingPlaceId": "upsc89p04l"
+  },
+  "k2i5rnt27q_b_milk": {
+    "batchId": "B-MILK-4",
+    "productId": "p_milk",
+    "productName": "Organic Whole Milk",
+    "expiryDate": "2026-07-25T17:41:30.018Z",
+    "initialQty": 100,
+    "remainingQty": 46,
+    "status": "active",
+    "sellingPlaceId": "k2i5rnt27q"
+  },
+  "k2i5rnt27q_b_bread": {
+    "batchId": "B-BREAD-4",
+    "productId": "p_bread",
+    "productName": "Whole Wheat Bread",
+    "expiryDate": "2026-07-19T17:41:30.018Z",
+    "initialQty": 50,
+    "remainingQty": 2,
+    "status": "active",
+    "sellingPlaceId": "k2i5rnt27q"
+  },
+  "k2i5rnt27q_b_oj": {
+    "batchId": "B-OJ-4",
+    "productId": "p_oj",
+    "productName": "Fresh Orange Juice",
+    "expiryDate": "2026-08-17T17:41:30.018Z",
+    "initialQty": 150,
+    "remainingQty": 25,
+    "status": "active",
+    "sellingPlaceId": "k2i5rnt27q"
   }
 }

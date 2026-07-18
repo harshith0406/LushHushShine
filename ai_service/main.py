@@ -28,7 +28,7 @@ app.add_middleware(
 
 HF_API_KEY = os.environ.get("HUGGINGFACE_API_KEY", "")
 HF_BASE_URL = os.environ.get("HUGGINGFACE_BASE_URL", "https://router.huggingface.co/v1")
-HF_MODEL = os.environ.get("HUGGINGFACE_MODEL", os.environ.get("HUGGINGFACE_MODE", "meta-llama/Meta-Llama-3-8B-Instruct"))
+HF_MODEL = os.environ.get("HUGGINGFACE_MODEL", os.environ.get("HUGGINGFACE_MODE", "meta-llama/Meta-Llama-3.1-8B-Instruct"))
 
 def get_backend_url():
     if os.environ.get("VERCEL_PROJECT_PRODUCTION_URL"):
@@ -64,6 +64,14 @@ def calculate_linear_regression(y: List[float]):
     n = len(y)
     if n < 2:
         return 0.0, (y[0] if n == 1 else 0.0)
+
+def parse_number(val, default=0.0):
+    if isinstance(val, dict):
+        return float(val.get("operand", default)) if "operand" in val else default
+    try:
+        return float(val)
+    except (ValueError, TypeError):
+        return default
     x = list(range(n))
     mean_x = sum(x) / n
     mean_y = sum(y) / n
@@ -663,7 +671,7 @@ def classify_abc_xyz(data: ABCXYZRequest):
 
     # ABC — sort by soldQty * price (revenue proxy), use soldQty if price not available
     def revenue(item):
-        return item.get("soldQty", 0) * item.get("price", 1.0)
+        return parse_number(item.get("soldQty", 0)) * parse_number(item.get("price", 1.0))
 
     sorted_items = sorted(items, key=revenue, reverse=True)
     total_rev = sum(revenue(i) for i in sorted_items)
@@ -709,9 +717,9 @@ def detect_ghost_skus(data: GhostSKURequest):
     healthy = []
 
     for item in items:
-        sold = item.get("soldQty", 0)
-        avg_daily = item.get("averageDailySales", 0)
-        available = item.get("availableQty", item.get("stock", 0))
+        sold = parse_number(item.get("soldQty", 0))
+        avg_daily = parse_number(item.get("averageDailySales", 0))
+        available = parse_number(item.get("availableQty", item.get("stock", 0)))
         updated_at = item.get("updatedAt", now_str)
 
         # Days since last movement
@@ -767,11 +775,11 @@ def analyze_stockout_risk(data: StockoutRiskRequest):
     results = []
 
     for item in items:
-        available = item.get("availableQty", item.get("stock", 0))
-        avg_daily = max(0.01, item.get("averageDailySales", 1.0))
-        lead_time = item.get("leadTimeDays", 5)
-        reorder_pt = item.get("reorderPoint", 10)
-        std = item.get("standardDeviation", 1.0)
+        available = parse_number(item.get("availableQty", item.get("stock", 0)))
+        avg_daily = max(0.01, parse_number(item.get("averageDailySales", 1.0)))
+        lead_time = parse_number(item.get("leadTimeDays", 5))
+        reorder_pt = parse_number(item.get("reorderPoint", 10))
+        std = parse_number(item.get("standardDeviation", 1.0))
 
         days_remaining = available / avg_daily
         # Safety stock
@@ -814,12 +822,12 @@ def analyze_stockout_risk(data: StockoutRiskRequest):
             )
         })
 
-    results.sort(key=lambda x: x["risk_score"], reverse=True)
+    results.sort(key=lambda x: x["riskScore"], reverse=True)
     return {
         "stockout_risks": results,
-        "critical_count": sum(1 for r in results if r["risk_level"] == "CRITICAL"),
-        "warning_count": sum(1 for r in results if r["risk_level"] == "WARNING"),
-        "safe_count": sum(1 for r in results if r["risk_level"] == "SAFE")
+        "critical_count": sum(1 for r in results if r["riskLevel"] == "CRITICAL"),
+        "warning_count": sum(1 for r in results if r["riskLevel"] == "WARNING"),
+        "safe_count": sum(1 for r in results if r["riskLevel"] == "SAFE")
     }
 
 
@@ -888,9 +896,9 @@ def analyze_margin_health(data: MarginHealthRequest):
     alerts = []
 
     for p in products:
-        price = p.get("price", 0)
-        cost = p.get("unitCost", p.get("unit_cost", 0))
-        sold = p.get("soldQty", 0)
+        price = parse_number(p.get("price", 0))
+        cost = parse_number(p.get("unitCost", p.get("unit_cost", 0)))
+        sold = parse_number(p.get("soldQty", 0))
 
         if price <= 0:
             continue
