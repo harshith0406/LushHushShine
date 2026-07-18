@@ -23,11 +23,16 @@ import {
   IconButton,
   Divider,
   Card,
-  CardContent
+  CardContent,
+  Chip,
+  Tooltip
 } from '@mui/material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
+import TrendingDownIcon from '@mui/icons-material/TrendingDown';
+
 
 const Sales = () => {
   const { user } = useAuth();
@@ -41,6 +46,9 @@ const Sales = () => {
   const [cart, setCart] = useState([]);
   const [selectedProductId, setSelectedProductId] = useState('');
   const [quantity, setQuantity] = useState(1);
+  // Anomaly detection state
+  const [anomalyData, setAnomalyData] = useState({ anomalies: [], anomaly_count: 0 });
+  const [anomalyLoading, setAnomalyLoading] = useState(false);
 
   const fetchProducts = async () => {
     if (user.role !== 'Selling Place') return;
@@ -67,6 +75,12 @@ const Sales = () => {
       setLoading(true);
       await Promise.all([fetchProducts(), fetchSalesHistory()]);
       setLoading(false);
+      // Fetch anomaly data in background
+      setAnomalyLoading(true);
+      try {
+        const aRes = await API.get('/api/analytics/sales-anomalies');
+        setAnomalyData(aRes.data);
+      } catch (e) { /* silent */ } finally { setAnomalyLoading(false); }
     };
     init();
   }, [user]);
@@ -152,6 +166,39 @@ const Sales = () => {
 
       {error && <Alert severity="error" style={{ marginBottom: '24px', borderRadius: '10px' }}>{error}</Alert>}
       {success && <Alert severity="success" style={{ marginBottom: '24px', borderRadius: '10px' }}>{success}</Alert>}
+
+      {/* ── Sales Anomaly Alert Strip ───────────────────────────────── */}
+      {!anomalyLoading && (
+        <Box
+          style={{
+            display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap',
+            backgroundColor: '#101726', border: '1px solid rgba(0,242,254,0.12)',
+            borderRadius: '12px', padding: '12px 18px', marginBottom: '24px'
+          }}
+        >
+          <Typography variant="caption" style={{ color: '#94a3b8', fontWeight: 700, marginRight: '4px', whiteSpace: 'nowrap' }}>
+            🚨 Anomaly Scan:
+          </Typography>
+          {anomalyData.anomaly_count === 0 ? (
+            <Chip label="✅ All sales patterns normal" size="small" style={{ backgroundColor: 'rgba(16,185,129,0.15)', color: '#10b981', fontWeight: 600 }} />
+          ) : (
+            anomalyData.anomalies?.map((a, i) => (
+              <Tooltip key={i} title={a.description}>
+                <Chip
+                  icon={a.anomaly_type === 'SPIKE' ? <ElectricBoltIcon style={{ fontSize: 14 }} /> : <TrendingDownIcon style={{ fontSize: 14 }} />}
+                  label={`${a.name}: ${a.label} (z=${a.z_score})`}
+                  size="small"
+                  style={{
+                    backgroundColor: a.anomaly_type === 'SPIKE' ? 'rgba(0,242,254,0.15)' : 'rgba(255,75,114,0.15)',
+                    color: a.anomaly_type === 'SPIKE' ? '#00f2fe' : '#ff4b72',
+                    fontWeight: 600, fontSize: '0.7rem'
+                  }}
+                />
+              </Tooltip>
+            ))
+          )}
+        </Box>
+      )}
 
       <Grid container spacing={4}>
         {user.role === 'Selling Place' && (

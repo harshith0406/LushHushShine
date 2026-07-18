@@ -23,7 +23,19 @@
       "destination": "/api/index.js"
     },
     {
+      "source": "/api/purchase-orders/:path*",
+      "destination": "/api/index.js"
+    },
+    {
       "source": "/api/notifications",
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/api/analytics/:path*",
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/api/vendor-status/:path*",
       "destination": "/api/index.js"
     },
     {

@@ -34,6 +34,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/ExitToApp';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
+import SecurityIcon from '@mui/icons-material/Security';
 
 import ChatbotPanel from './ChatbotPanel';
 
@@ -124,6 +125,7 @@ const DashboardLayout = () => {
     { text: 'Inventory', icon: <InventoryIcon />, path: '/inventory' },
     { text: 'Sales', icon: <ReceiptIcon />, path: '/sales' },
     { text: 'Purchase Orders', icon: <AssignmentIcon />, path: '/purchase-orders' },
+    { text: 'Risk Analysis', icon: <SecurityIcon />, path: '/risk-analysis' },
     { text: 'Profile', icon: <PersonIcon />, path: '/profile' }
   ];
 

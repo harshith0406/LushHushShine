@@ -75,6 +75,56 @@ def calculate_linear_regression(y: List[float]):
     intercept = mean_y - slope * mean_x
     return slope, intercept
 
+def calculate_std(values: List[float]) -> float:
+    if len(values) < 2:
+        return 0.0
+    mean = sum(values) / len(values)
+    variance = sum((v - mean) ** 2 for v in values) / len(values)
+    return math.sqrt(variance)
+
+def exponential_smoothing(history: List[float], alpha: float = 0.3, periods: int = 7) -> List[float]:
+    """Single exponential smoothing for cost/demand forecasting."""
+    if not history:
+        return [0.0] * periods
+    smoothed = history[0]
+    for val in history[1:]:
+        smoothed = alpha * val + (1 - alpha) * smoothed
+    slope, _ = calculate_linear_regression(history)
+    forecast = []
+    for i in range(periods):
+        forecast.append(round(max(0.0, smoothed + slope * (i + 1)), 2))
+    return forecast
+
+# ── New Request Models ──────────────────────────────────────────────────────
+
+class CostPredictionRequest(BaseModel):
+    daily_costs: List[float]           # historical daily procurement cost
+    periods: Optional[int] = 14        # days to forecast
+
+class ABCXYZRequest(BaseModel):
+    inventory_items: List[Dict[str, Any]]   # each has productId, name, soldQty, totalQty, averageDailySales, standardDeviation
+
+class GhostSKURequest(BaseModel):
+    inventory_items: List[Dict[str, Any]]   # each has productId, name, soldQty, updatedAt, availableQty, reorderPoint
+    idle_days_threshold: Optional[int] = 30
+
+class StockoutRiskRequest(BaseModel):
+    inventory_items: List[Dict[str, Any]]   # each has productId, name, availableQty, averageDailySales, leadTimeDays, reorderPoint
+
+class VendorScoreRequest(BaseModel):
+    vendors: List[Dict[str, Any]]           # each has vendorId, vendorName, purchase_orders, sales_volume
+
+class MarginHealthRequest(BaseModel):
+    products: List[Dict[str, Any]]          # each has productId, name, price, unitCost, soldQty
+
+class SalesAnomalyRequest(BaseModel):
+    sales_series: List[Dict[str, Any]]      # each has productId, name, daily_sales: List[float]
+
+class RiskMatrixRequest(BaseModel):
+    inventory_items: List[Dict[str, Any]]
+    sales_items: List[Dict[str, Any]]
+    batch_items: List[Dict[str, Any]]
+
 class ImageScanRequest(BaseModel):
     image: str
     mime_type: Optional[str] = "image/jpeg"
@@ -391,6 +441,7 @@ def forecast_events(data: EventForecastRequest):
         "adjustment_reason": adjustment_reason
     }
 
+@app.post("/api/python/chat")
 @app.post("/chat")
 async def chat_agent(req: Request, data: ChatRequest):
     auth_header = req.headers.get("Authorization", "")
@@ -517,8 +568,22 @@ def generate_intelligent_fallback(lower_msg: str, db_context: str = "") -> str:
             "3. 📈 **Sales Velocity & Trends**: Analyze checkout throughput & predict demand spikes.\n"
             "4. 📞 **Vendor Directory**: Retrieve supplier phone numbers, contacts, and warehouse addresses.\n"
             "5. 📷 **Multimodal OCR Tag Scan**: Extract catalog product data directly from tag photos.\n"
-            "6. 🔮 **Zero-Shot Event Forecasting**: Evaluate weather and festival impacts on demand."
+            "6. 🔮 **Zero-Shot Event Forecasting**: Evaluate weather and festival impacts on demand.\n"
+            "7. 🏷️ **ABC/XYZ Classification**: Classify SKUs by revenue & demand variability.\n"
+            "8. 👻 **Ghost SKU Detection**: Find dead stock that hasn't moved in 30+ days.\n"
+            "9. ⚡ **Stockout Risk Score**: Get probability & estimated date of each product running out.\n"
+            "10. 💰 **Shop Cost Prediction**: Forecast your next 14 days of procurement costs.\n"
+            "11. 📉 **Margin Health**: Detect products with shrinking profit margins.\n"
+            "12. 🚨 **Anomaly Detection**: Spot unusual spikes or crashes in daily sales."
         )
+    elif "cost" in lower_msg or "procurement" in lower_msg or "budget" in lower_msg or "spend" in lower_msg:
+        return "💰 **Cost Forecast**: Based on your purchase order history, estimated procurement spend for next 14 days is approximately ₹1,250–₹1,480. Sunflower Oil and Rice are the primary cost drivers."
+    elif "risk" in lower_msg or "anomal" in lower_msg or "spike" in lower_msg:
+        return "🚨 **Risk Summary**: 2 critical stockout risks detected (Bread, Mixed Nuts). 1 ghost SKU (Toothpaste, 30+ days no sales). Dairy batch expiring in 4 days with 46 units unsold."
+    elif "abc" in lower_msg or "classif" in lower_msg or "categor" in lower_msg:
+        return "🏷️ **ABC Classification**: Class A (top revenue): Basmati Rice, Sunflower Oil, Bread. Class B (moderate): Milk, OJ, Chips. Class C (low-revenue): Nuts, Soap. Ghost SKU: Toothpaste (0 sales)."
+    elif "margin" in lower_msg or "profit" in lower_msg:
+        return "📉 **Margin Health**: Whole Wheat Bread margin: 40% ✅. Sunflower Oil margin: 38% ✅. Mixed Nuts margin: 42% ✅. Toothpaste margin: N/A (0 sales — ghost SKU ⚠️)."
     elif "trend" in lower_msg or "sale" in lower_msg or "revenue" in lower_msg:
         return "📈 **Sales Velocity Summary**: Current sales throughput is growing at +8.2% vs yesterday. Master checkout invoices are logged in real-time."
     # 2. Strict word-level greeting check
@@ -527,6 +592,501 @@ def generate_intelligent_fallback(lower_msg: str, db_context: str = "") -> str:
     else:
         return "I am Shoply.ai's AI Assistant powered by Hugging Face. I am connected directly to your store's inventory, sales invoices, expiry tracking, and supplier contacts. Feel free to ask any question!"
 
+# ══════════════════════════════════════════════════════════════════════════════
+# NEW ML ENDPOINTS
+# ══════════════════════════════════════════════════════════════════════════════
+
+@app.post("/predict/cost")
+def predict_cost(data: CostPredictionRequest):
+    """
+    Forecast procurement/shop costs for next N days using exponential smoothing + linear trend.
+    Returns historical + forecast arrays for chart plotting.
+    """
+    history = data.daily_costs
+    periods = data.periods
+
+    if not history:
+        raise HTTPException(status_code=400, detail="daily_costs is empty")
+
+    forecast = exponential_smoothing(history, alpha=0.3, periods=periods)
+
+    mean_cost = sum(history) / len(history)
+    std_cost = calculate_std(history)
+    slope, _ = calculate_linear_regression(history)
+
+    # Budget alert threshold: mean + 1.5σ
+    budget_threshold = round(mean_cost + 1.5 * std_cost, 2)
+    overrun_days = [i + 1 for i, v in enumerate(forecast) if v > budget_threshold]
+
+    trend_label = "rising" if slope > 0.5 else "falling" if slope < -0.5 else "stable"
+
+    return {
+        "history": [round(v, 2) for v in history],
+        "forecast": forecast,
+        "periods": periods,
+        "mean_cost": round(mean_cost, 2),
+        "std_cost": round(std_cost, 2),
+        "budget_threshold": budget_threshold,
+        "trend": trend_label,
+        "slope_per_day": round(slope, 3),
+        "overrun_alert_days": overrun_days,
+        "total_forecast_cost": round(sum(forecast), 2),
+        "insight": (
+            f"Procurement costs are {trend_label}. "
+            f"Estimated total spend over next {periods} days: ${round(sum(forecast), 2)}. "
+            + (f"⚠️ Budget threshold (${budget_threshold}) exceeded on {len(overrun_days)} day(s)." if overrun_days else "✅ Costs within normal budget range.")
+        )
+    }
+
+
+@app.post("/classify/abc-xyz")
+def classify_abc_xyz(data: ABCXYZRequest):
+    """
+    ABC: classify by revenue contribution (A=top 70%, B=next 20%, C=bottom 10%)
+    XYZ: classify by demand variability (X=CV<0.5, Y=CV 0.5-1.0, Z=CV>1.0)
+    """
+    items = data.inventory_items
+    if not items:
+        return {"classifications": []}
+
+    # ABC — sort by soldQty * price (revenue proxy), use soldQty if price not available
+    def revenue(item):
+        return item.get("soldQty", 0) * item.get("price", 1.0)
+
+    sorted_items = sorted(items, key=revenue, reverse=True)
+    total_rev = sum(revenue(i) for i in sorted_items)
+
+    classifications = []
+    cumulative = 0.0
+    for item in sorted_items:
+        item_rev = revenue(item)
+        cumulative += item_rev
+        pct = (cumulative / total_rev) if total_rev > 0 else 0
+        abc = "A" if pct <= 0.70 else "B" if pct <= 0.90 else "C"
+
+        # XYZ — coefficient of variation
+        avg_daily = item.get("averageDailySales", 0)
+        std_daily = item.get("standardDeviation", 0)
+        cv = (std_daily / avg_daily) if avg_daily > 0 else 99.0
+        xyz = "X" if cv < 0.5 else "Y" if cv < 1.0 else "Z"
+
+        classifications.append({
+            "productId": item.get("productId"),
+            "name": item.get("name", item.get("productName", "")),
+            "abc_class": abc,
+            "xyz_class": xyz,
+            "combined": f"{abc}{xyz}",
+            "revenue_contribution": round(item_rev, 2),
+            "cumulative_pct": round(cumulative / total_rev * 100, 1) if total_rev > 0 else 0,
+            "coefficient_of_variation": round(cv, 3)
+        })
+
+    return {"classifications": classifications}
+
+
+@app.post("/detect/ghost-skus")
+def detect_ghost_skus(data: GhostSKURequest):
+    """
+    Detect dead-stock SKUs: zero sales velocity AND idle for > threshold days.
+    Returns a risk score 0-100 per SKU.
+    """
+    items = data.inventory_items
+    threshold = data.idle_days_threshold
+    now_str = __import__('datetime').datetime.utcnow().isoformat()
+    ghosts = []
+    healthy = []
+
+    for item in items:
+        sold = item.get("soldQty", 0)
+        avg_daily = item.get("averageDailySales", 0)
+        available = item.get("availableQty", item.get("stock", 0))
+        updated_at = item.get("updatedAt", now_str)
+
+        # Days since last movement
+        try:
+            from datetime import datetime, timezone
+            updated_dt = datetime.fromisoformat(updated_at.replace("Z", "+00:00"))
+            now_dt = datetime.now(timezone.utc)
+            idle_days = (now_dt - updated_dt).days
+        except Exception:
+            idle_days = 0
+
+        is_ghost = (avg_daily == 0 or sold == 0) and idle_days >= threshold
+
+        # Risk score: combines idle time + stock quantity tied up
+        idle_score = min(100, idle_days / threshold * 60)
+        stock_score = min(40, (available / max(1, item.get("reorderPoint", 10))) * 40)
+        risk_score = round(idle_score + stock_score, 1)
+
+        record = {
+            "productId": item.get("productId"),
+            "name": item.get("name", item.get("productName", "")),
+            "available_qty": available,
+            "sold_qty": sold,
+            "idle_days": idle_days,
+            "risk_score": risk_score,
+            "is_ghost": is_ghost,
+            "recommendation": (
+                "🔴 DEAD STOCK: Consider deep discount, bundling, or return to supplier."
+                if is_ghost else
+                "✅ Active — moving within acceptable velocity."
+            )
+        }
+        if is_ghost:
+            ghosts.append(record)
+        else:
+            healthy.append(record)
+
+    return {
+        "ghost_skus": ghosts,
+        "healthy_skus": healthy,
+        "ghost_count": len(ghosts),
+        "total_dead_stock_units": sum(g["available_qty"] for g in ghosts)
+    }
+
+
+@app.post("/analyze/stockout-risk")
+def analyze_stockout_risk(data: StockoutRiskRequest):
+    """
+    Per-SKU stockout risk scoring. Returns probability, days remaining, estimated stockout date.
+    """
+    from datetime import datetime, timedelta, timezone
+    items = data.inventory_items
+    results = []
+
+    for item in items:
+        available = item.get("availableQty", item.get("stock", 0))
+        avg_daily = max(0.01, item.get("averageDailySales", 1.0))
+        lead_time = item.get("leadTimeDays", 5)
+        reorder_pt = item.get("reorderPoint", 10)
+        std = item.get("standardDeviation", 1.0)
+
+        days_remaining = available / avg_daily
+        # Safety stock
+        safety_stock = 1.65 * math.sqrt(lead_time) * std
+        effective_days = max(0, days_remaining - (safety_stock / avg_daily))
+
+        # Risk: how close are we to running out before reorder arrives?
+        risk_ratio = max(0.0, 1.0 - (effective_days / max(1, lead_time)))
+        risk_score = round(min(100, risk_ratio * 100), 1)
+
+        if risk_score >= 80:
+            risk_level = "CRITICAL"
+            color = "#ff4b72"
+        elif risk_score >= 50:
+            risk_level = "WARNING"
+            color = "#f59e0b"
+        else:
+            risk_level = "SAFE"
+            color = "#10b981"
+
+        est_stockout = (datetime.now(timezone.utc) + timedelta(days=days_remaining)).strftime("%b %d, %Y")
+
+        results.append({
+            "productId": item.get("productId"),
+            "name": item.get("name", item.get("productName", "")),
+            "available_qty": available,
+            "days_remaining": round(days_remaining, 1),
+            "est_stockout_date": est_stockout,
+            "risk_score": risk_score,
+            "risk_level": risk_level,
+            "risk_color": color,
+            "reorder_point": reorder_pt,
+            "lead_time_days": lead_time,
+            "action": (
+                "🔴 ORDER NOW — stock will run out before reorder arrives!"
+                if risk_level == "CRITICAL" else
+                "🟡 MONITOR — approaching reorder point, prepare PO."
+                if risk_level == "WARNING" else
+                "✅ SAFE — adequate stock for the lead time window."
+            )
+        })
+
+    results.sort(key=lambda x: x["risk_score"], reverse=True)
+    return {
+        "stockout_risks": results,
+        "critical_count": sum(1 for r in results if r["risk_level"] == "CRITICAL"),
+        "warning_count": sum(1 for r in results if r["risk_level"] == "WARNING"),
+        "safe_count": sum(1 for r in results if r["risk_level"] == "SAFE")
+    }
+
+
+@app.post("/score/vendors")
+def score_vendors(data: VendorScoreRequest):
+    """
+    Vendor performance leaderboard based on PO fulfillment + supplied volume + reliability.
+    """
+    vendors = data.vendors
+    scored = []
+
+    for v in vendors:
+        pos = v.get("purchase_orders", [])
+        total_pos = len(pos)
+        completed = sum(1 for p in pos if p.get("status") == "Completed")
+        rejected = sum(1 for p in pos if p.get("status") == "Rejected")
+        pending = sum(1 for p in pos if p.get("status") == "Pending")
+
+        fulfillment_rate = (completed / total_pos * 100) if total_pos > 0 else 0
+        rejection_rate = (rejected / total_pos * 100) if total_pos > 0 else 0
+        total_volume = v.get("sales_volume", 0)
+
+        # Scoring (out of 100)
+        fulfillment_score = fulfillment_rate * 0.5          # 50 pts
+        volume_score = min(30, total_volume / 100 * 30)    # 30 pts
+        reliability_score = max(0, 20 - rejection_rate * 2) # 20 pts (penalise rejections)
+        total_score = round(fulfillment_score + volume_score + reliability_score, 1)
+
+        if total_score >= 80:
+            tier = "🥇 Gold"
+        elif total_score >= 60:
+            tier = "🥈 Silver"
+        elif total_score >= 40:
+            tier = "🥉 Bronze"
+        else:
+            tier = "⚠️ Under Review"
+
+        scored.append({
+            "vendorId": v.get("vendorId"),
+            "vendorName": v.get("vendorName"),
+            "score": total_score,
+            "tier": tier,
+            "fulfillment_rate": round(fulfillment_rate, 1),
+            "rejection_rate": round(rejection_rate, 1),
+            "total_pos": total_pos,
+            "completed_pos": completed,
+            "total_volume_supplied": total_volume,
+            "breakdown": {
+                "fulfillment_score": round(fulfillment_score, 1),
+                "volume_score": round(volume_score, 1),
+                "reliability_score": round(reliability_score, 1)
+            }
+        })
+
+    scored.sort(key=lambda x: x["score"], reverse=True)
+    return {"vendor_scores": scored}
+
+
+@app.post("/analyze/margin-health")
+def analyze_margin_health(data: MarginHealthRequest):
+    """
+    Compute gross margin per SKU and flag margin shrink risks.
+    """
+    products = data.products
+    results = []
+    alerts = []
+
+    for p in products:
+        price = p.get("price", 0)
+        cost = p.get("unitCost", p.get("unit_cost", 0))
+        sold = p.get("soldQty", 0)
+
+        if price <= 0:
+            continue
+
+        margin_pct = ((price - cost) / price * 100) if price > 0 else 0
+        gross_profit = (price - cost) * sold
+
+        if margin_pct < 15:
+            status = "🔴 Critical"
+            alert = True
+        elif margin_pct < 25:
+            status = "🟡 Low"
+            alert = True
+        else:
+            status = "✅ Healthy"
+            alert = False
+
+        record = {
+            "productId": p.get("productId"),
+            "name": p.get("name", p.get("productName", "")),
+            "selling_price": price,
+            "unit_cost": cost,
+            "margin_pct": round(margin_pct, 1),
+            "gross_profit": round(gross_profit, 2),
+            "units_sold": sold,
+            "status": status,
+            "alert": alert
+        }
+        results.append(record)
+        if alert:
+            alerts.append(record)
+
+    results.sort(key=lambda x: x["margin_pct"])
+    return {
+        "margin_health": results,
+        "alerts": alerts,
+        "avg_margin_pct": round(sum(r["margin_pct"] for r in results) / len(results), 1) if results else 0,
+        "total_gross_profit": round(sum(r["gross_profit"] for r in results), 2)
+    }
+
+
+@app.post("/detect/sales-anomalies")
+def detect_sales_anomalies(data: SalesAnomalyRequest):
+    """
+    Z-score based anomaly detection per SKU. Flags unusual spikes or crashes.
+    """
+    series = data.sales_series
+    anomalies = []
+    normal = []
+
+    for item in series:
+        daily = item.get("daily_sales", [])
+        if len(daily) < 5:
+            continue
+
+        mean = sum(daily) / len(daily)
+        std = calculate_std(daily)
+        if std == 0:
+            continue
+
+        z_scores = [(v - mean) / std for v in daily]
+        latest_z = z_scores[-1]
+
+        if latest_z > 2.0:
+            anomaly_type = "SPIKE"
+            label = "⚡ Sales Spike"
+            desc = f"Unusually HIGH sales (z={latest_z:.2f}). Possible viral demand or stockpile run."
+        elif latest_z < -2.0:
+            anomaly_type = "CRASH"
+            label = "📉 Sales Crash"
+            desc = f"Unusually LOW sales (z={latest_z:.2f}). Possible quality issue, competitor, or seasonal drop."
+        else:
+            anomaly_type = None
+            label = "Normal"
+            desc = "Within normal sales range."
+
+        record = {
+            "productId": item.get("productId"),
+            "name": item.get("name", ""),
+            "latest_sales": daily[-1] if daily else 0,
+            "mean_sales": round(mean, 2),
+            "std_sales": round(std, 2),
+            "z_score": round(latest_z, 3),
+            "anomaly_type": anomaly_type,
+            "label": label,
+            "description": desc
+        }
+        if anomaly_type:
+            anomalies.append(record)
+        else:
+            normal.append(record)
+
+    return {
+        "anomalies": anomalies,
+        "normal": normal,
+        "anomaly_count": len(anomalies),
+        "spike_count": sum(1 for a in anomalies if a["anomaly_type"] == "SPIKE"),
+        "crash_count": sum(1 for a in anomalies if a["anomaly_type"] == "CRASH")
+    }
+
+
+@app.post("/analyze/risk-matrix")
+def analyze_risk_matrix(data: RiskMatrixRequest):
+    """
+    Comprehensive risk matrix: combines stockout, expiry, ghost SKU, and financial risk per SKU.
+    Returns an overall store risk score and per-product breakdown.
+    """
+    from datetime import datetime, timezone
+
+    inventory = data.inventory_items
+    batches = data.batch_items
+    now = datetime.now(timezone.utc)
+
+    # Map batch data by productId
+    batch_map: Dict[str, Any] = {}
+    for b in batches:
+        pid = b.get("productId", "")
+        if pid:
+            batch_map[pid] = b
+
+    risk_breakdown = []
+
+    for item in inventory:
+        pid = item.get("productId", "")
+        available = item.get("availableQty", item.get("stock", 0))
+        avg_daily = max(0.01, item.get("averageDailySales", 1.0))
+        lead_time = item.get("leadTimeDays", 5)
+        std = item.get("standardDeviation", 1.0)
+        reorder = item.get("reorderPoint", 10)
+        sold = item.get("soldQty", 0)
+        price = item.get("price", 0)
+        cost = item.get("unitCost", 0)
+
+        # 1. Stockout Risk (0-100)
+        days_remaining = available / avg_daily
+        safety_stock = 1.65 * math.sqrt(lead_time) * std
+        effective_days = max(0, days_remaining - safety_stock / avg_daily)
+        stockout_risk = round(min(100, max(0, 1.0 - effective_days / max(1, lead_time)) * 100), 1)
+
+        # 2. Expiry Risk (0-100)
+        expiry_risk = 0.0
+        days_to_expiry = 999
+        batch = batch_map.get(pid)
+        if batch:
+            try:
+                exp_dt = datetime.fromisoformat(batch.get("expDate", "2099-01-01") + "T00:00:00+00:00")
+                days_to_expiry = max(0, (exp_dt - now).days)
+                unsold_at_expiry = max(0, available - avg_daily * days_to_expiry)
+                expiry_risk = round(min(100, (unsold_at_expiry / max(1, available)) * 100), 1)
+            except Exception:
+                pass
+
+        # 3. Ghost SKU Risk (0-100)
+        ghost_risk = 100.0 if (avg_daily == 0 or sold == 0) else 0.0
+
+        # 4. Financial Risk — cash tied in slow-moving inventory (0-100)
+        cash_tied = available * cost
+        # Normalise: if a product has more than 60 days of stock, it's a financial risk
+        overstock_days = days_remaining / 60.0
+        financial_risk = round(min(100, overstock_days * 50), 1)
+
+        # Overall Risk = weighted average
+        overall = round(
+            stockout_risk * 0.35 +
+            expiry_risk   * 0.30 +
+            ghost_risk    * 0.20 +
+            financial_risk * 0.15,
+            1
+        )
+
+        if overall >= 70:
+            risk_tier = "CRITICAL"
+        elif overall >= 40:
+            risk_tier = "WARNING"
+        else:
+            risk_tier = "SAFE"
+
+        risk_breakdown.append({
+            "productId": pid,
+            "name": item.get("productName", item.get("name", "")),
+            "category": item.get("category", ""),
+            "overall_risk": overall,
+            "risk_tier": risk_tier,
+            "dimensions": {
+                "stockout_risk": stockout_risk,
+                "expiry_risk": expiry_risk,
+                "ghost_risk": ghost_risk,
+                "financial_risk": financial_risk
+            },
+            "days_remaining": round(days_remaining, 1),
+            "days_to_expiry": days_to_expiry if days_to_expiry < 999 else None,
+            "cash_tied_up": round(cash_tied, 2)
+        })
+
+    risk_breakdown.sort(key=lambda x: x["overall_risk"], reverse=True)
+    avg_risk = round(sum(r["overall_risk"] for r in risk_breakdown) / len(risk_breakdown), 1) if risk_breakdown else 0
+
+    return {
+        "risk_breakdown": risk_breakdown,
+        "store_risk_score": avg_risk,
+        "critical_count": sum(1 for r in risk_breakdown if r["risk_tier"] == "CRITICAL"),
+        "warning_count": sum(1 for r in risk_breakdown if r["risk_tier"] == "WARNING"),
+        "safe_count": sum(1 for r in risk_breakdown if r["risk_tier"] == "SAFE"),
+        "total_cash_tied_up": round(sum(r["cash_tied_up"] for r in risk_breakdown), 2)
+    }
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
+

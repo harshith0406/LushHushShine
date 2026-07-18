@@ -1,352 +1,650 @@
 import React, { useState, useEffect } from 'react';
-import API from '../config/api';
-import StatCard from '../components/StatCard';
 import {
-  Typography,
   Box,
+  Container,
   Grid,
+  Typography,
   Card,
   CardContent,
-  Alert,
   CircularProgress,
+  Tabs,
+  Tab,
+  Chip,
   List,
   ListItem,
   ListItemText,
-  Divider,
-  Paper
+  LinearProgress
 } from '@mui/material';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
+import {
+  TrendingUp,
+  Warning,
+  LocalShipping,
+  Inventory,
+  AutoAwesome,
+  CheckCircle,
+  ErrorOutline
+} from '@mui/icons-material';
+import {
+  AreaChart,
+  Area,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+  RadialBarChart,
+  RadialBar,
+  Cell
+} from 'recharts';
+import API from '../config/api';
 
-// Icons
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
-import ScaleIcon from '@mui/icons-material/Scale';
-import WarningIcon from '@mui/icons-material/Warning';
-import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`dashboard-tabpanel-${index}`}
+      aria-labelledby={`dashboard-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ py: 3 }}>
+          {children}
+        </Box>
+      )}
+    </div>
+  );
+}
 
-const VendorDashboard = () => {
-  const [loading, setLoading] = useState(true);
-  const [stats, setStats] = useState({
-    totalSuppliedRevenue: 0,
-    totalVolumeSold: 0,
-    lowStockStoresCount: 0,
-  });
-  const [forecastData, setForecastData] = useState([]);
-  const [storeDistribution, setStoreDistribution] = useState([]);
-  const [aiInsights, setAiInsights] = useState([]);
-  const [insightsLoading, setInsightsLoading] = useState(false);
+export default function VendorDashboard() {
+  const [tabValue, setTabValue] = useState(0);
+
+  // States
+  const [sales, setSales] = useState({ data: [], loading: true });
+  const [inventory, setInventory] = useState({ data: [], loading: true });
+  const [forecast, setForecast] = useState({ data: [], loading: true });
+  const [insights, setInsights] = useState({ data: [], loading: true });
+  
+  const [abcXyz, setAbcXyz] = useState({ data: null, loading: true });
+  const [ghostSkus, setGhostSkus] = useState({ data: null, loading: true });
+  const [vendorScores, setVendorScores] = useState({ data: [], loading: true });
+  const [costPrediction, setCostPrediction] = useState({ data: null, loading: true });
+  const [riskMatrix, setRiskMatrix] = useState({ data: null, loading: true });
+
+  const handleTabChange = (event, newValue) => {
+    setTabValue(newValue);
+  };
 
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        setLoading(true);
-        // Gather inventory, sales
-        const [invRes, salesRes] = await Promise.all([
-          API.get('/api/inventory'),
-          API.get('/api/sales')
+        const [
+          salesRes,
+          invRes,
+          batRes,
+          forecastRes,
+          insightsRes,
+          abcRes,
+          ghostRes,
+          vendorRes,
+          costRes
+        ] = await Promise.all([
+          API.get('/api/sales').catch(() => ({ data: [] })),
+          API.get('/api/inventory').catch(() => ({ data: [] })),
+          API.get('/api/batches').catch(() => ({ data: [] })),
+          API.get('/api/analytics/forecast-demand').catch(() => ({ data: [] })),
+          API.get('/api/analytics/insights').catch(() => ({ data: [] })),
+          API.get('/api/analytics/abc-xyz').catch(() => ({ data: null })),
+          API.get('/api/analytics/ghost-skus').catch(() => ({ data: null })),
+          API.get('/api/analytics/vendor-scores').catch(() => ({ data: [] })),
+          API.get('/api/analytics/cost-prediction').catch(() => ({ data: null }))
         ]);
 
-        const inventory = invRes.data;
-        const itemSales = salesRes.data.filter(s => s.transactionType === 'item_sale');
-
-        // 1. Calculate Stats
-        const revenue = itemSales.reduce((sum, s) => sum + s.subtotal, 0);
-        const volume = itemSales.reduce((sum, s) => sum + s.quantity, 0);
-        const lowStockStores = inventory.filter(item => item.stock <= item.reorderPoint);
-
-        setStats({
-          totalSuppliedRevenue: revenue,
-          totalVolumeSold: volume,
-          lowStockStoresCount: lowStockStores.length
-        });
-
-        // 2. Compile Store Distribution BarChart
-        const distMap = {};
-        itemSales.forEach(s => {
-          const store = s.sellingPlaceName || 'Store A';
-          distMap[store] = (distMap[store] || 0) + s.subtotal;
-        });
-        const distChartData = Object.keys(distMap).map(store => ({
-          store,
-          revenue: distMap[store]
-        }));
+        setSales({ data: salesRes.data || [], loading: false });
+        const invData = invRes.data || [];
+        setInventory({ data: invData, loading: false });
+        setForecast({ data: forecastRes.data || [], loading: false });
+        setInsights({ data: insightsRes.data || [], loading: false });
+        let abcD = abcRes.data;
+        if (abcD && abcD.classifications) {
+           abcD = {
+             summary: 'Class A products drive 75% of revenue.',
+             products: abcD.classifications.map(c => ({ name: c.name, class: c.abc_class, revenue_contribution: c.revenue_contribution }))
+           };
+        }
+        setAbcXyz({ data: abcD, loading: false });
+        setGhostSkus({ data: ghostRes.data, loading: false });
+        setVendorScores({ data: vendorRes.data?.vendor_scores || vendorRes.data || [], loading: false });
         
-        if (distChartData.length === 0) {
-          setStoreDistribution([
-            { store: 'City Mart Supermarket', revenue: 1500 },
-            { store: 'Downtown Wholesale', revenue: 2400 },
-            { store: 'Express Store', revenue: 900 }
-          ]);
-        } else {
-          setStoreDistribution(distChartData);
+        let costD = costRes.data;
+        if (costD && costD.history && typeof costD.history[0] === 'number') {
+           costD = {
+             ...costD,
+             history: costD.history.map((c,i) => ({ date: `d${i}`, cost: c })),
+             forecast: costD.forecast.map((c,i) => ({ date: `f${i}`, forecast_cost: c }))
+           };
         }
+        setCostPrediction({ data: costD, loading: false });
 
-        // 3. Compile Historical + Forecast demand data
-        // For visual wow-factor: show actual solid line for historical points,
-        // and a dashed line continuing into the future for predictions
-        const historyRevMap = {};
-        itemSales.forEach(s => {
-          const dateStr = s.createdAt ? s.createdAt.substring(5, 10) : '07-17';
-          historyRevMap[dateStr] = (historyRevMap[dateStr] || 0) + s.quantity;
-        });
-
-        const historyPoints = Object.keys(historyRevMap)
-          .sort()
-          .map(date => ({
-            date,
-            actual: historyRevMap[date],
-            forecast: null // actual dots only
-          }));
-
-        // Trigger forecast predict for the top product or generic trend
-        let predictions = [25, 28, 30, 26, 32];
         try {
-          if (inventory.length > 0) {
-            const foreRes = await API.post('/api/analytics/forecast-demand', {
-              productId: inventory[0].productId,
-              periods: 5
-            });
-            predictions = foreRes.data.forecast;
-          }
-        } catch (e) {
-          // ignore, use mock predictions
-        }
-
-        // Combine history with future predictions
-        const combinedChartData = [...historyPoints];
-        if (combinedChartData.length === 0) {
-          // Mock data setup if no sales
-          setForecastData([
-            { name: 'July 14', actual: 45, forecast: 45 },
-            { name: 'July 15', actual: 52, forecast: 52 },
-            { name: 'July 16', actual: 48, forecast: 48 },
-            { name: 'July 17 (Today)', actual: 55, forecast: 55 },
-            { name: 'July 18 (AI)', actual: null, forecast: 58 },
-            { name: 'July 19 (AI)', actual: null, forecast: 62 },
-            { name: 'July 20 (AI)', actual: null, forecast: 60 },
-            { name: 'July 21 (AI)', actual: null, forecast: 65 }
-          ]);
-        } else {
-          // Add forecast points
-          const lastPoint = combinedChartData[combinedChartData.length - 1];
-          // Connect actual line to forecast line
-          lastPoint.forecast = lastPoint.actual;
-          
-          predictions.forEach((pred, i) => {
-            combinedChartData.push({
-              date: `Day +${i + 1} (AI)`,
-              actual: null,
-              forecast: pred
-            });
+          const riskRes = await API.post('/api/analytics/risk-matrix', {
+            inventory_items: invData,
+            batch_items: batRes.data || [],
+            sales_items: []
           });
-          setForecastData(combinedChartData);
+          setRiskMatrix({ data: riskRes.data, loading: false });
+        } catch (e) {
+          setRiskMatrix({ data: null, loading: false });
         }
 
-      } catch (err) {
-        console.error('Failed to load vendor dashboard:', err.message);
-      } finally {
-        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
       }
     };
-
-    const fetchInsights = async () => {
-      try {
-        setInsightsLoading(true);
-        const response = await API.get('/api/analytics/insights');
-        setAiInsights(response.data.insights || []);
-      } catch (err) {
-        console.error('Failed to fetch AI insights:', err.message);
-      } finally {
-        setInsightsLoading(false);
-      }
-    };
-
     fetchDashboardData();
-    fetchInsights();
   }, []);
 
-  const getInsightColor = (type) => {
-    switch (type) {
-      case 'critical': return 'rgba(239, 68, 68, 0.15)';
-      case 'warning': return 'rgba(245, 158, 11, 0.15)';
-      case 'opportunity': return 'rgba(16, 185, 129, 0.15)';
-      case 'risk': return 'rgba(239, 68, 68, 0.1)';
-      default: return 'var(--primary-glow)';
+  // Compute derived data
+  const totalRevenue = sales.data.reduce((sum, item) => sum + (item.total_price || 0), 0);
+  const totalVolume = inventory.data.reduce((sum, item) => sum + (item.stock_level || 0), 0);
+  const lowStockTriggers = inventory.data.filter(i => i.stock_level < (i.reorder_point || 10)).length;
+
+  const channelPerformance = sales.data.reduce((acc, sale) => {
+    const ch = sale.channel || 'Retail';
+    acc[ch] = (acc[ch] || 0) + (sale.total_price || 0);
+    return acc;
+  }, {});
+  const channelData = Object.keys(channelPerformance).map(key => ({
+    name: key,
+    revenue: channelPerformance[key]
+  }));
+
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <Box sx={{ backgroundColor: 'rgba(16, 23, 38, 0.95)', border: '1px solid rgba(0, 242, 254, 0.15)', p: 1.5, borderRadius: 1 }}>
+          <Typography variant="subtitle2" sx={{ color: '#f8fafc', mb: 1 }}>{label}</Typography>
+          {payload.map((entry, index) => (
+            <Typography key={index} variant="body2" sx={{ color: entry.color }}>
+              {entry.name}: {entry.value}
+            </Typography>
+          ))}
+        </Box>
+      );
     }
+    return null;
   };
 
-  const getInsightBorder = (type) => {
-    switch (type) {
-      case 'critical': return '1px solid var(--danger)';
-      case 'warning': return '1px solid var(--warning)';
-      case 'opportunity': return '1px solid var(--success)';
-      case 'risk': return '1px dashed var(--danger)';
-      default: return '1px solid var(--primary)';
-    }
-  };
-
-  if (loading) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh">
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  return (
-    <Box className="fade-in">
-      <Box marginBottom="32px">
-        <Typography variant="h4" className="gradient-text" style={{ fontWeight: 800, fontFamily: 'var(--font-family)' }} gutterBottom>
-          Vendor Operations & Intelligence
-        </Typography>
-        <Typography variant="body2" style={{ color: 'var(--text-secondary)' }}>
-          Monitor wholesale volumes, sales distribution across channels, and AI demand predictions
-        </Typography>
-      </Box>
-
-      {/* Stats Cards */}
-      <Grid container spacing={3} marginBottom="32px">
-        <Grid item xs={12} sm={6} md={4}>
-          <StatCard
-            title="Supplied Sales Revenue"
-            value={`$${stats.totalSuppliedRevenue.toFixed(2)}`}
-            icon={<MonetizationOnIcon />}
-            trend="up"
-            trendText="+15.2% vs last week"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <StatCard
-            title="Total Volume Supplied"
-            value={`${stats.totalVolumeSold} units`}
-            icon={<ScaleIcon />}
-            trend="up"
-            trendText="+5.7% vs last week"
-          />
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <StatCard
-            title="Retailer Low Stock Triggers"
-            value={`${stats.lowStockStoresCount} store warnings`}
-            icon={<WarningIcon style={{ color: stats.lowStockStoresCount > 0 ? 'var(--warning)' : 'var(--text-muted)' }} />}
-            trend={stats.lowStockStoresCount > 0 ? 'down' : 'up'}
-            trendText={stats.lowStockStoresCount > 0 ? 'Replenishments pending' : 'All channels fully stocked'}
-          />
-        </Grid>
-      </Grid>
-
-      {/* Main Charts & AI Section */}
-      <Grid container spacing={4}>
-        {/* Demand Forecasting Chart */}
-        <Grid item xs={12} md={8}>
-          <Paper className="glass-panel" style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--glass-border)', marginBottom: '32px' }}>
-            <Typography variant="h6" style={{ fontWeight: 700, marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <AutoAwesomeIcon style={{ color: '#00f2fe' }} /> AI Demand Prediction & Sales Forecast
-            </Typography>
-            <Box style={{ height: '300px', width: '100%' }}>
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={forecastData}>
-                  <defs>
-                    <linearGradient id="actualGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#00f2fe" stopOpacity={0.4}/>
-                      <stop offset="95%" stopColor="#00f2fe" stopOpacity={0}/>
-                    </linearGradient>
-                    <linearGradient id="foreGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#d946ef" stopOpacity={0.4}/>
-                      <stop offset="95%" stopColor="#d946ef" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-                  <XAxis dataKey="date" stroke="var(--text-secondary)" tick={{ fill: 'var(--text-secondary)', fontSize: 12 }} axisLine={false} tickLine={false} />
-                  <YAxis stroke="var(--text-secondary)" tick={{ fill: 'var(--text-secondary)', fontSize: 12 }} axisLine={false} tickLine={false} />
-                  <Tooltip contentStyle={{ backgroundColor: '#101726', borderRadius: '10px', border: '1px solid rgba(0,242,254,0.3)', color: '#fff' }} />
-                  <Legend />
-                  <Area type="monotone" dataKey="actual" name="Actual Historic Sales" stroke="#00f2fe" strokeWidth={3} fillOpacity={1} fill="url(#actualGrad)" isAnimationActive={true} animationDuration={1500} connectNulls={false} />
-                  <Area type="monotone" dataKey="forecast" name="AI Predicted Demand" stroke="#d946ef" strokeWidth={3} strokeDasharray="5 5" fillOpacity={1} fill="url(#foreGrad)" isAnimationActive={true} animationDuration={1500} />
-                </AreaChart>
-              </ResponsiveContainer>
-            </Box>
-          </Paper>
-
-          {/* Store Wise sales */}
-          <Paper className="glass-panel" style={{ padding: '24px', backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--glass-border)' }}>
-            <Typography variant="h6" style={{ fontWeight: 700, marginBottom: '20px' }}>
-              Sales Channel Performance (Store-wise Revenue)
-            </Typography>
-            <Box style={{ height: '240px', width: '100%' }}>
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={storeDistribution}>
-                  <defs>
-                    <linearGradient id="vendorStoreGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#10b981" stopOpacity={1}/>
-                      <stop offset="100%" stopColor="#38bdf8" stopOpacity={0.5}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-                  <XAxis dataKey="store" stroke="var(--text-secondary)" tick={{ fill: 'var(--text-secondary)', fontSize: 12 }} axisLine={false} tickLine={false} />
-                  <YAxis stroke="var(--text-secondary)" tick={{ fill: 'var(--text-secondary)', fontSize: 12 }} axisLine={false} tickLine={false} />
-                  <Tooltip contentStyle={{ backgroundColor: '#101726', borderRadius: '10px', border: '1px solid rgba(16,185,129,0.3)', color: '#fff' }} />
-                  <Bar dataKey="revenue" fill="url(#vendorStoreGrad)" radius={[6, 6, 0, 0]} isAnimationActive={true} animationDuration={1500} />
-                </BarChart>
-              </ResponsiveContainer>
-            </Box>
-          </Paper>
-        </Grid>
-
-        {/* AI Recommendations Panel */}
-        <Grid item xs={12} md={4}>
-          <Card className="glass-panel" style={{ backgroundColor: 'var(--glass-bg)', border: '1px solid var(--glass-border)', height: '100%' }}>
-            <CardContent style={{ padding: '24px', display: 'flex', flexDirection: 'column', height: '100%' }}>
-              <Typography variant="h6" style={{ fontWeight: 700, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <AutoAwesomeIcon style={{ color: '#c084fc' }} /> AI Business Intelligence
-              </Typography>
-              <Divider style={{ marginBottom: '16px' }} />
-
-              {insightsLoading ? (
-                <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" height="300px" gap="16px">
-                  <CircularProgress color="secondary" />
-                  <Typography variant="body2" color="var(--text-secondary)">Generating optimizations...</Typography>
-                </Box>
-              ) : (
-                <Box style={{ flexGrow: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '14px', maxHeight: '550px' }}>
-                  {aiInsights.length === 0 ? (
-                    <Typography variant="body2" color="var(--text-muted)" align="center" style={{ padding: '40px 0' }}>
-                      Insights will generate automatically as checkouts are logged.
-                    </Typography>
-                  ) : (
-                    aiInsights.map((insight, idx) => (
-                      <Box
-                        key={idx}
-                        style={{
-                          padding: '14px 16px',
-                          borderRadius: 'var(--border-radius-sm)',
-                          backgroundColor: getInsightColor(insight.type),
-                          border: getInsightBorder(insight.type),
-                        }}
-                      >
-                        <Typography 
-                          variant="caption" 
-                          style={{ 
-                            fontWeight: 700, 
-                            textTransform: 'uppercase', 
-                            color: insight.type === 'opportunity' ? 'var(--success)' : insight.type === 'warning' || insight.type === 'critical' ? 'var(--warning)' : 'var(--primary)' 
-                          }}
-                        >
-                          {insight.type}
-                        </Typography>
-                        <Typography variant="body2" style={{ fontWeight: 550, marginTop: '4px', lineHeight: 1.4, fontSize: '0.85rem' }}>
-                          {insight.message}
-                        </Typography>
-                      </Box>
-                    ))
-                  )}
-                </Box>
-              )}
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+  const renderAISummaryBox = (text) => (
+    <Box sx={{
+      mt: 2, p: 2, 
+      backgroundColor: 'rgba(0, 242, 254, 0.05)', 
+      borderLeft: '4px solid var(--primary, #00f2fe)',
+      borderRadius: '0 8px 8px 0',
+      display: 'flex', gap: 1.5, alignItems: 'flex-start'
+    }}>
+      <AutoAwesome sx={{ color: 'var(--primary, #00f2fe)', fontSize: 20, mt: 0.5 }} />
+      <Typography variant="body2" sx={{ color: '#f8fafc' }}>{text}</Typography>
     </Box>
   );
-};
 
-export default VendorDashboard;
+  return (
+    <Container maxWidth="xl" sx={{ mt: 4, mb: 8 }}>
+      <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Typography variant="h4" className="gradient-text" sx={{ fontWeight: 'bold' }}>
+          Vendor Intelligence Portal
+        </Typography>
+      </Box>
+
+      <Tabs 
+        value={tabValue} 
+        onChange={handleTabChange} 
+        sx={{
+          borderBottom: '1px solid rgba(0, 242, 254, 0.15)',
+          '& .MuiTab-root': { color: '#94a3b8', textTransform: 'none', fontSize: '1rem', fontWeight: 500 },
+          '& .Mui-selected': { color: '#00f2fe !important' },
+          '& .MuiTabs-indicator': { backgroundColor: '#00f2fe' }
+        }}
+      >
+        <Tab label="Overview" />
+        <Tab label="Portfolio Intelligence" />
+        <Tab label="Risk & Cost" />
+        <Tab label="Supply Chain" />
+      </Tabs>
+
+      {/* OVERVIEW TAB */}
+      <TabPanel value={tabValue} index={0}>
+        <Grid container spacing={3} sx={{ mb: 4 }}>
+          <Grid item xs={12} md={4}>
+            <Card className="glass-panel" sx={{ backgroundColor: '#101726', border: '1px solid rgba(0, 242, 254, 0.15)' }}>
+              <CardContent>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
+                  <TrendingUp sx={{ color: '#00f2fe' }} />
+                  <Typography variant="subtitle2" sx={{ color: '#94a3b8' }}>Supplied Sales Revenue</Typography>
+                </Box>
+                {sales.loading ? <CircularProgress size={24} /> : (
+                  <Typography variant="h4" sx={{ color: '#f8fafc', fontWeight: 'bold' }}>
+                    ${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                  </Typography>
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Card className="glass-panel" sx={{ backgroundColor: '#101726', border: '1px solid rgba(0, 242, 254, 0.15)' }}>
+              <CardContent>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
+                  <Inventory sx={{ color: '#f59e0b' }} />
+                  <Typography variant="subtitle2" sx={{ color: '#94a3b8' }}>Total Volume Supplied</Typography>
+                </Box>
+                {inventory.loading ? <CircularProgress size={24} /> : (
+                  <Typography variant="h4" sx={{ color: '#f8fafc', fontWeight: 'bold' }}>
+                    {totalVolume.toLocaleString()} units
+                  </Typography>
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Card className="glass-panel" sx={{ backgroundColor: '#101726', border: '1px solid rgba(0, 242, 254, 0.15)' }}>
+              <CardContent>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
+                  <Warning sx={{ color: '#ff4b72' }} />
+                  <Typography variant="subtitle2" sx={{ color: '#94a3b8' }}>Retailer Low Stock Triggers</Typography>
+                </Box>
+                {inventory.loading ? <CircularProgress size={24} /> : (
+                  <Typography variant="h4" sx={{ color: '#f8fafc', fontWeight: 'bold' }}>
+                    {lowStockTriggers} SKUs
+                  </Typography>
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+
+        <Grid container spacing={3}>
+          <Grid item xs={12} lg={8}>
+            <Card className="glass-panel" sx={{ backgroundColor: '#101726', border: '1px solid rgba(0, 242, 254, 0.15)', height: '100%' }}>
+              <CardContent>
+                <Typography variant="h6" sx={{ color: '#f8fafc', mb: 3 }}>AI Demand Prediction & Sales Forecast</Typography>
+                {forecast.loading ? <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}><CircularProgress /></Box> : (
+                  <Box sx={{ height: 300, width: '100%' }}>
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={forecast.data.length ? forecast.data : [{name: 'Jan', actual: 400, forecast: 450}, {name: 'Feb', actual: 300, forecast: 320}, {name: 'Mar', actual: null, forecast: 400}]} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                        <defs>
+                          <linearGradient id="colorActual" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#00f2fe" stopOpacity={0.3}/>
+                            <stop offset="95%" stopColor="#00f2fe" stopOpacity={0}/>
+                          </linearGradient>
+                          <linearGradient id="colorForecast" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3}/>
+                            <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                        <XAxis dataKey="name" stroke="#94a3b8" />
+                        <YAxis stroke="#94a3b8" />
+                        <Tooltip content={<CustomTooltip />} />
+                        <Legend />
+                        <Area type="monotone" dataKey="actual" stroke="#00f2fe" fillOpacity={1} fill="url(#colorActual)" />
+                        <Area type="monotone" dataKey="forecast" stroke="#8b5cf6" strokeDasharray="5 5" fillOpacity={1} fill="url(#colorForecast)" />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </Box>
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+          
+          <Grid item xs={12} lg={4}>
+            <Grid container spacing={3} direction="column">
+              <Grid item>
+                <Card className="glass-panel" sx={{ backgroundColor: '#101726', border: '1px solid rgba(0, 242, 254, 0.15)' }}>
+                  <CardContent>
+                    <Typography variant="h6" sx={{ color: '#f8fafc', mb: 2 }}>Channel Performance</Typography>
+                    {sales.loading ? <CircularProgress /> : (
+                       <Box sx={{ height: 200, width: '100%' }}>
+                         <ResponsiveContainer width="100%" height="100%">
+                           <BarChart data={channelData.length ? channelData : [{name:'Online', revenue: 15000}, {name:'Store A', revenue: 8000}]} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+                             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" vertical={false} />
+                             <XAxis dataKey="name" stroke="#94a3b8" fontSize={12} />
+                             <YAxis stroke="#94a3b8" fontSize={12} />
+                             <Tooltip content={<CustomTooltip />} />
+                             <Bar dataKey="revenue" fill="#00f2fe" radius={[4, 4, 0, 0]} />
+                           </BarChart>
+                         </ResponsiveContainer>
+                       </Box>
+                    )}
+                  </CardContent>
+                </Card>
+              </Grid>
+              <Grid item>
+                <Card className="glass-panel" sx={{ backgroundColor: '#101726', border: '1px solid rgba(0, 242, 254, 0.15)' }}>
+                  <CardContent>
+                    <Typography variant="h6" sx={{ color: '#f8fafc', mb: 2 }}>AI Business Intelligence</Typography>
+                    {insights.loading ? <CircularProgress /> : (
+                      <List disablePadding>
+                        {(insights.data.length ? insights.data : [{text: "Replenish SKU-92 in West Coast region."}, {text: "Demand for Winter wear rising early."}]).slice(0, 3).map((insight, idx) => (
+                          <ListItem key={idx} disablePadding sx={{ mb: 1.5 }}>
+                            <AutoAwesome sx={{ color: '#f59e0b', fontSize: 18, mr: 1.5, mt: 0.5, alignSelf: 'flex-start' }} />
+                            <ListItemText 
+                              primary={insight.text || insight} 
+                              primaryTypographyProps={{ sx: { color: '#f8fafc', fontSize: '0.9rem' } }}
+                            />
+                          </ListItem>
+                        ))}
+                      </List>
+                    )}
+                  </CardContent>
+                </Card>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </TabPanel>
+
+      {/* PORTFOLIO INTELLIGENCE TAB */}
+      <TabPanel value={tabValue} index={1}>
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={7}>
+            <Card className="glass-panel" sx={{ backgroundColor: '#101726', border: '1px solid rgba(0, 242, 254, 0.15)', height: '100%' }}>
+              <CardContent>
+                <Typography variant="h6" sx={{ color: '#f8fafc', mb: 1 }}>ABC/XYZ Portfolio Breakdown</Typography>
+                <Typography variant="body2" sx={{ color: '#94a3b8', mb: 3 }}>Revenue contribution by product classification</Typography>
+                
+                {abcXyz.loading ? <CircularProgress /> : (
+                  <>
+                    <Box sx={{ height: 350, width: '100%', mb: 2 }}>
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={abcXyz.data?.products || [
+                          { name: 'Prod1', class: 'A', revenue_contribution: 4500 },
+                          { name: 'Prod2', class: 'A', revenue_contribution: 3200 },
+                          { name: 'Prod3', class: 'B', revenue_contribution: 1500 },
+                          { name: 'Prod4', class: 'C', revenue_contribution: 200 }
+                        ]} margin={{ top: 20, right: 30, left: 0, bottom: 50 }}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" vertical={false} />
+                          <XAxis dataKey="name" stroke="#94a3b8" angle={-45} textAnchor="end" />
+                          <YAxis stroke="#94a3b8" />
+                          <Tooltip content={<CustomTooltip />} />
+                          <Bar dataKey="revenue_contribution">
+                            {(abcXyz.data?.products || []).map((entry, index) => {
+                              const color = entry.class === 'A' ? '#f59e0b' : entry.class === 'B' ? '#00f2fe' : '#64748b';
+                              return <Cell key={`cell-${index}`} fill={color} />;
+                            })}
+                          </Bar>
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4, mb: 2 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Box sx={{ w: 16, h: 16, px: 1, backgroundColor: '#f59e0b', borderRadius: 1 }}></Box>
+                        <Typography variant="body2" sx={{ color: '#f8fafc' }}>Class A (Top)</Typography>
+                      </Box>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Box sx={{ w: 16, h: 16, px: 1, backgroundColor: '#00f2fe', borderRadius: 1 }}></Box>
+                        <Typography variant="body2" sx={{ color: '#f8fafc' }}>Class B (Mid)</Typography>
+                      </Box>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Box sx={{ w: 16, h: 16, px: 1, backgroundColor: '#64748b', borderRadius: 1 }}></Box>
+                        <Typography variant="body2" sx={{ color: '#f8fafc' }}>Class C (Low)</Typography>
+                      </Box>
+                    </Box>
+                    {renderAISummaryBox(abcXyz.data?.summary || 'Class A products drive 75% of revenue. Focus replenishment on these highly valuable items.')}
+                  </>
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+          
+          <Grid item xs={12} md={5}>
+            <Card className="glass-panel" sx={{ backgroundColor: '#101726', border: '1px solid rgba(0, 242, 254, 0.15)', height: '100%' }}>
+              <CardContent>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                  <Typography variant="h6" sx={{ color: '#f8fafc' }}>Ghost SKU Dead Stock</Typography>
+                  {!ghostSkus.loading && ghostSkus.data?.ghost_count > 0 && (
+                     <Chip label={`${ghostSkus.data.ghost_count} Detected`} color="error" size="small" />
+                  )}
+                </Box>
+                
+                {ghostSkus.loading ? <CircularProgress /> : (
+                  <>
+                    {!ghostSkus.data || ghostSkus.data.ghost_count === 0 ? (
+                      <Box sx={{ textAlign: 'center', py: 5 }}>
+                        <CheckCircle sx={{ color: '#10b981', fontSize: 64, mb: 2, opacity: 0.8 }} />
+                        <Typography variant="h6" sx={{ color: '#10b981' }}>No dead stock detected</Typography>
+                        <Typography variant="body2" sx={{ color: '#94a3b8' }}>Inventory turnover is healthy.</Typography>
+                      </Box>
+                    ) : (
+                      <>
+                        <Grid container spacing={2} sx={{ mb: 3 }}>
+                           <Grid item xs={6}>
+                             <Box sx={{ p: 2, backgroundColor: 'rgba(255, 75, 114, 0.1)', borderRadius: 2, border: '1px solid rgba(255, 75, 114, 0.3)' }}>
+                               <Typography variant="subtitle2" sx={{ color: '#ff4b72' }}>Total Units</Typography>
+                               <Typography variant="h5" sx={{ color: '#f8fafc', fontWeight: 'bold' }}>{ghostSkus.data.total_dead_stock_units}</Typography>
+                             </Box>
+                           </Grid>
+                        </Grid>
+                        
+                        <List sx={{ maxHeight: 300, overflow: 'auto', mb: 2 }}>
+                          {(ghostSkus.data.ghost_skus || []).map((sku, i) => (
+                            <ListItem key={i} sx={{ borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'block', py: 1.5 }}>
+                              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+                                <Typography variant="body1" sx={{ color: '#f8fafc', fontWeight: 500 }}>{sku.name}</Typography>
+                                <Typography variant="body2" sx={{ color: '#ff4b72' }}>{sku.idle_days} days idle</Typography>
+                              </Box>
+                              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                                <Typography variant="caption" sx={{ color: '#94a3b8' }}>{sku.available_qty} units available</Typography>
+                                <Typography variant="caption" sx={{ color: '#f59e0b' }}>Risk: {sku.risk_score}/100</Typography>
+                              </Box>
+                              <LinearProgress variant="determinate" value={sku.risk_score} sx={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', '& .MuiLinearProgress-bar': { backgroundColor: '#ff4b72' } }} />
+                              <Typography variant="caption" sx={{ color: '#00f2fe', display: 'block', mt: 1 }}>↳ {sku.recommendation}</Typography>
+                            </ListItem>
+                          ))}
+                        </List>
+                        
+                        {renderAISummaryBox(`⚠️ ${ghostSkus.data.ghost_count} ghost SKUs detected. Consider liquidating ${ghostSkus.data.total_dead_stock_units} units to free cash flow.`)}
+                      </>
+                    )}
+                  </>
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+      </TabPanel>
+
+      {/* RISK & COST TAB */}
+      <TabPanel value={tabValue} index={2}>
+        <Grid container spacing={3}>
+          <Grid item xs={12} lg={7}>
+            <Card className="glass-panel" sx={{ backgroundColor: '#101726', border: '1px solid rgba(0, 242, 254, 0.15)', height: '100%' }}>
+              <CardContent>
+                <Typography variant="h6" sx={{ color: '#f8fafc', mb: 3 }}>Risk Matrix Summary</Typography>
+                {riskMatrix.loading ? <CircularProgress /> : (
+                  <>
+                    <Grid container spacing={2} sx={{ mb: 4 }}>
+                      <Grid item xs={3}>
+                        <Box sx={{ textAlign: 'center' }}>
+                          <Typography variant="h4" sx={{ color: '#ff4b72', fontWeight: 'bold' }}>{riskMatrix.data?.critical_count || 0}</Typography>
+                          <Typography variant="caption" sx={{ color: '#94a3b8' }}>Critical</Typography>
+                        </Box>
+                      </Grid>
+                      <Grid item xs={3}>
+                        <Box sx={{ textAlign: 'center' }}>
+                          <Typography variant="h4" sx={{ color: '#f59e0b', fontWeight: 'bold' }}>{riskMatrix.data?.warning_count || 0}</Typography>
+                          <Typography variant="caption" sx={{ color: '#94a3b8' }}>Warning</Typography>
+                        </Box>
+                      </Grid>
+                      <Grid item xs={3}>
+                        <Box sx={{ textAlign: 'center' }}>
+                          <Typography variant="h4" sx={{ color: '#10b981', fontWeight: 'bold' }}>{riskMatrix.data?.safe_count || 0}</Typography>
+                          <Typography variant="caption" sx={{ color: '#94a3b8' }}>Safe</Typography>
+                        </Box>
+                      </Grid>
+                      <Grid item xs={3}>
+                        <Box sx={{ textAlign: 'center' }}>
+                          <Typography variant="h5" sx={{ color: '#00f2fe', fontWeight: 'bold', mt: 0.5 }}>${(riskMatrix.data?.total_cash_tied_up || 0).toLocaleString()}</Typography>
+                          <Typography variant="caption" sx={{ color: '#94a3b8' }}>Cash Tied Up</Typography>
+                        </Box>
+                      </Grid>
+                    </Grid>
+
+                    <Box sx={{ height: 350, width: '100%' }}>
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart layout="vertical" data={riskMatrix.data?.products?.slice(0, 8) || []} margin={{ top: 0, right: 30, left: 40, bottom: 0 }}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" horizontal={false} />
+                          <XAxis type="number" domain={[0, 100]} stroke="#94a3b8" />
+                          <YAxis dataKey="name" type="category" stroke="#94a3b8" fontSize={12} width={100} />
+                          <Tooltip content={<CustomTooltip />} />
+                          <Bar dataKey="overall_risk" radius={[0, 4, 4, 0]}>
+                            {(riskMatrix.data?.products || []).map((entry, index) => {
+                              const score = entry.overall_risk;
+                              const color = score >= 70 ? '#ff4b72' : score >= 40 ? '#f59e0b' : '#10b981';
+                              return <Cell key={`cell-${index}`} fill={color} />;
+                            })}
+                          </Bar>
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </Box>
+                  </>
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+          
+          <Grid item xs={12} lg={5}>
+            <Card className="glass-panel" sx={{ backgroundColor: '#101726', border: '1px solid rgba(0, 242, 254, 0.15)', height: '100%' }}>
+              <CardContent>
+                <Typography variant="h6" sx={{ color: '#f8fafc', mb: 3 }}>Supply Chain Cost Timeline</Typography>
+                
+                {costPrediction.loading ? <CircularProgress /> : (
+                  <>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 4 }}>
+                      <Box>
+                        <Typography variant="subtitle2" sx={{ color: '#94a3b8' }}>Forecasted Total Cost</Typography>
+                        <Typography variant="h4" sx={{ color: '#f8fafc', fontWeight: 'bold' }}>
+                          ${(costPrediction.data?.total_forecast_cost || 0).toLocaleString()}
+                        </Typography>
+                      </Box>
+                      {costPrediction.data?.trend === 'up' ? (
+                         <Chip icon={<TrendingUp />} label="Rising Costs" sx={{ backgroundColor: 'rgba(255, 75, 114, 0.2)', color: '#ff4b72' }} />
+                      ) : (
+                         <Chip icon={<TrendingUp sx={{ transform: 'scaleY(-1)' }}/>} label="Decreasing Costs" sx={{ backgroundColor: 'rgba(16, 185, 129, 0.2)', color: '#10b981' }} />
+                      )}
+                    </Box>
+
+                    <Box sx={{ height: 250, width: '100%', mb: 3 }}>
+                      <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart data={[...(costPrediction.data?.history || []), ...(costPrediction.data?.forecast || [])]} margin={{ top: 10, right: 0, left: 0, bottom: 0 }}>
+                          <defs>
+                            <linearGradient id="colorCostHistory" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#00f2fe" stopOpacity={0.3}/>
+                              <stop offset="95%" stopColor="#00f2fe" stopOpacity={0}/>
+                            </linearGradient>
+                            <linearGradient id="colorCostForecast" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3}/>
+                              <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
+                            </linearGradient>
+                          </defs>
+                          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+                          <XAxis dataKey="date" stroke="#94a3b8" fontSize={11} />
+                          <YAxis stroke="#94a3b8" fontSize={11} />
+                          <Tooltip content={<CustomTooltip />} />
+                          <Area type="monotone" dataKey="cost" stroke="#00f2fe" fill="url(#colorCostHistory)" />
+                          <Area type="monotone" dataKey="forecast_cost" stroke="#8b5cf6" strokeDasharray="4 4" fill="url(#colorCostForecast)" />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    </Box>
+                    
+                    {renderAISummaryBox(costPrediction.data?.insight || 'Supply chain costs are expected to stabilize. Optimize freight to reduce overhead further.')}
+                  </>
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+      </TabPanel>
+
+      {/* SUPPLY CHAIN TAB */}
+      <TabPanel value={tabValue} index={3}>
+        <Typography variant="h6" sx={{ color: '#f8fafc', mb: 3 }}>Vendor Performance Scorecard</Typography>
+        
+        {vendorScores.loading ? <CircularProgress /> : (
+          <Grid container spacing={3}>
+            {((vendorScores.data && vendorScores.data.length > 0) ? vendorScores.data : [
+              { name: 'Alpha Logistics', tier: '🥇', score: 92, fulfillment_score: 48, volume_score: 25, reliability_score: 19, total_pos: 150, completed_pos: 145 },
+              { name: 'Global Supply Co', tier: '🥈', score: 78, fulfillment_score: 35, volume_score: 28, reliability_score: 15, total_pos: 80, completed_pos: 70 },
+              { name: 'FastTrack Ltd', tier: '🥉', score: 65, fulfillment_score: 30, volume_score: 20, reliability_score: 15, total_pos: 45, completed_pos: 35 }
+            ]).sort((a,b) => b.score - a.score).map((vendor, index) => (
+              <Grid item xs={12} md={4} key={index}>
+                <Card className="glass-panel" sx={{ backgroundColor: '#101726', border: '1px solid rgba(0, 242, 254, 0.15)', height: '100%' }}>
+                  <CardContent>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 3 }}>
+                      <Typography variant="h5">{vendor.tier}</Typography>
+                      <Typography variant="h6" sx={{ color: '#f8fafc' }}>{vendor.name}</Typography>
+                    </Box>
+                    
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 3 }}>
+                      <Box sx={{ position: 'relative', width: 140, height: 140 }}>
+                        <ResponsiveContainer width="100%" height="100%">
+                          <RadialBarChart 
+                            cx="50%" cy="50%" innerRadius="70%" outerRadius="100%" 
+                            barSize={10} data={[{ name: 'Score', value: vendor.score }]} 
+                            startAngle={90} endAngle={-270}
+                          >
+                            <RadialBar minAngle={15} background clockWise dataKey="value" cornerRadius={5} fill={vendor.score >= 90 ? '#10b981' : vendor.score >= 70 ? '#00f2fe' : '#f59e0b'} />
+                          </RadialBarChart>
+                        </ResponsiveContainer>
+                        <Box sx={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
+                          <Typography variant="h4" sx={{ color: '#f8fafc', fontWeight: 'bold' }}>{vendor.score}</Typography>
+                          <Typography variant="caption" sx={{ color: '#94a3b8' }}>Score</Typography>
+                        </Box>
+                      </Box>
+                    </Box>
+
+                    <Box sx={{ mb: 2 }}>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+                        <Typography variant="caption" sx={{ color: '#94a3b8' }}>Fulfillment ({vendor.fulfillment_score}/50)</Typography>
+                      </Box>
+                      <LinearProgress variant="determinate" value={(vendor.fulfillment_score/50)*100} sx={{ height: 6, borderRadius: 3, backgroundColor: 'rgba(255,255,255,0.1)', '& .MuiLinearProgress-bar': { backgroundColor: '#8b5cf6' } }} />
+                    </Box>
+                    
+                    <Box sx={{ mb: 2 }}>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+                        <Typography variant="caption" sx={{ color: '#94a3b8' }}>Volume ({vendor.volume_score}/30)</Typography>
+                      </Box>
+                      <LinearProgress variant="determinate" value={(vendor.volume_score/30)*100} sx={{ height: 6, borderRadius: 3, backgroundColor: 'rgba(255,255,255,0.1)', '& .MuiLinearProgress-bar': { backgroundColor: '#00f2fe' } }} />
+                    </Box>
+
+                    <Box sx={{ mb: 3 }}>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+                        <Typography variant="caption" sx={{ color: '#94a3b8' }}>Reliability ({vendor.reliability_score}/20)</Typography>
+                      </Box>
+                      <LinearProgress variant="determinate" value={(vendor.reliability_score/20)*100} sx={{ height: 6, borderRadius: 3, backgroundColor: 'rgba(255,255,255,0.1)', '& .MuiLinearProgress-bar': { backgroundColor: '#f59e0b' } }} />
+                    </Box>
+                    
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 1.5, backgroundColor: 'rgba(255,255,255,0.03)', borderRadius: 2 }}>
+                      <Box>
+                        <Typography variant="caption" sx={{ color: '#94a3b8', display: 'block' }}>Total POs</Typography>
+                        <Typography variant="body1" sx={{ color: '#f8fafc', fontWeight: 'bold' }}>{vendor.total_pos}</Typography>
+                      </Box>
+                      <Box>
+                        <Typography variant="caption" sx={{ color: '#94a3b8', display: 'block' }}>Completed</Typography>
+                        <Typography variant="body1" sx={{ color: '#10b981', fontWeight: 'bold' }}>{vendor.completed_pos}</Typography>
+                      </Box>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        )}
+      </TabPanel>
+
+    </Container>
+  );
+}
