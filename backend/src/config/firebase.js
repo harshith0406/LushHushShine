@@ -587,7 +587,13 @@ const DB_URL = process.env.DATABASE_URL || process.env['1hsdb_DATABASE_URL'];
 // --- Initialize Database Connection ---
 if (DB_URL) {
   try {
-    const { Pool } = require('@neondatabase/serverless');
+    const { Pool, neonConfig } = require('@neondatabase/serverless');
+    
+    // Inject WebSocket for local Node.js environment
+    if (typeof WebSocket === 'undefined') {
+      neonConfig.webSocketConstructor = require('ws');
+    }
+    
     const sql = new Pool({ connectionString: DB_URL });
     db = new PostgresFirestoreDb(sql);
     auth = new PostgresAuth(sql);
