@@ -34,6 +34,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/ExitToApp';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
+import SecurityIcon from '@mui/icons-material/Security';
 
 import ChatbotPanel from './ChatbotPanel';
 
@@ -124,6 +125,7 @@ const DashboardLayout = () => {
     { text: 'Inventory', icon: <InventoryIcon />, path: '/inventory' },
     { text: 'Sales', icon: <ReceiptIcon />, path: '/sales' },
     { text: 'Purchase Orders', icon: <AssignmentIcon />, path: '/purchase-orders' },
+    { text: 'Risk Analysis', icon: <SecurityIcon />, path: '/risk-analysis' },
     { text: 'Profile', icon: <PersonIcon />, path: '/profile' }
   ];
 
@@ -151,32 +153,17 @@ const DashboardLayout = () => {
           style={{ 
             fontWeight: 800, 
             letterSpacing: '-0.02em',
-            color: '#f8fafc',
+            color: 'var(--text-primary)',
             fontFamily: 'var(--font-family)'
           }}
         >
-          Shoply<span style={{ color: '#00f2fe' }}>.ai</span>
+          Shoply<span style={{ color: 'var(--primary, #00f2fe)' }}>.ai</span>
         </Typography>
       </Toolbar>
       
       <Divider style={{ backgroundColor: 'rgba(255,255,255,0.08)' }} />
       
-      {/* User Quick Info */}
-      <Box style={{ padding: '20px 24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-        <Avatar style={{ backgroundColor: 'var(--primary)', color: '#fff', fontWeight: 600 }}>
-          {user?.userName ? user.userName[0].toUpperCase() : 'U'}
-        </Avatar>
-        <Box style={{ overflow: 'hidden' }}>
-          <Typography variant="subtitle2" noWrap style={{ fontWeight: 600 }}>
-            {user?.userName}
-          </Typography>
-          <Typography variant="caption" noWrap style={{ color: '#94a3b8', display: 'block' }}>
-            {user?.role}
-          </Typography>
-        </Box>
-      </Box>
 
-      <Divider style={{ backgroundColor: 'rgba(255,255,255,0.08)' }} />
 
       <List style={{ padding: '8px 12px', flexGrow: 1 }}>
         {menuItems.map((item) => {

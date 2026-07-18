@@ -32,7 +32,7 @@ class ErrorBoundary extends React.Component {
           minHeight="60vh"
           padding="32px"
           className="glass-panel"
-          style={{ margin: '32px', borderRadius: '16px', textAlignment: 'center' }}
+          style={{ margin: '32px', borderRadius: '16px', textAlign: 'center' }}
         >
           <WarningAmberIcon style={{ fontSize: 64, color: 'var(--accent)', marginBottom: 16 }} />
           <Typography variant="h5" style={{ fontWeight: 800, fontFamily: 'var(--font-family)', marginBottom: 8 }}>

@@ -74,15 +74,15 @@ const Login = () => {
                 style={{ width: '100%', height: '100%', objectFit: 'contain', mixBlendMode: 'multiply' }} 
               />
             </Box>
-            <Typography variant="h4" style={{ fontWeight: 800, fontFamily: 'var(--font-family)', color: '#0f172a', letterSpacing: '-0.02em' }}>
-              Shoply<span style={{ color: '#7c4dff' }}>.ai</span>
+            <Typography variant="h4" style={{ fontWeight: 800, fontFamily: 'var(--font-family)', color: 'var(--text-primary, #0f172a)', letterSpacing: '-0.02em' }}>
+              Shoply<span style={{ color: 'var(--primary, #00f2fe)' }}>.ai</span>
             </Typography>
           </Box>
 
-          <Typography variant="h3" style={{ fontWeight: 800, fontFamily: 'var(--font-family)', color: '#0f172a', marginBottom: '8px', fontSize: '2.2rem' }}>
+          <Typography variant="h3" style={{ fontWeight: 800, fontFamily: 'var(--font-family)', color: 'var(--text-primary, #0f172a)', marginBottom: '8px', fontSize: '2.2rem' }}>
             Login
           </Typography>
-          <Typography variant="body1" style={{ color: '#64748b', marginBottom: '32px', fontFamily: 'var(--font-family)' }}>
+          <Typography variant="body1" style={{ color: 'var(--text-secondary, #64748b)', marginBottom: '32px', fontFamily: 'var(--font-family)' }}>
             Welcome back! Enter your details to access your dashboard.
           </Typography>
 

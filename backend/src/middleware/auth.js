@@ -15,10 +15,10 @@ const authenticateToken = async (req, res, next) => {
   // --- Stateless fallback for pre-seeded admin (survives cold-starts) ---
   if (token === 'mock-token-admin-uid-123') {
     req.user = {
-      uid: 'admin-uid-123',
+      uid: 'STORE-MAIN-001',
       email: 'admin@shoply.ai',
       name: 'Shoply Admin',
-      companyName: 'Shoply HQ',
+      companyName: 'City Mart Supermarket',
       role: 'Selling Place',
       phone: '1234567890',
       address: '123 Shoply Way',

@@ -44,7 +44,7 @@ router.get('/', authenticateToken, async (req, res) => {
         .get();
       const sellerItemIds = sellerItemsSnapshot.docs.map(doc => doc.id);
       
-      const filtered = batches.filter(b => sellerItemIds.includes(b.itemNbr));
+      const filtered = batches.filter(b => sellerItemIds.includes(b.itemNbr) || sellerItemIds.includes(b.productId));
       return res.json(filtered);
     } else if (req.user.role === 'Vendor') {
       const vendorItemsSnapshot = await db.collection('item_list')
@@ -52,7 +52,7 @@ router.get('/', authenticateToken, async (req, res) => {
         .get();
       const vendorItemIds = vendorItemsSnapshot.docs.map(doc => doc.id);
       
-      const filtered = batches.filter(b => vendorItemIds.includes(b.itemNbr));
+      const filtered = batches.filter(b => vendorItemIds.includes(b.itemNbr) || vendorItemIds.includes(b.productId));
       return res.json(filtered);
     }
 
@@ -102,6 +102,7 @@ router.post('/', authenticateToken, requireRole(['Selling Place']), async (req, 
     const batchPayload = {
       batchNo,
       itemNbr,
+      productId: itemNbr,
       mfgDate,
       expDate,
       createdAt: new Date().toISOString()
@@ -149,7 +150,8 @@ router.put('/:batchNo', authenticateToken, requireRole(['Selling Place']), async
 
     const batchData = batchDoc.data();
     
-    const itemDoc = await db.collection('item_list').doc(batchData.itemNbr).get();
+    const pId = batchData.itemNbr || batchData.productId;
+    const itemDoc = await db.collection('item_list').doc(pId).get();
     if (itemDoc.exists && itemDoc.data().sellingPlaceId !== req.user.uid) {
       return res.status(403).json({ error: 'Access Denied: Product belongs to another store.' });
     }

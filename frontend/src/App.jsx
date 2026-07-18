@@ -15,6 +15,7 @@ import Inventory from './pages/Inventory';
 import Sales from './pages/Sales';
 import PurchaseOrders from './pages/PurchaseOrders';
 import Profile from './pages/Profile';
+import RiskAnalysis from './pages/RiskAnalysis';
 
 /**
  * Root Route Selector
@@ -49,6 +50,7 @@ function App() {
                 <Route path="/sales" element={<Sales />} />
                 <Route path="/purchase-orders" element={<PurchaseOrders />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/risk-analysis" element={<RiskAnalysis />} />
               </Route>
             </Route>
 

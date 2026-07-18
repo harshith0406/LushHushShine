@@ -16,5 +16,14 @@
     "poId": "owdx30gehnp",
     "read": false,
     "createdAt": "2026-07-17T20:03:48.474Z"
+  },
+  "lcvtcrjfec": {
+    "userId": "VENDOR-NEXUS-001",
+    "title": "New Purchase Order Received",
+    "message": "You received a new purchase order (u7jro8k87kh) from Retailer 'City Mart Supermarket' with 1 items.",
+    "type": "po-received",
+    "poId": "u7jro8k87kh",
+    "read": false,
+    "createdAt": "2026-07-18T10:32:46.079Z"
   }
 }

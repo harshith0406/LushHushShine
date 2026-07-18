@@ -1,4 +1,24 @@
 {
+  "VENDOR-NEXUS-001": {
+    "id": "VENDOR-NEXUS-001",
+    "companyName": "Nexus Distributors Ltd.",
+    "userName": "Rajan Mehta",
+    "email": "rajan@nexusdist.com",
+    "phone": "9876543210",
+    "address": "500 Logistics Way, Industrial Zone",
+    "licenseNo": "LIC-VENDOR-NXS-001",
+    "createdAt": "2026-06-01T08:00:00.000Z"
+  },
+  "VENDOR-APEX-002": {
+    "id": "VENDOR-APEX-002",
+    "companyName": "Apex Distributions",
+    "userName": "Sneha Joshi",
+    "email": "sneha@apexdist.in",
+    "phone": "8765432109",
+    "address": "Hosahalli Industrial Area, Bangalore",
+    "licenseNo": "LIC-VENDOR-APX-002",
+    "createdAt": "2026-06-01T08:00:00.000Z"
+  },
   "mfyvtejbb4d": {
     "id": "mfyvtejbb4d",
     "companyName": "AFC",
@@ -17,16 +37,6 @@
     "address": "500 Logistics Way",
     "licenseNo": "LIC-VENDOR-888",
     "createdAt": "2026-07-17T20:03:20.137Z"
-  },
-  "wacdxu0bmyi": {
-    "id": "wacdxu0bmyi",
-    "companyName": "Nexus Distributors Ltd.",
-    "userName": "Alex Vendor",
-    "email": "vendor_ic65@test.com",
-    "phone": "9876543210",
-    "address": "500 Logistics Way",
-    "licenseNo": "LIC-VENDOR-888",
-    "createdAt": "2026-07-17T20:03:29.659Z"
   },
   "5smfttaljk7": {
     "id": "5smfttaljk7",
