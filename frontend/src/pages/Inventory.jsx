@@ -57,7 +57,7 @@ const Inventory = () => {
   const fetchInventory = async () => {
     try {
       const response = await API.get('/api/inventory');
-      setInventory(response.data || []);
+      setInventory(Array.isArray(response.data) ? response.data : []);
     } catch (err) {
       setError('Failed to load inventory levels');
     }
@@ -170,7 +170,7 @@ const Inventory = () => {
       ];
       try {
         const response = await API.get('/api/auth/vendors');
-        if (response.data && response.data.length > 0) {
+        if (Array.isArray(response.data) && response.data.length > 0) {
           mockList = response.data;
         }
       } catch (e) {
