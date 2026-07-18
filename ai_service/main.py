@@ -38,7 +38,7 @@ HF_API_KEY = os.environ.get("HUGGINGFACE_API_KEY", "")
 HF_BASE_URL = os.environ.get("HUGGINGFACE_BASE_URL", "https://router.huggingface.co/v1")
 
 
-HF_MODEL = os.environ.get("HUGGINGFACE_MODEL", os.environ.get("HUGGINGFACE_MODE", "meta-llama/Meta-Llama-3.1-8B-Instruct"))
+HF_MODEL = os.environ.get("HUGGINGFACE_MODEL", os.environ.get("HUGGINGFACE_MODE", "meta-llama/Llama-3.1-8B-Instruct"))
 
 def get_backend_url():
     if os.environ.get("VERCEL_PROJECT_PRODUCTION_URL"):
@@ -641,7 +641,8 @@ def generate_intelligent_fallback(lower_msg: str, db_context: str = "") -> str:
     elif any(w in words for w in ["hi", "hello", "hey", "greetings"]):
         return "Hello! 👋 I am your Shoply.ai Assistant powered by Hugging Face (Llama-3.1-8B). Ask me about low stock alerts, product expiries, sales trends, or vendor contacts!"
     else:
-        return "I am Shoply.ai's AI Assistant powered by Hugging Face. I am connected directly to your store's inventory, sales invoices, expiry tracking, and supplier contacts. Feel free to ask any question!"
+        # Fallback to a generic response if LLM API completely fails and we don't have a specific hardcoded reply
+        return "I am Shoply.ai's AI Assistant, powered by Hugging Face. The AI engine seems to be currently unavailable. Please check your API token or internet connection, but feel free to ask about your store's inventory, sales invoices, expiry tracking, and supplier contacts!"
 
 # ══════════════════════════════════════════════════════════════════════════════
 # NEW ML ENDPOINTS
@@ -683,8 +684,8 @@ def predict_cost(data: CostPredictionRequest):
         "overrun_alert_days": overrun_days,
         "total_forecast_cost": round(sum(forecast), 2),
         "insight": (
-            f"Procurement costs are {trend_label}. "
-            f"Estimated total spend over next {periods} days: ${round(sum(forecast), 2)}. "
+            f"Procurement costs are {trend_label}.\n"
+            f"Estimated total spend over next {periods} days: ${round(sum(forecast), 2)}.\n"
             + (f"⚠️ Budget threshold (${budget_threshold}) exceeded on {len(overrun_days)} day(s)." if overrun_days else "✅ Costs within normal budget range.")
         )
     }

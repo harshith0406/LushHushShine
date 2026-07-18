@@ -3,10 +3,11 @@ import { Card, CardContent, Typography, Box } from '@mui/material';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
-const StatCard = ({ title, value, icon, trend, trendText }) => {
+const StatCard = ({ title, value, icon, trend, trendText, onClick }) => {
   return (
     <Card 
       className="glass-panel fade-in card-tilt"
+      onClick={onClick}
       style={{
         height: '100%',
         backgroundColor: 'var(--glass-bg)',
@@ -14,7 +15,8 @@ const StatCard = ({ title, value, icon, trend, trendText }) => {
         boxShadow: '0 8px 32px 0 var(--glass-shadow)',
         borderRadius: 'var(--border-radius-md)',
         position: 'relative',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        cursor: onClick ? 'pointer' : 'default'
       }}
     >
       <CardContent style={{ padding: '24px' }}>
@@ -64,9 +66,9 @@ const StatCard = ({ title, value, icon, trend, trendText }) => {
             <span className={`stat-trend ${trend}`}>
               {trend === 'up' ? (
                 <ArrowUpwardIcon style={{ fontSize: '0.85rem' }} />
-              ) : (
+              ) : trend === 'down' ? (
                 <ArrowDownwardIcon style={{ fontSize: '0.85rem' }} />
-              )}
+              ) : null}
               {trendText}
             </span>
           </Box>

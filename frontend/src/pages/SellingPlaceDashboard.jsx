@@ -51,7 +51,7 @@ const AIPlotSummary = ({ text }) => (
     boxShadow: '0 0 10px rgba(0,242,254,0.1)'
   }}>
     <AutoAwesomeIcon style={{ color: '#00f2fe', fontSize: '1.2rem' }} />
-    <Typography variant="body2" style={{ color: '#f8fafc', fontFamily: 'var(--font-family)' }}>
+    <Typography variant="body2" style={{ color: '#f8fafc', fontFamily: 'var(--font-family)', whiteSpace: 'pre-wrap' }}>
       {text}
     </Typography>
   </Box>
@@ -462,8 +462,9 @@ const SellingPlaceDashboard = () => {
               title="Low Stock Items"
               value={`${stats.lowStockCount} alerts`}
               icon={<WarningIcon style={{ color: stats.lowStockCount > 0 ? 'var(--danger)' : 'var(--text-muted)' }} />}
-              trend={stats.lowStockCount > 0 ? 'down' : 'up'}
-              trendText={stats.lowStockCount > 0 ? 'Reorder needed' : 'All stock optimal'}
+              trend={stats.lowStockCount > 0 ? 'warning' : 'up'}
+              trendText={stats.lowStockCount > 0 ? 'Reorder needed (Click to view)' : 'All stock optimal'}
+              onClick={() => navigate('/risk-analysis')}
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>

@@ -310,8 +310,11 @@ const Inventory = () => {
       {/* AI Summary Strip */}
       <Paper className="glass-panel" style={{ padding: '16px 24px', backgroundColor: '#101726', border: '1px solid rgba(0, 242, 254, 0.2)', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
         <AutoAwesomeIcon style={{ color: '#00f2fe' }} />
-        <Typography variant="body1" style={{ color: '#f8fafc', fontWeight: 600 }}>
-          AI Insights: <span style={{ color: '#ff4b72' }}>{stats.critical} items critical risk</span> | <span style={{ color: '#f59e0b' }}>{stats.ghost} ghost SKUs</span> | <span style={{ color: '#10b981' }}>Avg margin {stats.avgMargin.toFixed(1)}%</span>
+        <Typography variant="body1" style={{ color: '#f8fafc', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+          AI Insights: 
+          <span style={{ backgroundColor: 'rgba(255, 75, 114, 0.1)', color: '#ff4b72', padding: '4px 12px', borderRadius: '16px', fontSize: '0.85rem' }}>{stats.critical} items critical risk</span>
+          <span style={{ backgroundColor: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b', padding: '4px 12px', borderRadius: '16px', fontSize: '0.85rem' }}>{stats.ghost} ghost SKUs</span>
+          <span style={{ backgroundColor: 'rgba(16, 185, 129, 0.1)', color: '#10b981', padding: '4px 12px', borderRadius: '16px', fontSize: '0.85rem' }}>Avg margin {stats.avgMargin.toFixed(1)}%</span>
         </Typography>
       </Paper>
 
