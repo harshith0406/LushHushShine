@@ -19,7 +19,7 @@
     "sellingPlaceName": "City Mart Supermarket",
     "vendorId": "VENDOR-NEXUS-001",
     "vendorName": "Nexus Distributors Ltd.",
-    "unitCost": 1.80
+    "unitCost": 1.8
   },
   "SKU-DAIRY-002": {
     "itemNbr": "SKU-DAIRY-002",
@@ -41,7 +41,7 @@
     "sellingPlaceName": "City Mart Supermarket",
     "vendorId": "VENDOR-NEXUS-001",
     "vendorName": "Nexus Distributors Ltd.",
-    "unitCost": 2.60
+    "unitCost": 2.6
   },
   "SKU-BAKE-003": {
     "itemNbr": "SKU-BAKE-003",
@@ -63,7 +63,7 @@
     "sellingPlaceName": "City Mart Supermarket",
     "vendorId": "VENDOR-NEXUS-001",
     "vendorName": "Nexus Distributors Ltd.",
-    "unitCost": 2.10
+    "unitCost": 2.1
   },
   "SKU-BEVE-004": {
     "itemNbr": "SKU-BEVE-004",
@@ -85,7 +85,7 @@
     "sellingPlaceName": "City Mart Supermarket",
     "vendorId": "VENDOR-NEXUS-001",
     "vendorName": "Nexus Distributors Ltd.",
-    "unitCost": 2.20
+    "unitCost": 2.2
   },
   "SKU-SNAC-005": {
     "itemNbr": "SKU-SNAC-005",
@@ -107,7 +107,7 @@
     "sellingPlaceName": "City Mart Supermarket",
     "vendorId": "VENDOR-APEX-002",
     "vendorName": "Apex Distributions",
-    "unitCost": 1.10
+    "unitCost": 1.1
   },
   "SKU-SNAC-006": {
     "itemNbr": "SKU-SNAC-006",
@@ -129,7 +129,7 @@
     "sellingPlaceName": "City Mart Supermarket",
     "vendorId": "VENDOR-APEX-002",
     "vendorName": "Apex Distributions",
-    "unitCost": 3.20
+    "unitCost": 3.2
   },
   "SKU-HYGN-007": {
     "itemNbr": "SKU-HYGN-007",
@@ -151,7 +151,7 @@
     "sellingPlaceName": "City Mart Supermarket",
     "vendorId": "VENDOR-APEX-002",
     "vendorName": "Apex Distributions",
-    "unitCost": 1.40
+    "unitCost": 1.4
   },
   "SKU-HYSE-008": {
     "itemNbr": "SKU-HYSE-008",
@@ -161,7 +161,7 @@
     "availableQty": 70,
     "stock": 70,
     "reorderPoint": 15,
-    "averageDailySales": 0.0,
+    "averageDailySales": 0,
     "standardDeviation": 0.2,
     "leadTimeDays": 5,
     "updatedAt": "2026-06-15T18:00:00.000Z",
@@ -173,7 +173,7 @@
     "sellingPlaceName": "City Mart Supermarket",
     "vendorId": "VENDOR-APEX-002",
     "vendorName": "Apex Distributions",
-    "unitCost": 1.30
+    "unitCost": 1.3
   },
   "SKU-GROC-009": {
     "itemNbr": "SKU-GROC-009",
@@ -195,7 +195,7 @@
     "sellingPlaceName": "City Mart Supermarket",
     "vendorId": "VENDOR-NEXUS-001",
     "vendorName": "Nexus Distributors Ltd.",
-    "unitCost": 5.50
+    "unitCost": 5.5
   },
   "SKU-GROC-010": {
     "itemNbr": "SKU-GROC-010",
@@ -217,7 +217,7 @@
     "sellingPlaceName": "City Mart Supermarket",
     "vendorId": "VENDOR-NEXUS-001",
     "vendorName": "Nexus Distributors Ltd.",
-    "unitCost": 2.00
+    "unitCost": 2
   },
   "TEST-SKU-0YSN": {
     "itemNbr": "TEST-SKU-0YSN",
@@ -239,7 +239,7 @@
     "sellingPlaceName": "Test Store Inc.",
     "vendorId": "5smfttaljk7",
     "vendorName": "Nexus Distributors Ltd.",
-    "unitCost": 1.80
+    "unitCost": 1.8
   },
   "TEST-SKU-ZM3B": {
     "itemNbr": "TEST-SKU-ZM3B",
@@ -303,5 +303,59 @@
     "sellingPlaceName": "Test Store Inc.",
     "vendorId": "4r847t7v8jj",
     "vendorName": "Nexus Distributors Ltd."
+  },
+  "SKU-GHOST-001": {
+    "itemNbr": "SKU-GHOST-001",
+    "batchNo": "B-GHOST-001",
+    "totalQty": 100,
+    "soldQty": 0,
+    "availableQty": 100,
+    "stock": 100,
+    "reorderPoint": 10,
+    "averageDailySales": 0,
+    "standardDeviation": 0,
+    "leadTimeDays": 5,
+    "updatedAt": "2026-06-01T10:00:00.000Z",
+    "productId": "SKU-GHOST-001",
+    "productName": "Unpopular Toothpaste",
+    "sku": "SKU-GHOST-001",
+    "category": "Hygiene",
+    "sellingPlaceId": "STORE-MAIN-001",
+    "vendorId": "VENDOR-APEX-002",
+    "unitCost": 2.5
+  },
+  "SKU-RISK-002": {
+    "itemNbr": "SKU-RISK-002",
+    "batchNo": "B-RISK-002",
+    "totalQty": 50,
+    "soldQty": 45,
+    "availableQty": 5,
+    "stock": 5,
+    "reorderPoint": 20,
+    "averageDailySales": 10,
+    "standardDeviation": 2,
+    "leadTimeDays": 7,
+    "updatedAt": "2026-07-18T10:00:00.000Z",
+    "productId": "SKU-RISK-002",
+    "productName": "Critical Energy Drink",
+    "sku": "SKU-RISK-002",
+    "category": "Beverages",
+    "sellingPlaceId": "STORE-MAIN-001",
+    "vendorId": "VENDOR-NEXUS-001",
+    "unitCost": 1.5
+  },
+  "SKU-SPIKE-003": {
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "productName": "Viral Trending Snack",
+    "stock": 50,
+    "availableQty": 50
+  },
+  "SKU-CRASH-004": {
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "productName": "Recalled Widget",
+    "stock": 50,
+    "availableQty": 50
   }
 }

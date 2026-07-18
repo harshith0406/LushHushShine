@@ -28,7 +28,7 @@ app.add_middleware(
 
 HF_API_KEY = os.environ.get("HUGGINGFACE_API_KEY", "")
 HF_BASE_URL = os.environ.get("HUGGINGFACE_BASE_URL", "https://router.huggingface.co/v1")
-HF_MODEL = os.environ.get("HUGGINGFACE_MODEL", "meta-llama/Llama-3.1-8B-Instruct:novita")
+HF_MODEL = os.environ.get("HUGGINGFACE_MODEL", os.environ.get("HUGGINGFACE_MODE", "meta-llama/Meta-Llama-3-8B-Instruct"))
 
 def get_backend_url():
     if os.environ.get("VERCEL_PROJECT_PRODUCTION_URL"):
@@ -796,15 +796,15 @@ def analyze_stockout_risk(data: StockoutRiskRequest):
 
         results.append({
             "productId": item.get("productId"),
-            "name": item.get("name", item.get("productName", "")),
-            "available_qty": available,
-            "days_remaining": round(days_remaining, 1),
-            "est_stockout_date": est_stockout,
-            "risk_score": risk_score,
-            "risk_level": risk_level,
-            "risk_color": color,
-            "reorder_point": reorder_pt,
-            "lead_time_days": lead_time,
+            "productName": item.get("name", item.get("productName", "")),
+            "availableQty": available,
+            "daysRemaining": round(days_remaining, 1),
+            "estStockoutDate": est_stockout,
+            "riskScore": risk_score,
+            "riskLevel": risk_level,
+            "riskColor": color,
+            "reorderPoint": reorder_pt,
+            "leadTimeDays": lead_time,
             "action": (
                 "🔴 ORDER NOW — stock will run out before reorder arrives!"
                 if risk_level == "CRITICAL" else
@@ -968,13 +968,13 @@ def detect_sales_anomalies(data: SalesAnomalyRequest):
             desc = "Within normal sales range."
 
         record = {
-            "productId": item.get("productId"),
-            "name": item.get("name", ""),
+            "id": item.get("productId"),
+            "productName": item.get("name", ""),
             "latest_sales": daily[-1] if daily else 0,
             "mean_sales": round(mean, 2),
             "std_sales": round(std, 2),
             "z_score": round(latest_z, 3),
-            "anomaly_type": anomaly_type,
+            "type": anomaly_type,
             "label": label,
             "description": desc
         }
@@ -1100,5 +1100,5 @@ def analyze_risk_matrix(data: RiskMatrixRequest):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=False)
 

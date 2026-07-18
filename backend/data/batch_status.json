@@ -152,5 +152,16 @@
     "mfgDate": "2026-07-10T00:00:00.000Z",
     "expDate": "2026-10-10T00:00:00.000Z",
     "createdAt": "2026-07-18T12:13:43.711Z"
+  },
+  "B-EXP-001": {
+    "batchNo": "B-EXP-001",
+    "productId": "SKU-DAIRY-001",
+    "productName": "Full Cream Milk 1L",
+    "mfgDate": "2026-07-01",
+    "expDate": "2026-07-20",
+    "quantity": 25,
+    "sellingPlaceId": "STORE-MAIN-001",
+    "vendorId": "VENDOR-NEXUS-001",
+    "createdAt": "2026-07-01T10:00:00.000Z"
   }
 }

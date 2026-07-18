@@ -20,7 +20,7 @@ const getSalesTrendForProduct = async (productId) => {
   salesSnapshot.docs.forEach(doc => {
     const sale = doc.data();
     const dateStr = sale.createdAt ? sale.createdAt.substring(0, 10) : '2026-07-17';
-    salesByDate[dateStr] = (salesByDate[dateStr] || 0) + sale.subtotal;
+    salesByDate[dateStr] = (salesByDate[dateStr] || 0) + (sale.subtotal || 0);
   });
 
   const sortedRevenue = Object.keys(salesByDate)

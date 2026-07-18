@@ -751,8 +751,8 @@ const SellingPlaceDashboard = () => {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {[...stockoutData].sort((a,b) => b.riskScore - a.riskScore).map((row) => (
-                          <TableRow key={row.id}>
+                        {[...stockoutData].sort((a,b) => b.riskScore - a.riskScore).map((row, idx) => (
+                          <TableRow key={row.productId || idx}>
                             <TableCell style={{ fontWeight: 600, color: '#f8fafc' }}>{row.productName}</TableCell>
                             <TableCell style={{ color: '#f8fafc' }}>{row.availableQty}</TableCell>
                             <TableCell style={{ color: '#f8fafc' }}>{row.daysRemaining}</TableCell>

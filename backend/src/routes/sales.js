@@ -125,6 +125,14 @@ router.post('/', authenticateToken, requireRole(['Selling Place']), async (req, 
           error: `Insufficient stock for product '${product.name || product.itemDesc}'. Current stock: ${currentStock}, Requested: ${item.quantity}` 
         });
       }
+      
+      const admin = require('firebase-admin');
+      let increment;
+      try {
+        increment = admin.firestore.FieldValue.increment;
+      } catch(e) {
+        increment = (val) => val; // Fallback for mock db
+      }
 
       const newAvailable = currentStock - item.quantity;
       const newSold = (invData.soldQty || 0) + item.quantity;
@@ -134,10 +142,10 @@ router.post('/', authenticateToken, requireRole(['Selling Place']), async (req, 
       const simulatedAvgSales = Number((currentAvgSales * 0.9 + item.quantity * 0.1).toFixed(2));
 
       await invDocRef.update({
-        availableQty: newAvailable,
-        soldQty: newSold,
-        totalQty,
-        stock: newAvailable,
+        availableQty: increment ? increment(-item.quantity) : newAvailable,
+        stock: increment ? increment(-item.quantity) : newAvailable,
+        soldQty: increment ? increment(item.quantity) : newSold,
+        totalQty: totalQty,
         averageDailySales: simulatedAvgSales,
         updatedAt: new Date().toISOString()
       });

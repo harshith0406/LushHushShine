@@ -1,1 +1,852 @@
-{}
+{
+  "TX-SKU-SPIKE-003-2026-07-13-0": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-13-0",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-13T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-13-1": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-13-1",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-13T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-13-2": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-13-2",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-13T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-13-3": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-13-3",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-13T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-13-4": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-13-4",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-13T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-14-0": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-14-0",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-14T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-14-1": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-14-1",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-14T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-14-2": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-14-2",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-14T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-14-3": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-14-3",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-14T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-14-4": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-14-4",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-14T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-15-0": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-15-0",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-15T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-15-1": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-15-1",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-15T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-15-2": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-15-2",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-15T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-15-3": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-15-3",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-15T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-15-4": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-15-4",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-15T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-16-0": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-16-0",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-16T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-16-1": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-16-1",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-16T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-16-2": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-16-2",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-16T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-16-3": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-16-3",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-16T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-16-4": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-16-4",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-16T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-17-0": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-17-0",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-17T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-17-1": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-17-1",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-17T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-17-2": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-17-2",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-17T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-17-3": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-17-3",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-17T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-17-4": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-17-4",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-17T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-17-5": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-17-5",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-17T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-17-6": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-17-6",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-17T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-17-7": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-17-7",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-17T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-17-8": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-17-8",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-17T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-17-9": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-17-9",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-17T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-17-10": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-17-10",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-17T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-17-11": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-17-11",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-17T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-17-12": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-17-12",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-17T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-17-13": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-17-13",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-17T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-17-14": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-17-14",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-17T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-17-15": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-17-15",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-17T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-17-16": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-17-16",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-17T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-17-17": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-17-17",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-17T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-17-18": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-17-18",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-17T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-17-19": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-17-19",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-17T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-17-20": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-17-20",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-17T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-17-21": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-17-21",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-17T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-17-22": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-17-22",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-17T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-17-23": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-17-23",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-17T10:00:00.000Z"
+  },
+  "TX-SKU-SPIKE-003-2026-07-17-24": {
+    "transactionId": "TX-SKU-SPIKE-003-2026-07-17-24",
+    "itemNbr": "SKU-SPIKE-003",
+    "productId": "SKU-SPIKE-003",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-17T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-13-0": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-13-0",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-13T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-13-1": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-13-1",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-13T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-13-2": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-13-2",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-13T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-13-3": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-13-3",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-13T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-13-4": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-13-4",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-13T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-13-5": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-13-5",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-13T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-13-6": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-13-6",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-13T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-13-7": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-13-7",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-13T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-13-8": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-13-8",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-13T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-13-9": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-13-9",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-13T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-14-0": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-14-0",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-14T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-14-1": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-14-1",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-14T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-14-2": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-14-2",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-14T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-14-3": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-14-3",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-14T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-14-4": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-14-4",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-14T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-14-5": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-14-5",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-14T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-14-6": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-14-6",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-14T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-14-7": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-14-7",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-14T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-14-8": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-14-8",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-14T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-14-9": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-14-9",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-14T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-15-0": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-15-0",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-15T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-15-1": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-15-1",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-15T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-15-2": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-15-2",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-15T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-15-3": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-15-3",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-15T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-15-4": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-15-4",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-15T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-15-5": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-15-5",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-15T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-15-6": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-15-6",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-15T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-15-7": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-15-7",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-15T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-15-8": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-15-8",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-15T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-15-9": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-15-9",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-15T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-16-0": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-16-0",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-16T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-16-1": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-16-1",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-16T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-16-2": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-16-2",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-16T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-16-3": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-16-3",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-16T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-16-4": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-16-4",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-16T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-16-5": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-16-5",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-16T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-16-6": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-16-6",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-16T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-16-7": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-16-7",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-16T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-16-8": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-16-8",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-16T10:00:00.000Z"
+  },
+  "TX-SKU-CRASH-004-2026-07-16-9": {
+    "transactionId": "TX-SKU-CRASH-004-2026-07-16-9",
+    "itemNbr": "SKU-CRASH-004",
+    "productId": "SKU-CRASH-004",
+    "quantity": 1,
+    "price": 5,
+    "subtotal": 5,
+    "transactionType": "item_sale",
+    "createdAt": "2026-07-16T10:00:00.000Z"
+  }
+}

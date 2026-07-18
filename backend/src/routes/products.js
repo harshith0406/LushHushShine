@@ -12,7 +12,7 @@ const productCreateSchema = Joi.object({
   vendorId: Joi.string().required(),
   vendorName: Joi.string().required(),
   description: Joi.string().allow('').optional()
-});
+}).unknown(true);
 
 const productUpdateSchema = Joi.object({
   name: Joi.string().optional(),
