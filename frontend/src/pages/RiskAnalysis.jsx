@@ -78,17 +78,19 @@ const RiskAnalysis = () => {
           API.get('/api/analytics/margin-health').catch(() => ({ data: [] }))
         ]);
 
-        let rmArray = rmData?.products || rmData || [];
+        let rmArray = rmData?.risk_breakdown || rmData?.products || rmData || [];
         if (!Array.isArray(rmArray)) rmArray = [];
         setRiskMatrix(rmArray.sort((a, b) => (b.overall_risk || 0) - (a.overall_risk || 0)));
-        const getArr = (d, k) => Array.isArray(d?.[k]) ? d[k] : (Array.isArray(d) ? d : []);
+        const getArr = (d, k1, k2) => Array.isArray(d?.[k1]) ? d[k1] : (Array.isArray(d?.[k2]) ? d[k2] : (Array.isArray(d) ? d : []));
         setAnomalies(getArr(anomRes.data, 'anomalies'));
         setGhostSkus(getArr(ghostRes.data, 'ghost_skus'));
-        setMarginHealth(getArr(marginRes.data, 'margin_health'));
+        setMarginHealth(getArr(marginRes.data, 'margin_health', 'products'));
 
-        if (rmData.length > 0) {
-          const avgRisk = rmData.reduce((sum, r) => sum + (r.overall_risk || 0), 0) / rmData.length;
+        if (rmArray.length > 0) {
+          const avgRisk = rmArray.reduce((sum, r) => sum + (r.overall_risk || 0), 0) / rmArray.length;
           setStoreScore(Math.max(0, 100 - avgRisk));
+        } else if (rmData?.store_risk_score !== undefined) {
+          setStoreScore(Math.max(0, 100 - rmData.store_risk_score));
         }
 
       } catch (err) {
@@ -133,19 +135,19 @@ const RiskAnalysis = () => {
       { metric: 'Financial' }
     ];
     topRisks.forEach((p, i) => {
-      data[0][`prod${i}`] = p.stockout_risk || 0;
-      data[1][`prod${i}`] = p.expiry_risk || 0;
-      data[2][`prod${i}`] = p.ghost_risk || 0;
-      data[3][`prod${i}`] = p.financial_risk || 0;
+      data[0][`prod${i}`] = p.dimensions?.stockout_risk || p.stockout_risk || 0;
+      data[1][`prod${i}`] = p.dimensions?.expiry_risk || p.expiry_risk || 0;
+      data[2][`prod${i}`] = p.dimensions?.ghost_risk || p.ghost_risk || 0;
+      data[3][`prod${i}`] = p.dimensions?.financial_risk || p.financial_risk || 0;
     });
     return data;
   }, [topRisks]);
 
   const marginDataFormatted = useMemo(() => {
     return marginHealth.map(m => ({
-      name: m.productName?.substring(0, 15) || `Prod ${m.productId}`,
-      margin: m.marginPercent || 0,
-      fill: (m.marginPercent || 0) < 15 ? '#ff4b72' : (m.marginPercent < 30 ? '#f59e0b' : '#10b981')
+      name: (m.productName || m.name || `Prod ${m.productId}`)?.substring(0, 15),
+      margin: m.margin_pct || m.marginPercent || 0,
+      fill: (m.margin_pct || m.marginPercent || 0) < 15 ? '#ff4b72' : ((m.margin_pct || m.marginPercent || 0) < 30 ? '#f59e0b' : '#10b981')
     })).sort((a, b) => b.margin - a.margin).slice(0, 10);
   }, [marginHealth]);
 
@@ -160,7 +162,7 @@ const RiskAnalysis = () => {
       else safe++;
     });
 
-    const topNames = topRisks.map(r => r.product_name).join(', ');
+    const topNames = topRisks.map(r => r.name || r.product_name).join(', ');
     
     return `AI DIAGNOSTIC REPORT:
 Analyzed ${total} inventory items.
@@ -242,14 +244,14 @@ RECOMMENDATIONS:
               else if (overall >= 40) bg = 'rgba(245,158,11,0.05)';
 
               return (
-                <TableRow key={row.product_id} style={{ backgroundColor: bg }}>
-                  <TableCell style={{ fontWeight: 600, color: '#f8fafc' }}>{row.product_name}</TableCell>
+                <TableRow key={row.productId || row.product_id} style={{ backgroundColor: bg }}>
+                  <TableCell style={{ fontWeight: 600, color: '#f8fafc' }}>{row.name || row.product_name}</TableCell>
                   <TableCell style={{ color: '#cbd5e1' }}>{row.category || 'General'}</TableCell>
                   <TableCell><RiskProgressBar value={overall} /></TableCell>
-                  <TableCell><RiskProgressBar value={row.stockout_risk || 0} /></TableCell>
-                  <TableCell><RiskProgressBar value={row.expiry_risk || 0} /></TableCell>
-                  <TableCell><RiskProgressBar value={row.ghost_risk || 0} /></TableCell>
-                  <TableCell><RiskProgressBar value={row.financial_risk || 0} /></TableCell>
+                  <TableCell><RiskProgressBar value={row.dimensions?.stockout_risk || row.stockout_risk || 0} /></TableCell>
+                  <TableCell><RiskProgressBar value={row.dimensions?.expiry_risk || row.expiry_risk || 0} /></TableCell>
+                  <TableCell><RiskProgressBar value={row.dimensions?.ghost_risk || row.ghost_risk || 0} /></TableCell>
+                  <TableCell><RiskProgressBar value={row.dimensions?.financial_risk || row.financial_risk || 0} /></TableCell>
                   <TableCell style={{ color: '#cbd5e1' }}>{row.days_remaining ? row.days_remaining.toFixed(1) : '∞'}</TableCell>
                   <TableCell style={{ color: '#cbd5e1', fontWeight: 600 }}>${(row.cash_tied_up || 0).toLocaleString()}</TableCell>
                 </TableRow>
@@ -277,7 +279,7 @@ RECOMMENDATIONS:
                   <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
                   <Tooltip contentStyle={{ backgroundColor: '#162032', border: '1px solid rgba(0,242,254,0.3)', color: '#f8fafc' }} />
                   {topRisks.map((p, i) => (
-                    <Radar key={p.product_id} name={p.product_name} dataKey={`prod${i}`} stroke={RADAR_COLORS[i % RADAR_COLORS.length]} fill={RADAR_COLORS[i % RADAR_COLORS.length]} fillOpacity={0.3} />
+                    <Radar key={p.productId || p.product_id} name={p.name || p.product_name} dataKey={`prod${i}`} stroke={RADAR_COLORS[i % RADAR_COLORS.length]} fill={RADAR_COLORS[i % RADAR_COLORS.length]} fillOpacity={0.3} />
                   ))}
                   <Legend wrapperStyle={{ color: '#cbd5e1', fontSize: '12px' }} />
                 </RadarChart>
@@ -337,11 +339,11 @@ RECOMMENDATIONS:
               <Box display="flex" flexDirection="column" gap="12px">
                 {ghostSkus.map(g => (
                   <Box key={g.productId} style={{ padding: '12px', backgroundColor: '#162032', borderRadius: '8px', borderLeft: '4px solid #ff4b72' }}>
-                    <Typography variant="body2" style={{ color: '#f8fafc', fontWeight: 600 }}>{g.productName}</Typography>
-                    <Typography variant="caption" style={{ color: '#94a3b8' }}>Stock: {g.stockQty} | Days Inactive: {g.daysInactive || 'Unknown'}</Typography>
+                    <Typography variant="body2" style={{ color: '#f8fafc', fontWeight: 600 }}>{g.name || g.productName}</Typography>
+                    <Typography variant="caption" style={{ color: '#94a3b8' }}>Stock: {g.available_qty || g.stockQty || 0} | Days Inactive: {g.idle_days || g.daysInactive || 'Unknown'}</Typography>
                     <Box display="flex" alignItems="center" gap="8px" marginTop="4px">
                        <Typography variant="caption" style={{ color: '#cbd5e1' }}>Risk Score</Typography>
-                       <LinearProgress variant="determinate" value={g.riskScore || 0} sx={{ flexGrow: 1, height: 4, backgroundColor: 'rgba(255,255,255,0.1)', '& .MuiLinearProgress-bar': { backgroundColor: '#ff4b72' } }} />
+                       <LinearProgress variant="determinate" value={g.risk_score || g.riskScore || 0} sx={{ flexGrow: 1, height: 4, backgroundColor: 'rgba(255,255,255,0.1)', '& .MuiLinearProgress-bar': { backgroundColor: '#ff4b72' } }} />
                     </Box>
                   </Box>
                 ))}

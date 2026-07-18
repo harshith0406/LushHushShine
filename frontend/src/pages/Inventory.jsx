@@ -70,9 +70,10 @@ const Inventory = () => {
         API.get('/api/analytics/stockout-risk').catch(() => ({ data: [] })),
         API.get('/api/analytics/margin-health').catch(() => ({ data: [] }))
       ]);
-      setAbcData(abcRes.data?.classifications || abcRes.data || []);
-      setRiskData(riskRes.data?.stockout_risks || riskRes.data || []);
-      setMarginData(marginRes.data?.products || marginRes.data || []);
+      const getArr = (d, k1, k2) => Array.isArray(d?.[k1]) ? d[k1] : (Array.isArray(d?.[k2]) ? d[k2] : (Array.isArray(d) ? d : []));
+      setAbcData(getArr(abcRes.data, 'classifications'));
+      setRiskData(getArr(riskRes.data, 'stockout_risks', 'risk_breakdown'));
+      setMarginData(getArr(marginRes.data, 'margin_health', 'products'));
     } catch (err) {
       console.error(err);
     }

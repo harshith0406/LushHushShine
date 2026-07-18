@@ -7,7 +7,6 @@ const { authenticateToken } = require('../middleware/auth');
 const AI_SERVICE_URL = process.env.AI_SERVICE_URL || (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}/api/python` : (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}/api/python` : 'http://127.0.0.1:8000'));
 
 const callAiService = async (req, endpoint, data) => {
-  console.log("AXIOS DATA:", JSON.stringify(data, null, 2));
   return await axios.post(`${AI_SERVICE_URL}${endpoint}`, data, {
     headers: {
       cookie: req.headers.cookie || '',
@@ -468,8 +467,6 @@ router.get('/abc-xyz', authenticateToken, async (req, res) => {
         category: d.category || ''
       };
     });
-
-    console.log("SENDING TO ABC-XYZ AI:", JSON.stringify(items, null, 2));
 
     const response = await callAiService(req, '/classify/abc-xyz', {
       inventory_items: items

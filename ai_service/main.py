@@ -28,6 +28,8 @@ app.add_middleware(
 
 HF_API_KEY = os.environ.get("HUGGINGFACE_API_KEY", "")
 HF_BASE_URL = os.environ.get("HUGGINGFACE_BASE_URL", "https://router.huggingface.co/v1")
+
+print(f"DEBUG - HUGGINGFACE_API_KEY LOADED: '{HF_API_KEY}'", flush=True)
 HF_MODEL = os.environ.get("HUGGINGFACE_MODEL", os.environ.get("HUGGINGFACE_MODE", "meta-llama/Meta-Llama-3.1-8B-Instruct"))
 
 def get_backend_url():
@@ -64,14 +66,6 @@ def calculate_linear_regression(y: List[float]):
     n = len(y)
     if n < 2:
         return 0.0, (y[0] if n == 1 else 0.0)
-
-def parse_number(val, default=0.0):
-    if isinstance(val, dict):
-        return float(val.get("operand", default)) if "operand" in val else default
-    try:
-        return float(val)
-    except (ValueError, TypeError):
-        return default
     x = list(range(n))
     mean_x = sum(x) / n
     mean_y = sum(y) / n
@@ -82,6 +76,15 @@ def parse_number(val, default=0.0):
     slope = numerator / denominator
     intercept = mean_y - slope * mean_x
     return slope, intercept
+
+def parse_number(val, default=0.0):
+    """Safely extract a numeric value from val, handling corrupted FieldValue.increment dicts."""
+    if isinstance(val, dict):
+        return float(val.get("operand", default)) if "operand" in val else default
+    try:
+        return float(val)
+    except (ValueError, TypeError):
+        return default
 
 def calculate_std(values: List[float]) -> float:
     if len(values) < 2:
@@ -1023,14 +1026,14 @@ def analyze_risk_matrix(data: RiskMatrixRequest):
 
     for item in inventory:
         pid = item.get("productId", "")
-        available = item.get("availableQty", item.get("stock", 0))
-        avg_daily = max(0.01, item.get("averageDailySales", 1.0))
-        lead_time = item.get("leadTimeDays", 5)
-        std = item.get("standardDeviation", 1.0)
-        reorder = item.get("reorderPoint", 10)
-        sold = item.get("soldQty", 0)
-        price = item.get("price", 0)
-        cost = item.get("unitCost", 0)
+        available = parse_number(item.get("availableQty", item.get("stock", 0)))
+        avg_daily = max(0.01, parse_number(item.get("averageDailySales", 1.0)))
+        lead_time = parse_number(item.get("leadTimeDays", 5))
+        std = parse_number(item.get("standardDeviation", 1.0))
+        reorder = parse_number(item.get("reorderPoint", 10))
+        sold = parse_number(item.get("soldQty", 0))
+        price = parse_number(item.get("price", 0))
+        cost = parse_number(item.get("unitCost", 0))
 
         # 1. Stockout Risk (0-100)
         days_remaining = available / avg_daily
