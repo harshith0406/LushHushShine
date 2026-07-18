@@ -4,7 +4,7 @@ const axios = require('axios');
 const { db } = require('../config/firebase');
 const { authenticateToken } = require('../middleware/auth');
 
-const AI_SERVICE_URL = process.env.AI_SERVICE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}/api/python` : 'http://127.0.0.1:8000');
+const AI_SERVICE_URL = process.env.AI_SERVICE_URL || (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}/api/python` : (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}/api/python` : 'http://127.0.0.1:8000'));
 
 const callAiService = async (req, endpoint, data) => {
   return await axios.post(`${AI_SERVICE_URL}${endpoint}`, data, {

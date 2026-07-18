@@ -47,6 +47,10 @@
       "destination": "/api/index.js"
     },
     {
+      "source": "/api/python/:path*",
+      "destination": "/api/python/[...path].py"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
