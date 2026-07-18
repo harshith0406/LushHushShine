@@ -15,5 +15,22 @@
     "status": "Completed",
     "createdAt": "2026-07-17T20:03:48.461Z",
     "updatedAt": "2026-07-17T20:03:48.471Z"
+  },
+  "n80q3kdqywb": {
+    "sellingPlaceId": "upsc89p04l",
+    "sellingPlaceName": "Test Store Inc.",
+    "vendorId": "xr7pnu4rexg",
+    "vendorName": "Nexus Distributors Ltd.",
+    "items": [
+      {
+        "productId": "TEST-SKU-O0JM",
+        "productName": "Organic Whole Milk",
+        "quantity": 20,
+        "price": 3.5
+      }
+    ],
+    "status": "Completed",
+    "createdAt": "2026-07-18T10:55:20.992Z",
+    "updatedAt": "2026-07-18T10:55:20.999Z"
   }
 }

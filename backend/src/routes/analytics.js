@@ -7,7 +7,7 @@ const { authenticateToken } = require('../middleware/auth');
 const AI_SERVICE_URL = process.env.AI_SERVICE_URL || 'http://127.0.0.1:8000';
 
 const getSalesTrendForProduct = async (productId) => {
-  const salesSnapshot = await db.collection('sales')
+  const salesSnapshot = await db.collection('sales_table')
     .where('transactionType', '==', 'item_sale')
     .where('productId', '==', productId)
     .get();

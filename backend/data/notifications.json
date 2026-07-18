@@ -16,5 +16,23 @@
     "poId": "owdx30gehnp",
     "read": false,
     "createdAt": "2026-07-17T20:03:48.474Z"
+  },
+  "k1jdj4r5xqk": {
+    "userId": "xr7pnu4rexg",
+    "title": "New Purchase Order Received",
+    "message": "You received a new purchase order (n80q3kdqywb) from Retailer 'Test Store Inc.' with 1 items.",
+    "type": "po-received",
+    "poId": "n80q3kdqywb",
+    "read": false,
+    "createdAt": "2026-07-18T10:55:20.993Z"
+  },
+  "cz9x4g82i5m": {
+    "userId": "xr7pnu4rexg",
+    "title": "Shipment Delivered",
+    "message": "Retailer 'Test Store Inc.' confirmed delivery of purchase order (n80q3kdqywb). Stock has been added to their inventory.",
+    "type": "po-completed",
+    "poId": "n80q3kdqywb",
+    "read": false,
+    "createdAt": "2026-07-18T10:55:21.002Z"
   }
 }

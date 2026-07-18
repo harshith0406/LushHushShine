@@ -11,5 +11,12 @@
     "itemNbr": "TEST-SKU-ZM3B",
     "sellerId": "qsnfaze1hv",
     "createdAt": "2026-07-17T20:03:48.437Z"
+  },
+  "xr7pnu4rexg_TEST-SKU-O0JM": {
+    "vendorNo": "xr7pnu4rexg",
+    "vendorName": "Nexus Distributors Ltd.",
+    "itemNbr": "TEST-SKU-O0JM",
+    "sellerId": "upsc89p04l",
+    "createdAt": "2026-07-18T10:55:20.972Z"
   }
 }

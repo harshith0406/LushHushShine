@@ -36,6 +36,44 @@ const initMockFile = (colName) => {
   return filePath;
 };
 
+
+let edgeConfigSynced = false;
+
+const syncEdgeConfig = async () => {
+  if (edgeConfigSynced) return;
+  if (!process.env.EDGE_CONFIG) {
+    edgeConfigSynced = true;
+    return;
+  }
+  
+  try {
+    console.log('Detected Vercel Edge Config. Syncing database collections...');
+    const axios = require('axios');
+    const response = await axios.get(process.env.EDGE_CONFIG, { timeout: 5000 });
+    const store = response.data.items || response.data;
+    
+    if (store && typeof store === 'object') {
+      const collections = [
+        'batch_status', 'inventory', 'item_list', 'login_credentials', 
+        'notifications', 'products', 'purchaseOrders', 'sales', 
+        'sales_table', 'sellingPlaces', 'users', 'vendor_status', 'vendors'
+      ];
+      
+      for (const colName of collections) {
+        if (store[colName]) {
+          const filePath = path.join(DATA_DIR, `${colName}.json`);
+          fs.writeFileSync(filePath, JSON.stringify(store[colName], null, 2));
+          console.log(`Successfully synced collection '${colName}' from Vercel Edge Config.`);
+        }
+      }
+    }
+    edgeConfigSynced = true;
+  } catch (error) {
+    console.error('Failed to sync from Vercel Edge Config, using local mock data fallback:', error.message);
+    edgeConfigSynced = true;
+  }
+};
+
 // --- Mock Firestore Emulator Implementation ---
 class MockDocRef {
   constructor(collectionName, docId) {
@@ -45,6 +83,7 @@ class MockDocRef {
   }
 
   async get() {
+    await syncEdgeConfig();
     const data = JSON.parse(fs.readFileSync(this.filePath, 'utf8'));
     const docData = data[this.id];
     return {
@@ -55,6 +94,7 @@ class MockDocRef {
   }
 
   async set(content, options = {}) {
+    await syncEdgeConfig();
     const data = JSON.parse(fs.readFileSync(this.filePath, 'utf8'));
     if (options.merge && data[this.id]) {
       data[this.id] = { ...data[this.id], ...content };
@@ -66,6 +106,7 @@ class MockDocRef {
   }
 
   async update(content) {
+    await syncEdgeConfig();
     const data = JSON.parse(fs.readFileSync(this.filePath, 'utf8'));
     if (!data[this.id]) {
       throw new Error(`Document with ID ${this.id} does not exist in collection ${this.collectionName}`);
@@ -76,6 +117,7 @@ class MockDocRef {
   }
 
   async delete() {
+    await syncEdgeConfig();
     const data = JSON.parse(fs.readFileSync(this.filePath, 'utf8'));
     if (data[this.id]) {
       delete data[this.id];
@@ -109,6 +151,7 @@ class MockQuery {
   }
 
   async get() {
+    await syncEdgeConfig();
     const data = JSON.parse(fs.readFileSync(this.filePath, 'utf8'));
     let docs = Object.keys(data).map(id => ({
       id,
@@ -197,6 +240,7 @@ class MockAuth {
   }
 
   async verifyIdToken(token) {
+    await syncEdgeConfig();
     // A simple verify token mechanism
     if (!token) throw new Error('No token provided');
     const users = JSON.parse(fs.readFileSync(this.filePath, 'utf8'));
@@ -216,6 +260,7 @@ class MockAuth {
   }
 
   async createUser(properties) {
+    await syncEdgeConfig();
     const uid = properties.uid || Math.random().toString(36).substring(2, 15);
     const filePath = initMockFile('login_credentials');
     const users = JSON.parse(fs.readFileSync(filePath, 'utf8'));

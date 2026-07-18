@@ -24,5 +24,18 @@
     "mfgDate": "2026-07-10T00:00:00.000Z",
     "expDate": "2026-10-10T00:00:00.000Z",
     "createdAt": "2026-07-17T20:03:48.427Z"
+  },
+  "B-GEN-UT11ND": {
+    "batchNo": "B-GEN-UT11ND",
+    "itemNbr": "TEST-SKU-O0JM",
+    "mfgDate": "2026-07-18",
+    "expDate": "2027-01-18"
+  },
+  "B-TEST-SKU-O0JM": {
+    "batchNo": "B-TEST-SKU-O0JM",
+    "itemNbr": "TEST-SKU-O0JM",
+    "mfgDate": "2026-07-10T00:00:00.000Z",
+    "expDate": "2026-10-10T00:00:00.000Z",
+    "createdAt": "2026-07-18T10:55:20.968Z"
   }
 }

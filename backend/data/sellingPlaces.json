@@ -48,5 +48,15 @@
     "address": "100 Retail Plaza",
     "licenseNo": "LIC-SELLER-999",
     "createdAt": "2026-07-17T20:03:48.352Z"
+  },
+  "upsc89p04l": {
+    "id": "upsc89p04l",
+    "companyName": "Test Store Inc.",
+    "userName": "Store Manager",
+    "email": "seller_5qqo@test.com",
+    "phone": "1234567890",
+    "address": "100 Retail Plaza",
+    "licenseNo": "LIC-SELLER-999",
+    "createdAt": "2026-07-18T10:55:20.915Z"
   }
 }

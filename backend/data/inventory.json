@@ -40,5 +40,26 @@
     "sellingPlaceName": "Test Store Inc.",
     "vendorId": "wbuefzjzmc",
     "vendorName": "Nexus Distributors Ltd."
+  },
+  "TEST-SKU-O0JM": {
+    "itemNbr": "TEST-SKU-O0JM",
+    "batchNo": "B-TEST-SKU-O0JM",
+    "totalQty": 50,
+    "soldQty": 5,
+    "availableQty": 45,
+    "updatedAt": "2026-07-18T10:55:21.001Z",
+    "productId": "TEST-SKU-O0JM",
+    "productName": "Organic Whole Milk",
+    "sku": "TEST-SKU-O0JM",
+    "category": "Dairy & Alternatives",
+    "stock": 45,
+    "reorderPoint": 10,
+    "averageDailySales": 2.3,
+    "standardDeviation": 1,
+    "leadTimeDays": 4,
+    "sellingPlaceId": "upsc89p04l",
+    "sellingPlaceName": "Test Store Inc.",
+    "vendorId": "xr7pnu4rexg",
+    "vendorName": "Nexus Distributors Ltd."
   }
 }

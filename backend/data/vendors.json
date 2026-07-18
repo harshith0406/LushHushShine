@@ -47,5 +47,15 @@
     "address": "500 Logistics Way",
     "licenseNo": "LIC-VENDOR-888",
     "createdAt": "2026-07-17T20:03:48.361Z"
+  },
+  "xr7pnu4rexg": {
+    "id": "xr7pnu4rexg",
+    "companyName": "Nexus Distributors Ltd.",
+    "userName": "Alex Vendor",
+    "email": "vendor_kx89@test.com",
+    "phone": "9876543210",
+    "address": "500 Logistics Way",
+    "licenseNo": "LIC-VENDOR-888",
+    "createdAt": "2026-07-18T10:55:20.932Z"
   }
 }
