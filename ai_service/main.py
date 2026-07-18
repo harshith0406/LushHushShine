@@ -26,6 +26,14 @@ app.add_middleware(
     allow_methods=["*"]
 )
 
+@app.middleware("http")
+async def strip_api_python_prefix(request: Request, call_next):
+    if request.scope["path"].startswith("/api/python"):
+        request.scope["path"] = request.scope["path"][11:]
+        if request.scope["path"] == "":
+            request.scope["path"] = "/"
+    return await call_next(request)
+
 HF_API_KEY = os.environ.get("HUGGINGFACE_API_KEY", "")
 HF_BASE_URL = os.environ.get("HUGGINGFACE_BASE_URL", "https://router.huggingface.co/v1")
 
@@ -464,7 +472,6 @@ def forecast_events(data: EventForecastRequest):
         "adjustment_reason": adjustment_reason
     }
 
-@app.post("/api/python/chat")
 @app.post("/chat")
 async def chat_agent(req: Request, data: ChatRequest):
     auth_header = req.headers.get("Authorization", "")
