@@ -338,7 +338,7 @@ const initPostgresDb = async (sql) => {
   console.log('Initializing Postgres tables and seeding if empty...');
   for (const colName of COLLECTIONS) {
     await sql.query(`CREATE TABLE IF NOT EXISTS "${colName}" (id VARCHAR(255) PRIMARY KEY, data JSONB)`);
-    const countRes = await sql.query(`SELECT COUNT(*) as count FROM "${colName}"`);
+    const { rows: countRes } = await sql.query(`SELECT COUNT(*) as count FROM "${colName}"`);
     const count = parseInt(countRes[0].count, 10);
     
     if (count === 0) {
@@ -384,7 +384,7 @@ class PostgresDocRef {
 
   async get() {
     await ensurePgInitialized(this.sql);
-    const rows = await this.sql.query(`SELECT data FROM "${this.collectionName}" WHERE id = $1`, [this.id]);
+    const { rows } = await this.sql.query(`SELECT data FROM "${this.collectionName}" WHERE id = $1`, [this.id]);
     const docData = rows.length > 0 ? rows[0].data : null;
     return {
       id: this.id,
@@ -455,7 +455,7 @@ class PostgresQuery {
 
   async get() {
     await ensurePgInitialized(this.sql);
-    const rows = await this.sql.query(`SELECT id, data FROM "${this.collectionName}"`);
+    const { rows } = await this.sql.query(`SELECT id, data FROM "${this.collectionName}"`);
     let docs = rows.map(row => ({
       id: row.id,
       ...row.data
@@ -548,13 +548,13 @@ class PostgresAuth {
     await ensurePgInitialized(this.sql);
     
     const uid = token.replace('mock-token-', '');
-    const rows = await this.sql.query(`SELECT data FROM "login_credentials" WHERE id = $1`, [uid]);
+    const { rows } = await this.sql.query(`SELECT data FROM "login_credentials" WHERE id = $1`, [uid]);
     if (rows.length > 0) {
       const user = rows[0].data;
       return { uid, email: user.email, ...user };
     }
     
-    const allRows = await this.sql.query(`SELECT id, data FROM "login_credentials"`);
+    const { rows: allRows } = await this.sql.query(`SELECT id, data FROM "login_credentials"`);
     for (const row of allRows) {
       if (row.data && row.data.email === token) {
         return { uid: row.id, email: row.data.email, ...row.data };
@@ -585,8 +585,8 @@ class PostgresAuth {
 // --- Initialize Database Connection ---
 if (process.env.DATABASE_URL) {
   try {
-    const { neon } = require('@neondatabase/serverless');
-    const sql = neon(process.env.DATABASE_URL);
+    const { Pool } = require('@neondatabase/serverless');
+    const sql = new Pool({ connectionString: process.env.DATABASE_URL });
     db = new PostgresFirestoreDb(sql);
     auth = new PostgresAuth(sql);
     isMock = false;
