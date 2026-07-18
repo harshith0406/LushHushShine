@@ -475,9 +475,16 @@ def forecast_events(data: EventForecastRequest):
 @app.post("/chat")
 async def chat_agent(req: Request, data: ChatRequest):
     auth_header = req.headers.get("Authorization", "")
+    fwd_host = req.headers.get("x-forwarded-host", "")
+    fwd_proto = req.headers.get("x-forwarded-proto", "https")
+    
+    if fwd_host:
+        backend_base = f"{fwd_proto}://{fwd_host}"
+    else:
+        backend_base = get_backend_url()
+
     user_msg = data.messages[-1].content if data.messages else ""
     lower_msg = user_msg.lower().strip()
-    backend_base = get_backend_url()
     
     tools = [
         {"name": "get_low_stock_items", "description": "Retrieves products currently low on inventory stock."},

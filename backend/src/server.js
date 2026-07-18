@@ -113,7 +113,9 @@ app.post('/api/chat', async (req, res) => {
       headers: {
         'Authorization': req.headers['authorization'] || '',
         'cookie': req.headers['cookie'] || '',
-        'x-vercel-protection-bypass': process.env.VERCEL_AUTOMATION_BYPASS_SECRET || ''
+        'x-vercel-protection-bypass': process.env.VERCEL_AUTOMATION_BYPASS_SECRET || '',
+        'x-forwarded-host': req.headers['x-forwarded-host'] || req.headers['host'] || '',
+        'x-forwarded-proto': req.headers['x-forwarded-proto'] || req.protocol || 'https'
       },
       responseType: 'stream'
     });
