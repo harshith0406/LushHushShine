@@ -531,11 +531,18 @@ async def chat_agent(req: Request, data: ChatRequest):
                         r = requests.get(f"{backend_base}/api/inventory", headers=headers, timeout=5)
                         if r.status_code == 200:
                             low_stock = [item for item in r.json() if item.get("stock", 0) <= item.get("reorderPoint", 10)]
-                            db_context = f"Low Stock DB Records:\n{json.dumps(low_stock, indent=2)}"
+                            if not low_stock:
+                                db_context = "Database checked: All inventory items are fully stocked above their reorder points. No low stock items found."
+                            else:
+                                db_context = f"Low Stock DB Records:\n{json.dumps(low_stock, indent=2)}"
                     elif tool_name == "get_expiring_batches":
                         r = requests.get(f"{backend_base}/api/batches", headers=headers, timeout=5)
                         if r.status_code == 200:
-                            db_context = f"Expiring Batches DB Records:\n{json.dumps(r.json(), indent=2)}"
+                            batches = r.json()
+                            if not batches:
+                                db_context = "Database checked: No expiring batches found."
+                            else:
+                                db_context = f"Expiring Batches DB Records:\n{json.dumps(batches, indent=2)}"
                     elif tool_name == "get_sales_trend":
                         r = requests.get(f"{backend_base}/api/sales", headers=headers, timeout=5)
                         if r.status_code == 200:
@@ -551,17 +558,17 @@ async def chat_agent(req: Request, data: ChatRequest):
             if db_context:
                 messages_history.append({
                     "role": "system", 
-                    "content": f"Database search results for tool '{tool_name}':\n{db_context}\nAnswer the user's query utilizing this data."
+                    "content": f"Database search results for tool '{tool_name}':\n{db_context}\nAnswer the user's query utilizing this data. Be highly concise, direct, and use short bullet points. Do not exceed 250 words."
                 })
             else:
                 messages_history.append({
                     "role": "system",
-                    "content": "You are Shoply.ai's AI Assistant powered by Hugging Face (meta-llama/Llama-3.1-8B). Be helpful, conversational, and direct."
+                    "content": "You are Shoply.ai's AI Assistant powered by Hugging Face (meta-llama/Llama-3.1-8B). Be highly concise, direct, and use short bullet points. Do not exceed 250 words."
                 })
 
             def event_generator():
                 try:
-                    hf_stream = call_hf_api(messages_history, max_tokens=500, stream=True)
+                    hf_stream = call_hf_api(messages_history, max_tokens=800, stream=True)
                     if hf_stream.status_code == 200:
                         for line in hf_stream.iter_lines():
                             if line:

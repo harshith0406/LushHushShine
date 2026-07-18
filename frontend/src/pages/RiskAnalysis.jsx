@@ -162,17 +162,16 @@ const RiskAnalysis = () => {
       else safe++;
     });
 
-    const topNames = topRisks.map(r => r.name || r.product_name).join(', ');
+    // Deduplicate and limit to top 3 names
+    const uniqueTopNames = Array.from(new Set(topRisks.map(r => r.name || r.product_name))).slice(0, 3).join(', ');
     
-    return `AI DIAGNOSTIC REPORT:
-Analyzed ${total} inventory items.
-Risk Distribution: ${critical} Critical | ${warning} Warning | ${safe} Safe.
-Highest Priority Interventions: ${topNames || 'None'}.
+    return `⚡ SYSTEM STATUS: ${critical > 0 ? 'CRITICAL' : (warning > 0 ? 'WARNING' : 'HEALTHY')}
+${critical} Critical Risks | ${warning} Warnings | ${ghostSkus.length} Ghost SKUs
 
-RECOMMENDATIONS:
-- Immediately review top 3 items for stockout/expiry mitigation.
-- Liquidate ${ghostSkus.length} ghost SKUs tying up capital.
-- Restock high-margin items to protect store score.`;
+⚠️ TOP PRIORITIES:
+${uniqueTopNames ? '• Mitigate: ' + uniqueTopNames : '• No immediate risks detected.'}
+• Liquidate ${ghostSkus.length} inactive SKUs to free capital.
+• Restock high-margin items to stabilize store score.`;
   }, [riskMatrix, topRisks, ghostSkus]);
 
   if (loading) {

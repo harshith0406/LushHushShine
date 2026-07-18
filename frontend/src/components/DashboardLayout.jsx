@@ -134,7 +134,7 @@ const DashboardLayout = () => {
       style={{ 
         height: '100%', 
         backgroundColor: 'var(--bg-sidebar)', 
-        color: '#ffffff',
+        color: 'var(--text-primary)',
         display: 'flex',
         flexDirection: 'column'
       }}
@@ -178,11 +178,11 @@ const DashboardLayout = () => {
                 }}
                 style={{
                   borderRadius: 'var(--border-radius-sm)',
-                  backgroundColor: isSelected ? 'rgba(56, 189, 248, 0.12)' : 'transparent',
-                  color: isSelected ? '#38bdf8' : '#cbd5e1'
+                  backgroundColor: isSelected ? 'var(--primary-glow)' : 'transparent',
+                  color: isSelected ? 'var(--primary)' : 'var(--text-secondary)'
                 }}
               >
-                <ListItemIcon style={{ color: isSelected ? '#38bdf8' : '#94a3b8', minWidth: '40px' }}>
+                <ListItemIcon style={{ color: isSelected ? 'var(--primary)' : 'var(--text-secondary)', minWidth: '40px' }}>
                   {item.icon}
                 </ListItemIcon>
                 <ListItemText 
