@@ -25,12 +25,15 @@ import {
   IconButton,
   Alert,
   CircularProgress,
-  FormHelperText
+  FormHelperText,
+  Grid
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import AiAgentModal from '../components/AiAgentModal';
 
 const Products = () => {
   const { user } = useAuth();
@@ -43,6 +46,19 @@ const Products = () => {
   // Modal states
   const [open, setOpen] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
+  
+  // AI Agent Modal State
+  const [agentModalOpen, setAgentModalOpen] = useState(false);
+  const [agentType, setAgentType] = useState('');
+  const [agentPayload, setAgentPayload] = useState({});
+  const [agentTitle, setAgentTitle] = useState('');
+
+  const openAgent = (type, payload, title) => {
+    setAgentType(type);
+    setAgentPayload(payload);
+    setAgentTitle(title);
+    setAgentModalOpen(true);
+  };
   
   const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm();
 
@@ -352,14 +368,30 @@ const Products = () => {
               {errors.vendorId && <FormHelperText>{errors.vendorId.message}</FormHelperText>}
             </FormControl>
 
-            <TextField
-              label="Product Description"
-              multiline
-              rows={3}
-              fullWidth
-              InputLabelProps={{ shrink: true }}
-              {...register('description')}
-            />
+            <Box>
+              <Box display="flex" justifyContent="space-between" alignItems="center" marginBottom="8px">
+                <Typography variant="body2" style={{ color: '#94a3b8' }}>Description</Typography>
+                <Button 
+                  size="small" 
+                  startIcon={<AutoAwesomeIcon />}
+                  onClick={() => {
+                    const currentName = document.querySelector('input[name="name"]')?.value || 'New Product';
+                    const currentDesc = document.querySelector('textarea[name="description"]')?.value || '';
+                    openAgent('generate-marketing', { ocr_text: `${currentName}. ${currentDesc}` }, `Generate Marketing Copy`);
+                  }}
+                  style={{ backgroundColor: 'rgba(217, 70, 239, 0.1)', color: '#d946ef', textTransform: 'none', fontWeight: 600, fontSize: '0.75rem' }}
+                >
+                  AI Writer
+                </Button>
+              </Box>
+              <TextField
+                multiline
+                rows={3}
+                fullWidth
+                InputLabelProps={{ shrink: true }}
+                {...register('description')}
+              />
+            </Box>
           </DialogContent>
           <DialogActions style={{ padding: '16px 24px' }}>
             <Button onClick={handleClose} style={{ textTransform: 'none', fontWeight: 600 }}>Cancel</Button>
@@ -369,6 +401,20 @@ const Products = () => {
           </DialogActions>
         </form>
       </Dialog>
+
+      {/* AI Agent Modal */}
+      <AiAgentModal 
+        open={agentModalOpen} 
+        onClose={() => setAgentModalOpen(false)}
+        onApply={(result) => {
+          if (agentType === 'generate-marketing') {
+            setValue('description', result);
+          }
+        }}
+        agentType={agentType}
+        payload={agentPayload}
+        title={agentTitle}
+      />
     </Box>
   );
 };
