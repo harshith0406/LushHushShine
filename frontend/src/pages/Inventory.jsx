@@ -203,11 +203,10 @@ const Inventory = () => {
     }
   };
 
-  // Maps
   const abcMap = useMemo(() => {
     const map = {};
     abcData.forEach(d => {
-      map[d.productId] = { class: d.classification, revenue: d.revenueContribution || 0 };
+      map[d.productId] = { class: d.abc_class || d.classification, revenue: d.revenue_contribution || d.revenueContribution || 0 };
     });
     return map;
   }, [abcData]);
@@ -215,7 +214,7 @@ const Inventory = () => {
   const riskMap = useMemo(() => {
     const map = {};
     riskData.forEach(d => {
-      map[d.productId] = d.risk_level;
+      map[d.productId] = d.riskLevel || d.risk_level;
     });
     return map;
   }, [riskData]);
@@ -256,7 +255,7 @@ const Inventory = () => {
     const ghost = enhancedInventory.filter(i => i.isGhost).length;
     let avgMargin = 0;
     if (marginData.length > 0) {
-      avgMargin = marginData.reduce((sum, item) => sum + (item.marginPercent || 0), 0) / marginData.length;
+      avgMargin = marginData.reduce((sum, item) => sum + (item.margin_pct || item.marginPercent || 0), 0) / marginData.length;
     }
     return { critical, ghost, avgMargin };
   }, [enhancedInventory, marginData]);
@@ -266,10 +265,10 @@ const Inventory = () => {
     const groups = { A: [], B: [], C: [] };
     let totalRev = 0;
     abcData.forEach(d => {
-      const cls = d.classification?.charAt(0) || 'C';
+      const cls = (d.abc_class || d.classification || 'C').charAt(0);
       if (groups[cls]) {
         groups[cls].push(d);
-        totalRev += (d.revenueContribution || 0);
+        totalRev += (d.revenue_contribution || d.revenueContribution || 0);
       }
     });
     return { groups, totalRev };
@@ -424,7 +423,7 @@ const Inventory = () => {
       <Grid container spacing={3} style={{ marginBottom: '40px' }}>
         {['A', 'B', 'C'].map(cls => {
           const group = abcGroups.groups[cls];
-          const groupRev = group.reduce((sum, item) => sum + (item.revenueContribution || 0), 0);
+          const groupRev = group.reduce((sum, item) => sum + (item.revenue_contribution || item.revenueContribution || 0), 0);
           const pct = abcGroups.totalRev > 0 ? ((groupRev / abcGroups.totalRev) * 100).toFixed(1) : 0;
           
           let cardStyle = { backgroundColor: '#101726', border: '1px solid rgba(0, 242, 254, 0.2)', height: '100%' };
@@ -452,8 +451,8 @@ const Inventory = () => {
                   <Box style={{ maxHeight: '200px', overflowY: 'auto' }}>
                     {group.map((item, idx) => (
                       <Box key={idx} display="flex" justifyContent="space-between" marginBottom="8px">
-                        <Typography variant="body2" style={{ color: '#f8fafc' }}>{item.productName || `Product ${item.productId}`}</Typography>
-                        <Typography variant="body2" style={{ color: '#cbd5e1', fontWeight: 600 }}>${(item.revenueContribution || 0).toLocaleString()}</Typography>
+                        <Typography variant="body2" style={{ color: '#f8fafc' }}>{item.productName || item.name || `Product ${item.productId}`}</Typography>
+                        <Typography variant="body2" style={{ color: '#cbd5e1', fontWeight: 600 }}>${(item.revenue_contribution || item.revenueContribution || 0).toLocaleString()}</Typography>
                       </Box>
                     ))}
                     {group.length === 0 && <Typography variant="body2" style={{ color: '#64748b' }}>No items</Typography>}
@@ -474,9 +473,9 @@ const Inventory = () => {
             <PieChart>
               <Pie
                 data={[
-                  { name: 'Class A', value: abcGroups.groups['A'].reduce((s, i) => s + (i.revenueContribution || 0), 0) },
-                  { name: 'Class B', value: abcGroups.groups['B'].reduce((s, i) => s + (i.revenueContribution || 0), 0) },
-                  { name: 'Class C', value: abcGroups.groups['C'].reduce((s, i) => s + (i.revenueContribution || 0), 0) }
+                  { name: 'Class A', value: abcGroups.groups['A'].reduce((s, i) => s + (i.revenue_contribution || i.revenueContribution || 0), 0) + 0.0001 },
+                  { name: 'Class B', value: abcGroups.groups['B'].reduce((s, i) => s + (i.revenue_contribution || i.revenueContribution || 0), 0) + 0.0001 },
+                  { name: 'Class C', value: abcGroups.groups['C'].reduce((s, i) => s + (i.revenue_contribution || i.revenueContribution || 0), 0) + 0.0001 }
                 ]}
                 cx="50%"
                 cy="50%"
