@@ -92,6 +92,12 @@ app.post('/api/ocr/scan', upload.single('image'), async (req, res) => {
     const response = await axios.post(`${aiServiceUrl}/ocr/scan`, {
       image: base64Image,
       mime_type: req.file.mimetype
+    }, {
+      headers: {
+        'Authorization': req.headers['authorization'] || '',
+        'cookie': req.headers['cookie'] || '',
+        'x-vercel-protection-bypass': process.env.VERCEL_AUTOMATION_BYPASS_SECRET || ''
+      }
     });
     res.json(response.data);
   } catch (err) {
@@ -105,7 +111,9 @@ app.post('/api/chat', async (req, res) => {
     const aiServiceUrl = process.env.AI_SERVICE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}/api/python` : 'http://127.0.0.1:8000');
     const response = await axios.post(`${aiServiceUrl}/chat`, req.body, {
       headers: {
-        'Authorization': req.headers['authorization'] || ''
+        'Authorization': req.headers['authorization'] || '',
+        'cookie': req.headers['cookie'] || '',
+        'x-vercel-protection-bypass': process.env.VERCEL_AUTOMATION_BYPASS_SECRET || ''
       },
       responseType: 'stream'
     });

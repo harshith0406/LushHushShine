@@ -6,6 +6,16 @@ const { authenticateToken } = require('../middleware/auth');
 
 const AI_SERVICE_URL = process.env.AI_SERVICE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}/api/python` : 'http://127.0.0.1:8000');
 
+const callAiService = async (req, endpoint, data) => {
+  return await axios.post(`${AI_SERVICE_URL}${endpoint}`, data, {
+    headers: {
+      cookie: req.headers.cookie || '',
+      authorization: req.headers.authorization || '',
+      'x-vercel-protection-bypass': process.env.VERCEL_AUTOMATION_BYPASS_SECRET || ''
+    }
+  });
+};
+
 const getSalesTrendForProduct = async (productId) => {
   const salesSnapshot = await db.collection('sales_table')
     .where('transactionType', '==', 'item_sale')
@@ -64,7 +74,7 @@ router.post('/forecast-demand', authenticateToken, async (req, res) => {
   try {
     const history = await getSalesTrendForProduct(productId);
     
-    const response = await axios.post(`${AI_SERVICE_URL}/forecast/demand`, {
+    const response = await callAiService(req, '/forecast/demand', {
       sales_history: history,
       periods
     });
@@ -107,7 +117,7 @@ router.post('/predict-sales', authenticateToken, async (req, res) => {
   try {
     const history = await getSalesTrendForProduct(productId);
     
-    const response = await axios.post(`${AI_SERVICE_URL}/predict/sales`, {
+    const response = await callAiService(req, '/predict/sales', {
       sales_history: history,
       days
     });
@@ -152,7 +162,7 @@ router.post('/optimize-inventory', authenticateToken, async (req, res) => {
     }
     const inv = invDoc.data();
 
-    const response = await axios.post(`${AI_SERVICE_URL}/optimize/inventory`, {
+    const response = await callAiService(req, '/optimize/inventory', {
       average_daily_sales: inv.averageDailySales || 1.0,
       lead_time_days: inv.leadTimeDays || 5,
       standard_deviation: inv.standardDeviation || 1.0,
@@ -201,7 +211,7 @@ router.post('/recommendations', authenticateToken, async (req, res) => {
   }
 
   try {
-    const response = await axios.post(`${AI_SERVICE_URL}/recommendations`, {
+    const response = await callAiService(req, '/recommendations', {
       product_id: productName,
       limit: 3
     });
@@ -267,7 +277,7 @@ router.get('/insights', authenticateToken, async (req, res) => {
 
     let insights = [];
     try {
-      const response = await axios.post(`${AI_SERVICE_URL}/insights`, {
+      const response = await callAiService(req, '/insights', {
         inventory_items: inventoryItems,
         sales_trends: salesTrends
       });
@@ -313,7 +323,7 @@ router.get('/insights', authenticateToken, async (req, res) => {
  */
 router.post('/expiry-insights', authenticateToken, async (req, res) => {
   try {
-    const response = await axios.post(`${AI_SERVICE_URL}/expiry-insights`, req.body);
+    const response = await callAiService(req, '/expiry-insights', req.body);
     res.json(response.data);
   } catch (err) {
     console.error('Error calling AI Service expiry insights:', err.message);
@@ -334,7 +344,7 @@ router.post('/expiry-insights', authenticateToken, async (req, res) => {
  */
 router.post('/event-forecast', authenticateToken, async (req, res) => {
   try {
-    const response = await axios.post(`${AI_SERVICE_URL}/forecast`, req.body);
+    const response = await callAiService(req, '/forecast', req.body);
     res.json(response.data);
   } catch (err) {
     console.error('Error calling AI Service event-forecast:', err.message);
@@ -394,7 +404,7 @@ router.get('/cost-prediction', authenticateToken, async (req, res) => {
       dailyCosts = [285, 310, 275, 340, 295, 380, 320, 355, 300, 410, 285, 360, 290, 420];
     }
 
-    const response = await axios.post(`${AI_SERVICE_URL}/predict/cost`, {
+    const response = await callAiService(req, '/predict/cost', {
       daily_costs: dailyCosts,
       periods: 14
     });
@@ -458,7 +468,7 @@ router.get('/abc-xyz', authenticateToken, async (req, res) => {
       };
     });
 
-    const response = await axios.post(`${AI_SERVICE_URL}/classify/abc-xyz`, {
+    const response = await callAiService(req, '/classify/abc-xyz', {
       inventory_items: items
     });
     res.json(response.data);
@@ -509,7 +519,7 @@ router.get('/ghost-skus', authenticateToken, async (req, res) => {
       };
     });
 
-    const response = await axios.post(`${AI_SERVICE_URL}/detect/ghost-skus`, {
+    const response = await callAiService(req, '/detect/ghost-skus', {
       inventory_items: items,
       idle_days_threshold: 30
     });
@@ -558,7 +568,7 @@ router.get('/stockout-risk', authenticateToken, async (req, res) => {
       };
     });
 
-    const response = await axios.post(`${AI_SERVICE_URL}/analyze/stockout-risk`, {
+    const response = await callAiService(req, '/analyze/stockout-risk', {
       inventory_items: items
     });
     res.json(response.data);
@@ -627,7 +637,7 @@ router.get('/vendor-scores', authenticateToken, async (req, res) => {
       });
     }
 
-    const response = await axios.post(`${AI_SERVICE_URL}/score/vendors`, {
+    const response = await callAiService(req, '/score/vendors', {
       vendors: vendorList
     });
     res.json(response.data);
@@ -680,7 +690,7 @@ router.get('/margin-health', authenticateToken, async (req, res) => {
       };
     });
 
-    const response = await axios.post(`${AI_SERVICE_URL}/analyze/margin-health`, {
+    const response = await callAiService(req, '/analyze/margin-health', {
       products
     });
     res.json(response.data);
@@ -749,7 +759,7 @@ router.get('/sales-anomalies', authenticateToken, async (req, res) => {
       return res.json({ anomalies: [], normal: [], anomaly_count: 0, spike_count: 0, crash_count: 0, fallback: true });
     }
 
-    const response = await axios.post(`${AI_SERVICE_URL}/detect/sales-anomalies`, {
+    const response = await callAiService(req, '/detect/sales-anomalies', {
       sales_series: salesSeries
     });
     res.json(response.data);
@@ -814,7 +824,7 @@ router.post('/risk-matrix', authenticateToken, async (req, res) => {
       };
     });
 
-    const response = await axios.post(`${AI_SERVICE_URL}/analyze/risk-matrix`, {
+    const response = await callAiService(req, '/analyze/risk-matrix', {
       inventory_items: inventoryItems,
       sales_items: [],
       batch_items: batchItems
