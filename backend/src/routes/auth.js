@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
+const admin = require('firebase-admin');
 const { auth, db, isMock } = require('../config/firebase');
 const { authenticateToken } = require('../middleware/auth');
 

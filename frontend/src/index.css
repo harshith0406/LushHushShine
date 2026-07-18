@@ -214,6 +214,14 @@ body {
   color: var(--text-primary) !important;
 }
 
+/* Force dark text on white dialog backgrounds regardless of theme */
+.MuiDialog-paper .MuiInputBase-root {
+  color: #0f172a !important;
+}
+.MuiDialog-paper .MuiInputLabel-root {
+  color: #475569 !important;
+}
+
 .MuiOutlinedInput-notchedOutline {
   border-color: var(--border-color) !important;
 }
@@ -243,4 +251,26 @@ body {
 .card-tilt:hover {
   transform: translateY(-3px) !important;
   box-shadow: 0 15px 35px rgba(0, 242, 254, 0.15) !important;
+}
+
+/* Markdown styling overrides */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1em;
+}
+th, td {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 8px;
+  text-align: left;
+}
+th {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+p {
+  margin-bottom: 1em;
+}
+ul, ol {
+  margin-bottom: 1em;
+  padding-left: 20px;
 }

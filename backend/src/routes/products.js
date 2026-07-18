@@ -218,6 +218,7 @@ router.post('/', authenticateToken, requireRole(['Selling Place']), async (req, 
     await db.collection('batch_status').doc(batchNo).set({
       batchNo,
       itemNbr,
+      productId: itemNbr,
       mfgDate: today.toISOString().substring(0, 10),
       expDate: expDate.toISOString().substring(0, 10)
     });
