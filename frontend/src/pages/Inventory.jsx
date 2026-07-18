@@ -29,6 +29,7 @@ import {
   Tabs,
   Tab
 } from '@mui/material';
+import { PieChart, Pie, Cell, Tooltip as RechartsTooltip, ResponsiveContainer, Legend } from 'recharts';
 import EditIcon from '@mui/icons-material/Edit';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 
@@ -462,6 +463,41 @@ const Inventory = () => {
           );
         })}
       </Grid>
+      
+      <Paper className="glass-panel" style={{ padding: '24px', backgroundColor: '#101726', border: '1px solid rgba(0, 242, 254, 0.2)', marginBottom: '40px' }}>
+        <Typography variant="h6" style={{ fontWeight: 800, marginBottom: '20px', color: '#f8fafc' }}>
+          Revenue Contribution Breakdown
+        </Typography>
+        <Box height={300}>
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={[
+                  { name: 'Class A', value: abcGroups.groups['A'].reduce((s, i) => s + (i.revenueContribution || 0), 0) },
+                  { name: 'Class B', value: abcGroups.groups['B'].reduce((s, i) => s + (i.revenueContribution || 0), 0) },
+                  { name: 'Class C', value: abcGroups.groups['C'].reduce((s, i) => s + (i.revenueContribution || 0), 0) }
+                ]}
+                cx="50%"
+                cy="50%"
+                innerRadius={60}
+                outerRadius={100}
+                paddingAngle={5}
+                dataKey="value"
+              >
+                <Cell fill="#f59e0b" />
+                <Cell fill="#00f2fe" />
+                <Cell fill="#64748b" />
+              </Pie>
+              <RechartsTooltip 
+                contentStyle={{ backgroundColor: '#162032', border: '1px solid rgba(0, 242, 254, 0.2)' }}
+                itemStyle={{ color: '#f8fafc' }}
+                formatter={(val) => `$${val.toLocaleString()}`}
+              />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
+        </Box>
+      </Paper>
 
       {/* Vendor Search Utility Panel */}
       <Paper className="glass-panel" style={{ padding: '24px', backgroundColor: '#101726', border: '1px solid rgba(0, 242, 254, 0.2)', marginBottom: '40px' }}>

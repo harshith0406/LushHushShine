@@ -45,14 +45,14 @@ def get_backend_url():
             pass
     return "http://localhost:5000"
 
-def call_hf_api(messages: List[Dict[str, str]], max_tokens: int = 500, stream: bool = False):
+def call_hf_api(messages: List[Dict[str, Any]], max_tokens: int = 500, stream: bool = False, model: str = None):
     url = f"{HF_BASE_URL}/chat/completions"
     headers = {
         "Authorization": f"Bearer {HF_API_KEY}",
         "Content-Type": "application/json"
     }
     payload = {
-        "model": HF_MODEL,
+        "model": model or HF_MODEL,
         "messages": messages,
         "max_tokens": max_tokens,
         "stream": stream
@@ -308,7 +308,19 @@ def ocr_scan(data: ImageScanRequest):
             "{\"name\": \"extracted name\", \"sku\": \"extracted sku/code\", \"price\": 9.99, \"category\": \"category like Dairy/Beverages\", \"description\": \"description\"} "
             "Do not include markdown tags, code blocks, or explanations. Just return the raw JSON string."
         )
-        res = call_hf_api([{"role": "user", "content": prompt}], max_tokens=300, stream=False)
+        img_url = data.image if data.image.startswith("data:") else f"data:{data.mime_type};base64,{data.image}"
+        messages = [
+            {
+                "role": "user",
+                "content": [
+                    {"type": "text", "text": prompt},
+                    {"type": "image_url", "image_url": {"url": img_url}}
+                ]
+            }
+        ]
+        
+        vision_model = os.environ.get("HF_VISION_MODEL")
+        res = call_hf_api(messages, max_tokens=300, stream=False, model=vision_model)
         if res.status_code == 200:
             result_text = res.json()["choices"][0]["message"]["content"].strip()
             if "```" in result_text:

@@ -214,6 +214,14 @@ body {
   color: var(--text-primary) !important;
 }
 
+/* Force dark text on white dialog backgrounds regardless of theme */
+.MuiDialog-paper .MuiInputBase-root {
+  color: #0f172a !important;
+}
+.MuiDialog-paper .MuiInputLabel-root {
+  color: #475569 !important;
+}
+
 .MuiOutlinedInput-notchedOutline {
   border-color: var(--border-color) !important;
 }

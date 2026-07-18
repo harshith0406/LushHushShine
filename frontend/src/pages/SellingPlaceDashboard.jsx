@@ -231,7 +231,11 @@ const SellingPlaceDashboard = () => {
     const fetchMarginHealth = async () => {
       try {
         const res = await API.get('/api/analytics/margin-health');
-        setMarginData(res.data);
+        let data = res.data;
+        if (data.margin_health) {
+          data = { ...data, products: data.margin_health };
+        }
+        setMarginData(data);
       } catch (err) {
         setMarginData({
           products: [
@@ -890,13 +894,13 @@ const SellingPlaceDashboard = () => {
                     </Box>
                     <Box style={{ height: '250px', width: '100%' }}>
                       <ResponsiveContainer width="100%" height="100%">
-                        <BarChart layout="vertical" data={marginData.products} margin={{ top: 5, right: 30, left: 40, bottom: 5 }}>
+                        <BarChart layout="vertical" data={marginData.products} margin={{ top: 5, right: 30, left: 10, bottom: 5 }}>
                           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" horizontal={false} />
                           <XAxis type="number" stroke="#94a3b8" tick={{ fill: '#94a3b8', fontSize: 12 }} axisLine={false} tickLine={false} />
-                          <YAxis dataKey="name" type="category" stroke="#94a3b8" tick={{ fill: '#94a3b8', fontSize: 12 }} axisLine={false} tickLine={false} />
+                          <YAxis dataKey="name" type="category" stroke="#94a3b8" tick={{ fill: '#94a3b8', fontSize: 11 }} width={110} tickFormatter={(val) => val.length > 16 ? val.substring(0, 15) + '…' : val} axisLine={false} tickLine={false} />
                           <Tooltip contentStyle={{ backgroundColor: '#162032', borderRadius: '10px', border: '1px solid rgba(0,242,254,0.3)', color: '#f8fafc' }} />
                           <Bar dataKey="margin_pct" radius={[0, 4, 4, 0]}>
-                            {marginData.products.map((entry, index) => (
+                            {(marginData?.products || []).map((entry, index) => (
                               <Cell key={`cell-${index}`} fill={entry.alert ? '#ff4b72' : '#00f2fe'} />
                             ))}
                           </Bar>
@@ -904,13 +908,13 @@ const SellingPlaceDashboard = () => {
                       </ResponsiveContainer>
                     </Box>
                     <Box display="flex" flexDirection="column" gap="8px" marginTop="16px">
-                      {marginData.products.filter(p => p.alert).map((p, idx) => (
+                      {(marginData?.products || []).filter(p => p.alert).map((p, idx) => (
                         <Alert key={idx} severity="warning" style={{ backgroundColor: 'rgba(245,158,11,0.1)', color: '#f59e0b', border: '1px solid rgba(245,158,11,0.3)' }}>
                           {p.name} margin dropped to {p.margin_pct}%! Check supplier costs.
                         </Alert>
                       ))}
                     </Box>
-                    <AIPlotSummary text={marginData.insight || `✅ Average margin ${marginData.avg_margin_pct}%. ${marginData.products.filter(p=>p.alert).length} products below 25% threshold.`} />
+                    <AIPlotSummary text={marginData.insight || `✅ Average margin ${marginData.avg_margin_pct || 0}%. ${(marginData?.products || []).filter(p=>p.alert).length} products below 25% threshold.`} />
                   </>
                 )}
               </Paper>
@@ -936,7 +940,7 @@ const SellingPlaceDashboard = () => {
                             dataKey="value"
                             isAnimationActive={true}
                           >
-                            {abcData.pie.map((entry, index) => (
+                            {(abcData?.pie || []).map((entry, index) => (
                               <Cell key={`cell-${index}`} fill={entry.color} />
                             ))}
                           </Pie>
@@ -955,7 +959,7 @@ const SellingPlaceDashboard = () => {
                           </TableRow>
                         </TableHead>
                         <TableBody>
-                          {abcData.table.map(row => {
+                          {(abcData?.table || []).map(row => {
                             const bg = row.class.startsWith('A') ? 'rgba(251,191,36,0.15)' : row.class.startsWith('B') ? 'rgba(0,242,254,0.15)' : 'rgba(100,116,139,0.15)';
                             const color = row.class.startsWith('A') ? '#fbbf24' : row.class.startsWith('B') ? '#00f2fe' : '#94a3b8';
                             const suffixColor = row.class.endsWith('X') ? '#10b981' : row.class.endsWith('Y') ? '#f59e0b' : '#ff4b72';

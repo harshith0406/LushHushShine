@@ -60,7 +60,8 @@ const ChatbotPanel = () => {
       setMessages(prev => [...prev, { role: 'assistant', content: '' }]);
 
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/python/chat', {
+      const baseURL = import.meta.env.VITE_API_URL || '';
+      const response = await fetch(`${baseURL}/api/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

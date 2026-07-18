@@ -43,6 +43,10 @@
       "destination": "/api/index.js"
     },
     {
+      "source": "/api/ocr/scan",
+      "destination": "/api/index.js"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

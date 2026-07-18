@@ -439,6 +439,11 @@ router.get('/abc-xyz', authenticateToken, async (req, res) => {
     }
     const invSnapshot = await invQuery.get();
 
+    // Get prices from item_list
+    const itemListSnapshot = await db.collection('item_list').get();
+    const priceMap = {};
+    itemListSnapshot.docs.forEach(doc => { priceMap[doc.id] = doc.data().sellingPrice || doc.data().price || 0; });
+
     const items = invSnapshot.docs.map(doc => {
       const d = doc.data();
       return {
@@ -446,7 +451,7 @@ router.get('/abc-xyz', authenticateToken, async (req, res) => {
         name: d.productName || d.name || '',
         soldQty: d.soldQty || 0,
         totalQty: d.totalQty || 0,
-        price: d.price || 0,
+        price: priceMap[doc.id] || 0,
         averageDailySales: d.averageDailySales || 0,
         standardDeviation: d.standardDeviation || 1.0,
         category: d.category || ''
@@ -802,7 +807,7 @@ router.post('/risk-matrix', authenticateToken, async (req, res) => {
       const d = doc.data();
       return {
         batchNo: doc.id,
-        productId: d.productId || '',
+        productId: d.productId || d.itemNbr || '',
         expDate: d.expDate || '2099-01-01',
         mfgDate: d.mfgDate || '',
         quantity: d.quantity || 0
