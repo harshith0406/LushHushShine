@@ -556,14 +556,14 @@ async def chat_agent(req: Request, data: ChatRequest):
 
             messages_history = [{"role": m.role, "content": m.content} for m in data.messages]
             if db_context:
-                messages_history.append({
+                messages_history.insert(0, {
                     "role": "system", 
-                    "content": f"Database search results for tool '{tool_name}':\n{db_context}\nAnswer the user's query utilizing this data. Be highly concise, direct, and use short bullet points. Do not exceed 250 words."
+                    "content": f"You are Shoply.ai's AI Assistant. Database search results for tool '{tool_name}':\n{db_context}\nAnswer the user's query utilizing ONLY this data. If the data is empty, state that no matching records were found. Do NOT hallucinate products. Be highly concise, direct, and use short bullet points. Do not exceed 250 words."
                 })
             else:
-                messages_history.append({
+                messages_history.insert(0, {
                     "role": "system",
-                    "content": "You are Shoply.ai's AI Assistant powered by Hugging Face (meta-llama/Llama-3.1-8B). Be highly concise, direct, and use short bullet points. Do not exceed 250 words."
+                    "content": "You are Shoply.ai's AI Assistant powered by Hugging Face (meta-llama/Llama-3.1-8B). Answer the user accurately. If asked for specific store data like inventory, you may need to use a tool. Be highly concise, direct, and use short bullet points. Do not exceed 250 words."
                 })
 
             def event_generator():
