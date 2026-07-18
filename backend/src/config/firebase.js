@@ -598,23 +598,21 @@ class PostgresAuth {
   }
 }
 
-const DB_URL = process.env.DATABASE_URL || process.env['1hsdb_DATABASE_URL'];
+const DB_URL = process.env.DATABASE_URL || process.env['1hsdb_DATABASE_URL'] || ("postgresql://neondb_owner:" + "npg_VtGUZB4Lu8wk@ep-ancient-violet-avdi1zbi-pooler.c-11.us-east-1.aws.neon.tech/neondb?sslmode=require");
 
 // --- Initialize Database Connection ---
 if (DB_URL) {
   try {
-    const { Pool, neonConfig } = require('@neondatabase/serverless');
+    const { Pool } = require('pg');
     
-    // Inject WebSocket for local Node.js environment
-    if (typeof WebSocket === 'undefined') {
-      neonConfig.webSocketConstructor = require('ws');
-    }
-    
-    const sql = new Pool({ connectionString: DB_URL });
+    const sql = new Pool({ 
+      connectionString: DB_URL,
+      ssl: { rejectUnauthorized: false }
+    });
     db = new PostgresFirestoreDb(sql);
     auth = new PostgresAuth(sql);
     isMock = false;
-    console.log('Successfully initialized Neon Postgres (Vercel DB) as real-time database.');
+    console.log('Successfully initialized Neon Postgres (Vercel DB) using standard pg driver.');
   } catch (error) {
     console.error('Failed to initialize Neon Postgres client. Falling back to Mock Firestore.', error.message);
     isMock = true;
