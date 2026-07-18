@@ -337,8 +337,8 @@ let pgInitPromise = null;
 const initPostgresDb = async (sql) => {
   console.log('Initializing Postgres tables and seeding if empty...');
   for (const colName of COLLECTIONS) {
-    await sql(`CREATE TABLE IF NOT EXISTS "${colName}" (id VARCHAR(255) PRIMARY KEY, data JSONB)`);
-    const countRes = await sql(`SELECT COUNT(*) as count FROM "${colName}"`);
+    await sql.query(`CREATE TABLE IF NOT EXISTS "${colName}" (id VARCHAR(255) PRIMARY KEY, data JSONB)`);
+    const countRes = await sql.query(`SELECT COUNT(*) as count FROM "${colName}"`);
     const count = parseInt(countRes[0].count, 10);
     
     if (count === 0) {
@@ -349,7 +349,7 @@ const initPostgresDb = async (sql) => {
         try {
           const dataMap = JSON.parse(fileContent);
           for (const [id, value] of Object.entries(dataMap)) {
-            await sql(`INSERT INTO "${colName}" (id, data) VALUES ($1, $2) ON CONFLICT (id) DO UPDATE SET data = $2`, [id, JSON.stringify(value)]);
+            await sql.query(`INSERT INTO "${colName}" (id, data) VALUES ($1, $2) ON CONFLICT (id) DO UPDATE SET data = $2`, [id, JSON.stringify(value)]);
           }
           console.log(`Seeded ${Object.keys(dataMap).length} records into table "${colName}".`);
         } catch (err) {
@@ -384,7 +384,7 @@ class PostgresDocRef {
 
   async get() {
     await ensurePgInitialized(this.sql);
-    const rows = await this.sql(`SELECT data FROM "${this.collectionName}" WHERE id = $1`, [this.id]);
+    const rows = await this.sql.query(`SELECT data FROM "${this.collectionName}" WHERE id = $1`, [this.id]);
     const docData = rows.length > 0 ? rows[0].data : null;
     return {
       id: this.id,
@@ -402,7 +402,7 @@ class PostgresDocRef {
         finalContent = { ...existing.data(), ...content };
       }
     }
-    await this.sql(
+    await this.sql.query(
       `INSERT INTO "${this.collectionName}" (id, data) VALUES ($1, $2) ON CONFLICT (id) DO UPDATE SET data = $2`,
       [this.id, JSON.stringify(finalContent)]
     );
@@ -416,7 +416,7 @@ class PostgresDocRef {
       throw new Error(`Document with ID ${this.id} does not exist in collection ${this.collectionName}`);
     }
     const finalContent = { ...existing.data(), ...content };
-    await this.sql(
+    await this.sql.query(
       `UPDATE "${this.collectionName}" SET data = $2 WHERE id = $1`,
       [this.id, JSON.stringify(finalContent)]
     );
@@ -425,7 +425,7 @@ class PostgresDocRef {
 
   async delete() {
     await ensurePgInitialized(this.sql);
-    await this.sql(`DELETE FROM "${this.collectionName}" WHERE id = $1`, [this.id]);
+    await this.sql.query(`DELETE FROM "${this.collectionName}" WHERE id = $1`, [this.id]);
     return { success: true };
   }
 }
@@ -455,7 +455,7 @@ class PostgresQuery {
 
   async get() {
     await ensurePgInitialized(this.sql);
-    const rows = await this.sql(`SELECT id, data FROM "${this.collectionName}"`);
+    const rows = await this.sql.query(`SELECT id, data FROM "${this.collectionName}"`);
     let docs = rows.map(row => ({
       id: row.id,
       ...row.data
@@ -548,13 +548,13 @@ class PostgresAuth {
     await ensurePgInitialized(this.sql);
     
     const uid = token.replace('mock-token-', '');
-    const rows = await this.sql(`SELECT data FROM "login_credentials" WHERE id = $1`, [uid]);
+    const rows = await this.sql.query(`SELECT data FROM "login_credentials" WHERE id = $1`, [uid]);
     if (rows.length > 0) {
       const user = rows[0].data;
       return { uid, email: user.email, ...user };
     }
     
-    const allRows = await this.sql(`SELECT id, data FROM "login_credentials"`);
+    const allRows = await this.sql.query(`SELECT id, data FROM "login_credentials"`);
     for (const row of allRows) {
       if (row.data && row.data.email === token) {
         return { uid: row.id, email: row.data.email, ...row.data };
@@ -574,7 +574,7 @@ class PostgresAuth {
       phoneNumber: properties.phoneNumber || '',
       createdAt: new Date().toISOString()
     };
-    await this.sql(
+    await this.sql.query(
       `INSERT INTO "login_credentials" (id, data) VALUES ($1, $2) ON CONFLICT (id) DO UPDATE SET data = $2`,
       [uid, JSON.stringify(userData)]
     );
