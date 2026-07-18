@@ -60,7 +60,7 @@ router.post('/register', async (req, res) => {
 
   try {
     let uid;
-    if (isMock || process.env.DATABASE_URL) {
+    if (isMock || process.env.DATABASE_URL || process.env['1hsdb_DATABASE_URL']) {
       // Mock mode or Postgres mode registration
       const mockUser = await auth.createUser({
         email,

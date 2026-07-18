@@ -582,11 +582,13 @@ class PostgresAuth {
   }
 }
 
+const DB_URL = process.env.DATABASE_URL || process.env['1hsdb_DATABASE_URL'];
+
 // --- Initialize Database Connection ---
-if (process.env.DATABASE_URL) {
+if (DB_URL) {
   try {
     const { Pool } = require('@neondatabase/serverless');
-    const sql = new Pool({ connectionString: process.env.DATABASE_URL });
+    const sql = new Pool({ connectionString: DB_URL });
     db = new PostgresFirestoreDb(sql);
     auth = new PostgresAuth(sql);
     isMock = false;
