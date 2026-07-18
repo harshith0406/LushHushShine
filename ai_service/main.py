@@ -37,7 +37,7 @@ async def strip_api_python_prefix(request: Request, call_next):
 HF_API_KEY = os.environ.get("HUGGINGFACE_API_KEY", "")
 HF_BASE_URL = os.environ.get("HUGGINGFACE_BASE_URL", "https://router.huggingface.co/v1")
 
-print(f"DEBUG - HUGGINGFACE_API_KEY LOADED: '{HF_API_KEY}'", flush=True)
+
 HF_MODEL = os.environ.get("HUGGINGFACE_MODEL", os.environ.get("HUGGINGFACE_MODE", "meta-llama/Meta-Llama-3.1-8B-Instruct"))
 
 def get_backend_url():

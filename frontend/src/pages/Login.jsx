@@ -82,9 +82,7 @@ const Login = () => {
           <Typography variant="h3" style={{ fontWeight: 800, fontFamily: 'var(--font-family)', color: '#0f172a', marginBottom: '8px', fontSize: '2.2rem' }}>
             Login
           </Typography>
-          <Typography variant="body1" style={{ color: '#64748b', marginBottom: '32px', fontFamily: 'var(--font-family)' }}>
-            Welcome back! Enter your details to access your dashboard.
-          </Typography>
+
 
           {error && (
             <Alert severity="error" style={{ marginBottom: '24px', borderRadius: '12px' }}>
