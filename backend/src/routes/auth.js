@@ -61,8 +61,8 @@ router.post('/register', async (req, res) => {
 
   try {
     let uid;
-    if (isMock) {
-      // Mock mode registration
+    if (isMock || process.env.DATABASE_URL || process.env['1hsdb_DATABASE_URL']) {
+      // Mock mode or Postgres mode registration
       const mockUser = await auth.createUser({
         email,
         displayName: userName,
@@ -71,7 +71,8 @@ router.post('/register', async (req, res) => {
       uid = mockUser.uid;
     } else {
       // Create user in Firebase Authentication
-      const userRecord = await admin.auth().createUser({
+      const firebaseAdmin = require('firebase-admin');
+      const userRecord = await firebaseAdmin.auth().createUser({
         email,
         password,
         displayName: userName,

@@ -113,106 +113,41 @@
       }
     ],
     "status": "Completed",
-    "totalAmount": 147,
-    "createdAt": "2026-07-05T09:00:00.000Z",
-    "updatedAt": "2026-07-08T15:00:00.000Z"
+    "createdAt": "2026-07-17T20:03:48.461Z",
+    "updatedAt": "2026-07-17T20:03:48.471Z"
   },
-  "PO-HIST-005": {
-    "id": "PO-HIST-005",
-    "sellingPlaceId": "STORE-MAIN-001",
-    "sellingPlaceName": "City Mart Supermarket",
-    "vendorId": "VENDOR-NEXUS-001",
+  "n80q3kdqywb": {
+    "sellingPlaceId": "upsc89p04l",
+    "sellingPlaceName": "Test Store Inc.",
+    "vendorId": "xr7pnu4rexg",
     "vendorName": "Nexus Distributors Ltd.",
     "items": [
       {
-        "productId": "SKU-DAIRY-001",
-        "productName": "Full Cream Milk 1L",
-        "quantity": 60,
-        "price": 1.8
-      },
-      {
-        "productId": "SKU-BAKE-003",
-        "productName": "Whole Wheat Bread 400g",
-        "quantity": 30,
-        "price": 2.1
-      },
-      {
-        "productId": "SKU-GROC-010",
-        "productName": "Refined Sunflower Oil 1L",
-        "quantity": 70,
-        "price": 2
+        "productId": "TEST-SKU-O0JM",
+        "productName": "Organic Whole Milk",
+        "quantity": 20,
+        "price": 3.5
       }
     ],
     "status": "Completed",
-    "totalAmount": 311,
-    "createdAt": "2026-07-10T09:00:00.000Z",
-    "updatedAt": "2026-07-12T15:00:00.000Z"
+    "createdAt": "2026-07-18T10:55:20.992Z",
+    "updatedAt": "2026-07-18T10:55:20.999Z"
   },
-  "PO-PEND-006": {
-    "id": "PO-PEND-006",
-    "sellingPlaceId": "STORE-MAIN-001",
-    "sellingPlaceName": "City Mart Supermarket",
-    "vendorId": "VENDOR-APEX-002",
-    "vendorName": "Apex Distributions",
-    "items": [
-      {
-        "productId": "SKU-SNAC-006",
-        "productName": "Mixed Nuts 250g",
-        "quantity": 40,
-        "price": 3.2
-      },
-      {
-        "productId": "SKU-SNAC-005",
-        "productName": "Classic Potato Chips 150g",
-        "quantity": 100,
-        "price": 1.1
-      }
-    ],
-    "status": "Approved",
-    "totalAmount": 238,
-    "createdAt": "2026-07-16T11:00:00.000Z",
-    "updatedAt": "2026-07-17T10:00:00.000Z"
-  },
-  "PO-PEND-007": {
-    "id": "PO-PEND-007",
-    "sellingPlaceId": "STORE-MAIN-001",
-    "sellingPlaceName": "City Mart Supermarket",
-    "vendorId": "VENDOR-NEXUS-001",
+  "zvw561p5nyh": {
+    "sellingPlaceId": "k2i5rnt27q",
+    "sellingPlaceName": "Test Store Inc.",
+    "vendorId": "4r847t7v8jj",
     "vendorName": "Nexus Distributors Ltd.",
     "items": [
       {
-        "productId": "SKU-BAKE-003",
-        "productName": "Whole Wheat Bread 400g",
-        "quantity": 50,
-        "price": 2.1
-      },
-      {
-        "productId": "SKU-GROC-009",
-        "productName": "Basmati Rice 5kg",
-        "quantity": 50,
-        "price": 5.5
+        "productId": "TEST-SKU-10C6",
+        "productName": "Organic Whole Milk",
+        "quantity": 20,
+        "price": 3.5
       }
     ],
-    "status": "Pending",
-    "totalAmount": 380,
-    "createdAt": "2026-07-17T14:00:00.000Z",
-    "updatedAt": "2026-07-17T14:00:00.000Z"
-  },
-  "u7jro8k87kh": {
-    "sellingPlaceId": "STORE-MAIN-001",
-    "sellingPlaceName": "City Mart Supermarket",
-    "vendorId": "VENDOR-NEXUS-001",
-    "vendorName": "Nexus Distributors Ltd.",
-    "items": [
-      {
-        "productId": "SKU-DAIRY-001",
-        "productName": "Full Cream Milk 1L",
-        "quantity": 2,
-        "price": 2.99
-      }
-    ],
-    "status": "Pending",
-    "createdAt": "2026-07-18T10:32:46.073Z",
-    "updatedAt": "2026-07-18T10:32:46.073Z"
+    "status": "Completed",
+    "createdAt": "2026-07-18T12:13:43.737Z",
+    "updatedAt": "2026-07-18T12:13:43.743Z"
   }
 }

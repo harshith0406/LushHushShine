@@ -17,13 +17,40 @@
     "read": false,
     "createdAt": "2026-07-17T20:03:48.474Z"
   },
-  "lcvtcrjfec": {
-    "userId": "VENDOR-NEXUS-001",
+  "k1jdj4r5xqk": {
+    "userId": "xr7pnu4rexg",
     "title": "New Purchase Order Received",
-    "message": "You received a new purchase order (u7jro8k87kh) from Retailer 'City Mart Supermarket' with 1 items.",
+    "message": "You received a new purchase order (n80q3kdqywb) from Retailer 'Test Store Inc.' with 1 items.",
     "type": "po-received",
-    "poId": "u7jro8k87kh",
+    "poId": "n80q3kdqywb",
     "read": false,
-    "createdAt": "2026-07-18T10:32:46.079Z"
+    "createdAt": "2026-07-18T10:55:20.993Z"
+  },
+  "cz9x4g82i5m": {
+    "userId": "xr7pnu4rexg",
+    "title": "Shipment Delivered",
+    "message": "Retailer 'Test Store Inc.' confirmed delivery of purchase order (n80q3kdqywb). Stock has been added to their inventory.",
+    "type": "po-completed",
+    "poId": "n80q3kdqywb",
+    "read": false,
+    "createdAt": "2026-07-18T10:55:21.002Z"
+  },
+  "5oiusw880bo": {
+    "userId": "4r847t7v8jj",
+    "title": "New Purchase Order Received",
+    "message": "You received a new purchase order (zvw561p5nyh) from Retailer 'Test Store Inc.' with 1 items.",
+    "type": "po-received",
+    "poId": "zvw561p5nyh",
+    "read": false,
+    "createdAt": "2026-07-18T12:13:43.739Z"
+  },
+  "pcw7a4ev46i": {
+    "userId": "4r847t7v8jj",
+    "title": "Shipment Delivered",
+    "message": "Retailer 'Test Store Inc.' confirmed delivery of purchase order (zvw561p5nyh). Stock has been added to their inventory.",
+    "type": "po-completed",
+    "poId": "zvw561p5nyh",
+    "read": false,
+    "createdAt": "2026-07-18T12:13:43.744Z"
   }
 }

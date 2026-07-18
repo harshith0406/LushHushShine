@@ -122,13 +122,35 @@
   },
   "B-TEST-SKU-ZM3B": {
     "batchNo": "B-TEST-SKU-ZM3B",
-    "productId": "TEST-SKU-ZM3B",
-    "productName": "Organic Whole Milk",
-    "mfgDate": "2026-07-10",
-    "expDate": "2026-07-30",
-    "quantity": 50,
-    "sellingPlaceId": "qsnfaze1hv",
-    "vendorId": "wbuefzjzmc",
-    "createdAt": "2026-07-10T10:00:00.000Z"
+    "itemNbr": "TEST-SKU-ZM3B",
+    "mfgDate": "2026-07-10T00:00:00.000Z",
+    "expDate": "2026-10-10T00:00:00.000Z",
+    "createdAt": "2026-07-17T20:03:48.427Z"
+  },
+  "B-GEN-UT11ND": {
+    "batchNo": "B-GEN-UT11ND",
+    "itemNbr": "TEST-SKU-O0JM",
+    "mfgDate": "2026-07-18",
+    "expDate": "2027-01-18"
+  },
+  "B-TEST-SKU-O0JM": {
+    "batchNo": "B-TEST-SKU-O0JM",
+    "itemNbr": "TEST-SKU-O0JM",
+    "mfgDate": "2026-07-10T00:00:00.000Z",
+    "expDate": "2026-10-10T00:00:00.000Z",
+    "createdAt": "2026-07-18T10:55:20.968Z"
+  },
+  "B-GEN-356YHU": {
+    "batchNo": "B-GEN-356YHU",
+    "itemNbr": "TEST-SKU-10C6",
+    "mfgDate": "2026-07-18",
+    "expDate": "2027-01-18"
+  },
+  "B-TEST-SKU-10C6": {
+    "batchNo": "B-TEST-SKU-10C6",
+    "itemNbr": "TEST-SKU-10C6",
+    "mfgDate": "2026-07-10T00:00:00.000Z",
+    "expDate": "2026-10-10T00:00:00.000Z",
+    "createdAt": "2026-07-18T12:13:43.711Z"
   }
 }
