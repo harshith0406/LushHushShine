@@ -19,7 +19,8 @@
     "multer": "^1.4.5-lts.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
-    "@neondatabase/serverless": "^0.9.4"
+    "@neondatabase/serverless": "^0.9.4",
+    "pg": "^8.22.0"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
