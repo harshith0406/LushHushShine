@@ -493,27 +493,34 @@ async def chat_agent(req: Request, data: ChatRequest):
         {"name": "get_vendor_contact_info", "description": "Look up contact info and physical addresses of product suppliers."}
     ]
 
-    prompt = (
-        f"You are Shoply.ai's AI Assistant powered by Hugging Face (meta-llama/Llama-3.1-8B). "
-        f"Available database tools:\n{json.dumps(tools, indent=2)}\n\n"
-        f"User message: \"{user_msg}\"\n"
-        f"If you need database data to answer, reply in EXACT JSON: {{\"tool_call\": \"tool_name\"}}\n"
-        f"Otherwise, answer the user directly in friendly plain text."
-    )
+    import re
+    prompt_msgs = [
+        {
+            "role": "system",
+            "content": f"You are a tool routing agent. You MUST reply ONLY with a JSON object. No markdown, no explanations.\nTools:\n{json.dumps(tools, indent=2)}\n\nIf the user needs data from a tool, output: {{\"tool_call\": \"<tool_name>\"}}\nIf no tool is needed, output: {{\"tool_call\": \"none\"}}"
+        },
+        {
+            "role": "user",
+            "content": user_msg
+        }
+    ]
 
     db_context = ""
     try:
-        res = call_hf_api([{"role": "user", "content": prompt}], max_tokens=150, stream=False)
+        res = call_hf_api(prompt_msgs, max_tokens=150, stream=False)
         if res.status_code == 200:
             ai_decision = res.json()["choices"][0]["message"]["content"].strip()
             
             is_tool = False
             tool_name = ""
             try:
-                decision_json = json.loads(ai_decision)
-                if "tool_call" in decision_json:
-                    is_tool = True
-                    tool_name = decision_json["tool_call"]
+                # Use regex to find the JSON object in case of markdown or prefix text
+                match = re.search(r'\{.*\}', ai_decision, re.DOTALL)
+                if match:
+                    decision_json = json.loads(match.group(0))
+                    if decision_json.get("tool_call") and decision_json.get("tool_call") != "none":
+                        is_tool = True
+                        tool_name = decision_json["tool_call"]
             except Exception:
                 pass
 
