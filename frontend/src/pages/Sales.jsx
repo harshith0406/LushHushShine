@@ -203,8 +203,8 @@ const Sales = () => {
       <Grid container spacing={4}>
         {user.role === 'Selling Place' && (
           <Grid item xs={12} md={5}>
-            <Card className="glass-panel" style={{ backgroundColor: '#101726', border: '1px solid rgba(0, 242, 254, 0.2)', height: '100%' }}>
-              <CardContent style={{ padding: '24px', display: 'flex', flexDirection: 'column', height: '100%' }}>
+            <Card className="glass-panel" style={{ backgroundColor: '#101726', border: '1px solid rgba(0, 242, 254, 0.2)', height: 'auto' }}>
+              <CardContent style={{ padding: '24px', display: 'flex', flexDirection: 'column' }}>
                 <Typography variant="h6" style={{ fontWeight: 800, marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px', color: '#00f2fe' }}>
                   <AddShoppingCartIcon /> POS Register Cart
                 </Typography>
@@ -247,9 +247,9 @@ const Sales = () => {
 
                 <Divider style={{ margin: '12px 0', backgroundColor: 'rgba(255,255,255,0.08)' }} />
 
-                <Box style={{ flexGrow: 1, minHeight: '200px', overflowY: 'auto' }}>
+                <Box style={{ flexGrow: 1, minHeight: '100px', maxHeight: '400px', overflowY: 'auto' }}>
                   {cart.length === 0 ? (
-                    <Box display="flex" justifyContent="center" alignItems="center" height="200px">
+                    <Box display="flex" justifyContent="center" alignItems="center" height="100px">
                       <Typography variant="body2" style={{ color: '#94a3b8' }}>Cart is empty</Typography>
                     </Box>
                   ) : (

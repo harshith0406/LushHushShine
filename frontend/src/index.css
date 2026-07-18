@@ -252,3 +252,25 @@ body {
   transform: translateY(-3px) !important;
   box-shadow: 0 15px 35px rgba(0, 242, 254, 0.15) !important;
 }
+
+/* Markdown styling overrides */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1em;
+}
+th, td {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 8px;
+  text-align: left;
+}
+th {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+p {
+  margin-bottom: 1em;
+}
+ul, ol {
+  margin-bottom: 1em;
+  padding-left: 20px;
+}

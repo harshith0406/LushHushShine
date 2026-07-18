@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import API from '../config/api';
 import StatCard from '../components/StatCard';
 import {
@@ -1009,8 +1011,8 @@ const SellingPlaceDashboard = () => {
               </Typography>
             </Box>
           ) : (
-            <Box style={{ whiteSpace: 'pre-line', fontFamily: 'var(--font-family)', fontSize: '0.9rem', lineHeight: 1.6, color: '#f8fafc' }}>
-              {markdownText}
+            <Box style={{ fontFamily: 'var(--font-family)', fontSize: '0.9rem', lineHeight: 1.6, color: '#f8fafc' }}>
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>{markdownText}</ReactMarkdown>
             </Box>
           )}
         </DialogContent>

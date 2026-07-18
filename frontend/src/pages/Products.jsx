@@ -300,6 +300,7 @@ const Products = () => {
             <TextField
               label="Product Name"
               fullWidth
+              InputLabelProps={{ shrink: true }}
               {...register('name', { required: 'Product name is required' })}
               error={!!errors.name}
               helperText={errors.name?.message}
@@ -309,6 +310,7 @@ const Products = () => {
               <TextField
                 label="SKU"
                 fullWidth
+                InputLabelProps={{ shrink: true }}
                 {...register('sku', { required: 'SKU code is required' })}
                 error={!!errors.sku}
                 helperText={errors.sku?.message}
@@ -317,6 +319,7 @@ const Products = () => {
                 label="Retail Price ($)"
                 type="number"
                 inputProps={{ step: '0.01', min: '0.01' }}
+                InputLabelProps={{ shrink: true }}
                 fullWidth
                 {...register('price', { required: 'Price is required' })}
                 error={!!errors.price}
@@ -327,6 +330,7 @@ const Products = () => {
             <TextField
               label="Category"
               fullWidth
+              InputLabelProps={{ shrink: true }}
               placeholder="e.g. Dairy, Beverages, Bakery"
               {...register('category', { required: 'Category is required' })}
               error={!!errors.category}
@@ -353,6 +357,7 @@ const Products = () => {
               multiline
               rows={3}
               fullWidth
+              InputLabelProps={{ shrink: true }}
               {...register('description')}
             />
           </DialogContent>

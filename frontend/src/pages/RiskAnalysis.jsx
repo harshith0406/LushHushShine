@@ -81,9 +81,10 @@ const RiskAnalysis = () => {
         let rmArray = rmData?.products || rmData || [];
         if (!Array.isArray(rmArray)) rmArray = [];
         setRiskMatrix(rmArray.sort((a, b) => (b.overall_risk || 0) - (a.overall_risk || 0)));
-        setAnomalies(anomRes.data?.anomalies || anomRes.data || []);
-        setGhostSkus(ghostRes.data || []);
-        setMarginHealth(marginRes.data?.products || marginRes.data || []);
+        const getArr = (d, k) => Array.isArray(d?.[k]) ? d[k] : (Array.isArray(d) ? d : []);
+        setAnomalies(getArr(anomRes.data, 'anomalies'));
+        setGhostSkus(getArr(ghostRes.data, 'ghost_skus'));
+        setMarginHealth(getArr(marginRes.data, 'margin_health'));
 
         if (rmData.length > 0) {
           const avgRisk = rmData.reduce((sum, r) => sum + (r.overall_risk || 0), 0) / rmData.length;
