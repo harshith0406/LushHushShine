@@ -22,7 +22,7 @@ const batchesRoutes = require('./routes/batches');
 const vendorStatusRoutes = require('./routes/vendorStatus');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5002;
 const upload = multer({ limits: { fileSize: 5 * 1024 * 1024 } }); // 5MB limit
 
 // Middleware

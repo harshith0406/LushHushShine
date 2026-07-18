@@ -4,7 +4,7 @@ const axios = require('axios');
 const { db } = require('../config/firebase');
 const { authenticateToken } = require('../middleware/auth');
 
-const AI_SERVICE_URL = process.env.AI_SERVICE_URL || 'http://127.0.0.1:8000';
+const AI_SERVICE_URL = process.env.AI_SERVICE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}/api/python` : 'http://127.0.0.1:8000');
 
 const getSalesTrendForProduct = async (productId) => {
   const salesSnapshot = await db.collection('sales_table')
