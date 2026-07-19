@@ -55,6 +55,13 @@ def get_backend_url():
             pass
     return "http://localhost:5000"
 
+class DummyResponse:
+    def __init__(self, status_code, text):
+        self.status_code = status_code
+        self.text = text
+    def json(self):
+        return {}
+
 def call_hf_api(messages: List[Dict[str, Any]], max_tokens: int = 500, stream: bool = False, model: str = None):
     url = f"{HF_BASE_URL}/chat/completions"
     headers = {
@@ -67,8 +74,13 @@ def call_hf_api(messages: List[Dict[str, Any]], max_tokens: int = 500, stream: b
         "max_tokens": max_tokens,
         "stream": stream
     }
-    res = requests.post(url, headers=headers, json=payload, stream=stream, timeout=15)
-    return res
+    try:
+        res = requests.post(url, headers=headers, json=payload, stream=stream, timeout=60)
+        return res
+    except requests.exceptions.Timeout:
+        return DummyResponse(504, "HuggingFace API Timeout after 60 seconds")
+    except Exception as e:
+        return DummyResponse(500, f"HuggingFace API Error: {str(e)}")
 
 def calculate_linear_regression(y: List[float]):
     n = len(y)
