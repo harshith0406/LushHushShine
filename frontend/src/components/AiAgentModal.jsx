@@ -104,8 +104,13 @@ const AiAgentModal = ({ open, onClose, onApply, agentType, payload, title }) => 
             onChange={(e) => setResult(e.target.value)}
             variant="outlined"
             style={{ marginTop: '16px' }}
-            InputProps={{
-              style: { color: '#00f2fe', fontFamily: 'monospace', backgroundColor: '#090d16' }
+            sx={{
+              backgroundColor: '#090d16',
+              borderRadius: '8px',
+              '& .MuiInputBase-input': {
+                color: '#f8fafc',
+                fontFamily: 'monospace'
+              }
             }}
           />
         )}
