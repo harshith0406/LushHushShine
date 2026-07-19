@@ -128,6 +128,26 @@ app.post('/api/chat', async (req, res) => {
   }
 });
 
+// Generic proxy for any other /api/python/* AI Agent endpoints
+app.all('/api/python/*', async (req, res) => {
+  try {
+    const aiServiceUrl = process.env.AI_SERVICE_URL || (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}/api/python` : (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}/api/python` : 'http://127.0.0.1:8000'));
+    const targetUrl = req.originalUrl.replace('/api/python', ''); // e.g., /agent/draft-po
+    const response = await axios({
+      method: req.method,
+      url: `${aiServiceUrl}${targetUrl}`,
+      data: req.body,
+      headers: {
+        'Authorization': req.headers['authorization'] || '',
+      }
+    });
+    res.json(response.data);
+  } catch (err) {
+    console.error(`Error proxying ${req.originalUrl} to AI service:`, err.message);
+    res.status(500).json({ error: 'AI Service Proxy Error', details: err.message });
+  }
+});
+
 // Root Index route
 app.get('/', (req, res) => {
   res.json({

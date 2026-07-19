@@ -148,6 +148,28 @@ class ImageScanRequest(BaseModel):
     image: str
     mime_type: Optional[str] = "image/jpeg"
 
+class AgentDraftPORequest(BaseModel):
+    product_name: str
+    vendor_name: str
+    reorder_qty: int
+    urgency: str
+
+class AgentOptimizePriceRequest(BaseModel):
+    product_name: str
+    days_to_expiry: int
+    current_price: float
+    unit_cost: float
+    current_velocity: float
+
+class AgentMarketingRequest(BaseModel):
+    ocr_text: str
+
+class AgentVendorEmailRequest(BaseModel):
+    vendor_name: str
+    vendor_score: float
+    rejection_rate: float
+    issue_type: str
+
 class SalesHistoryRequest(BaseModel):
     sales_history: List[float]
     periods: Optional[int] = 3
@@ -1144,6 +1166,51 @@ def analyze_risk_matrix(data: RiskMatrixRequest):
         "safe_count": sum(1 for r in risk_breakdown if r["risk_tier"] == "SAFE"),
         "total_cash_tied_up": round(sum(r["cash_tied_up"] for r in risk_breakdown), 2)
     }
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# NEW AI AGENT ENDPOINTS (Hackathon Additions)
+# ══════════════════════════════════════════════════════════════════════════════
+
+@app.post("/agent/draft-po")
+def agent_draft_po(data: AgentDraftPORequest):
+    prompt = f"Write a professional Purchase Order email to '{data.vendor_name}' requesting {data.reorder_qty} units of '{data.product_name}'. Urgency level: {data.urgency}. Keep it concise and professional. Do NOT include any conversational filler, intro, or outro (e.g. 'Here is the email:'). Output ONLY the raw email text."
+    res = call_hf_api([{"role": "user", "content": prompt}], max_tokens=300, model=HF_MODEL)
+    if res.status_code == 200:
+        return {"draft": res.json()["choices"][0]["message"]["content"]}
+    return {"draft": f"Error: Could not draft PO. API Status: {res.status_code} - {res.text}"}
+
+@app.post("/agent/optimize-price")
+def agent_optimize_price(data: AgentOptimizePriceRequest):
+    prompt = f"Product: {data.product_name}\nDays to expiry: {data.days_to_expiry}\nCost: ${data.unit_cost}, Price: ${data.current_price}\nVelocity: {data.current_velocity}/day.\nCalculate optimal discount percentage to liquidate stock before expiry without losing too much margin. Return ONLY a JSON object with 'recommended_discount_percent' (number) and 'reasoning' (1 sentence). No markdown."
+    res = call_hf_api([{"role": "user", "content": prompt}], max_tokens=150, model=HF_MODEL)
+    if res.status_code == 200:
+        content = res.json()["choices"][0]["message"]["content"].strip()
+        import re
+        match = re.search(r'\{.*\}', content, re.DOTALL)
+        if match:
+            try:
+                return json.loads(match.group(0))
+            except Exception:
+                pass
+        return {"recommended_discount_percent": 20, "reasoning": "Fallback to standard 20% due to LLM format."}
+    return {"recommended_discount_percent": 10, "reasoning": f"Fallback due to API error. Status: {res.status_code} - {res.text}"}
+
+@app.post("/agent/generate-marketing")
+def agent_generate_marketing(data: AgentMarketingRequest):
+    prompt = f"Based on this OCR text from a product tag: '{data.ocr_text}', generate an SEO-optimized 2-sentence eCommerce product description, and 3 hashtags. Do NOT include any conversational filler (e.g. 'Here is your description:'). Output ONLY the raw description and hashtags."
+    res = call_hf_api([{"role": "user", "content": prompt}], max_tokens=200, model=HF_MODEL)
+    if res.status_code == 200:
+        return {"marketing_copy": res.json()["choices"][0]["message"]["content"]}
+    return {"marketing_copy": f"Error generating copy. Status: {res.status_code} - {res.text}"}
+
+@app.post("/agent/draft-vendor-email")
+def agent_draft_vendor_email(data: AgentVendorEmailRequest):
+    prompt = f"Write a professional email to vendor '{data.vendor_name}'. Their current score is {data.vendor_score}/100 with a rejection rate of {data.rejection_rate}%. The issue is: {data.issue_type}. Request improvement or renegotiation. Be firm but professional. Do NOT include any conversational filler (e.g. 'Here is your email:'). Output ONLY the raw email text."
+    res = call_hf_api([{"role": "user", "content": prompt}], max_tokens=400, model=HF_MODEL)
+    if res.status_code == 200:
+        return {"draft": res.json()["choices"][0]["message"]["content"]}
+    return {"draft": f"Error drafting email. Status: {res.status_code} - {res.text}"}
 
 
 if __name__ == "__main__":

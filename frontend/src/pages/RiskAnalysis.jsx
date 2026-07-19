@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import API from '../config/api';
+import AiAgentModal from '../components/AiAgentModal';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import {
   Typography,
   Box,
@@ -46,6 +48,19 @@ const RiskAnalysis = () => {
   const [ghostSkus, setGhostSkus] = useState([]);
   const [marginHealth, setMarginHealth] = useState([]);
   const [storeScore, setStoreScore] = useState(100);
+
+  // AI Agent Modal State
+  const [agentModalOpen, setAgentModalOpen] = useState(false);
+  const [agentType, setAgentType] = useState('');
+  const [agentPayload, setAgentPayload] = useState({});
+  const [agentTitle, setAgentTitle] = useState('');
+
+  const openAgent = (type, payload, title) => {
+    setAgentType(type);
+    setAgentPayload(payload);
+    setAgentTitle(title);
+    setAgentModalOpen(true);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -233,6 +248,7 @@ ${uniqueTopNames ? '• Mitigate: ' + uniqueTopNames : '• No immediate risks d
               <TableCell style={{ fontWeight: 700, color: '#94a3b8', backgroundColor: '#101726', minWidth: '120px' }}>Financial</TableCell>
               <TableCell style={{ fontWeight: 700, color: '#94a3b8', backgroundColor: '#101726' }}>Days Rem</TableCell>
               <TableCell style={{ fontWeight: 700, color: '#94a3b8', backgroundColor: '#101726' }}>Cash Tied</TableCell>
+              <TableCell style={{ fontWeight: 700, color: '#94a3b8', backgroundColor: '#101726' }}>AI Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -253,6 +269,18 @@ ${uniqueTopNames ? '• Mitigate: ' + uniqueTopNames : '• No immediate risks d
                   <TableCell><RiskProgressBar value={row.dimensions?.financial_risk || row.financial_risk || 0} /></TableCell>
                   <TableCell style={{ color: '#cbd5e1' }}>{row.days_remaining ? row.days_remaining.toFixed(1) : '∞'}</TableCell>
                   <TableCell style={{ color: '#cbd5e1', fontWeight: 600 }}>${(row.cash_tied_up || 0).toLocaleString()}</TableCell>
+                  <TableCell>
+                    {overall >= 70 && (
+                      <Button 
+                        size="small" 
+                        startIcon={<AutoAwesomeIcon />}
+                        onClick={() => openAgent('draft-po', { product_name: row.name || row.product_name, vendor_name: 'Primary Vendor', reorder_qty: 100, urgency: 'High' }, `Draft PO: ${row.name || row.product_name}`)}
+                        style={{ backgroundColor: 'rgba(217, 70, 239, 0.1)', color: '#d946ef', textTransform: 'none', fontSize: '0.75rem', fontWeight: 600 }}
+                      >
+                        Draft PO
+                      </Button>
+                    )}
+                  </TableCell>
                 </TableRow>
               );
             })}
@@ -344,6 +372,14 @@ ${uniqueTopNames ? '• Mitigate: ' + uniqueTopNames : '• No immediate risks d
                        <Typography variant="caption" style={{ color: '#cbd5e1' }}>Risk Score</Typography>
                        <LinearProgress variant="determinate" value={g.risk_score || g.riskScore || 0} sx={{ flexGrow: 1, height: 4, backgroundColor: 'rgba(255,255,255,0.1)', '& .MuiLinearProgress-bar': { backgroundColor: '#ff4b72' } }} />
                     </Box>
+                    <Button 
+                      size="small" 
+                      startIcon={<AutoAwesomeIcon />}
+                      onClick={() => openAgent('optimize-price', { product_name: g.name || g.productName, days_to_expiry: 10, current_price: 20.0, unit_cost: 12.0, current_velocity: 0 }, `Price Optimize: ${g.name || g.productName}`)}
+                      style={{ marginTop: '12px', backgroundColor: 'rgba(217, 70, 239, 0.1)', color: '#d946ef', textTransform: 'none', fontSize: '0.75rem', fontWeight: 600 }}
+                    >
+                      AI Price Optimize
+                    </Button>
                   </Box>
                 ))}
               </Box>
@@ -379,6 +415,15 @@ ${uniqueTopNames ? '• Mitigate: ' + uniqueTopNames : '• No immediate risks d
           </Typography>
         </Box>
       </Paper>
+
+      {/* AI Agent Modal */}
+      <AiAgentModal 
+        open={agentModalOpen} 
+        onClose={() => setAgentModalOpen(false)}
+        agentType={agentType}
+        payload={agentPayload}
+        title={agentTitle}
+      />
     </Box>
   );
 };

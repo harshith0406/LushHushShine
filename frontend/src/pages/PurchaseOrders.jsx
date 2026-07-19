@@ -35,6 +35,8 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import ListAltIcon from '@mui/icons-material/ListAlt';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import AiAgentModal from '../components/AiAgentModal';
 
 const PurchaseOrders = () => {
   const { user } = useAuth();
@@ -52,6 +54,19 @@ const PurchaseOrders = () => {
   // View items Modal state
   const [viewOpen, setViewOpen] = useState(false);
   const [viewPo, setViewPo] = useState(null);
+
+  // AI Agent Modal State
+  const [agentModalOpen, setAgentModalOpen] = useState(false);
+  const [agentType, setAgentType] = useState('');
+  const [agentPayload, setAgentPayload] = useState({});
+  const [agentTitle, setAgentTitle] = useState('');
+
+  const openAgent = (type, payload, title) => {
+    setAgentType(type);
+    setAgentPayload(payload);
+    setAgentTitle(title);
+    setAgentModalOpen(true);
+  };
 
   const fetchPOs = async () => {
     try {
@@ -276,6 +291,17 @@ const PurchaseOrders = () => {
                     >
                       View Items
                     </Button>
+
+                    {user.role === 'Selling Place' && (row.status === 'Rejected' || row.status === 'Pending') && (
+                      <Button
+                        size="small"
+                        startIcon={<AutoAwesomeIcon />}
+                        onClick={() => openAgent('draft-vendor-email', { vendor_name: row.vendorName, vendor_score: 45, rejection_rate: 15, issue_type: `PO ${row.id.substring(0, 8)} issue` }, `Negotiate with ${row.vendorName}`)}
+                        style={{ marginRight: '8px', backgroundColor: 'rgba(217, 70, 239, 0.1)', color: '#d946ef', textTransform: 'none', fontWeight: 600 }}
+                      >
+                        AI Negotiate
+                      </Button>
+                    )}
                     
                     {/* Action buttons based on Role & Status */}
                     {user.role === 'Vendor' && row.status === 'Pending' && (
@@ -443,6 +469,15 @@ const PurchaseOrders = () => {
           <Button onClick={handleViewClose} style={{ textTransform: 'none', fontWeight: 600 }}>Close</Button>
         </DialogActions>
       </Dialog>
+
+      {/* AI Agent Modal */}
+      <AiAgentModal 
+        open={agentModalOpen} 
+        onClose={() => setAgentModalOpen(false)}
+        agentType={agentType}
+        payload={agentPayload}
+        title={agentTitle}
+      />
     </Box>
   );
 };
