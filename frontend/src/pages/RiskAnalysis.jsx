@@ -34,7 +34,8 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend
+  Legend,
+  Cell
 } from 'recharts';
 
 const RADAR_COLORS = ['#ff4b72', '#f59e0b', '#d946ef', '#00f2fe', '#10b981'];
@@ -397,7 +398,7 @@ ${uniqueTopNames ? '• Mitigate: ' + uniqueTopNames : '• No immediate risks d
                   <Tooltip cursor={{ fill: 'rgba(255,255,255,0.05)' }} contentStyle={{ backgroundColor: '#162032', border: '1px solid rgba(0,242,254,0.3)', color: '#f8fafc' }} />
                   <Bar dataKey="margin" radius={[0, 4, 4, 0]}>
                     {marginDataFormatted.map((entry, index) => (
-                      <cell key={`cell-${index}`} fill={entry.fill} />
+                      <Cell key={`cell-${index}`} fill={entry.fill} />
                     ))}
                   </Bar>
                 </BarChart>

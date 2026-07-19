@@ -216,7 +216,7 @@ const ChatbotPanel = () => {
               </Avatar>
               <Box>
                 <Typography variant="subtitle1" style={{ fontWeight: 800, fontFamily: 'var(--font-family)', lineHeight: 1.2 }}>
-                  Chat with Shoply.ai
+                  Chat with VendSell.ai
                 </Typography>
                 <Typography variant="caption" style={{ opacity: 0.9, display: 'flex', alignItems: 'center', gap: '6px', marginTop: '4px' }}>
                   <span style={{ width: '8px', height: '8px', backgroundColor: '#4ade80', borderRadius: '50%', display: 'inline-block' }}></span>

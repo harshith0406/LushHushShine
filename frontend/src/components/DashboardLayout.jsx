@@ -143,7 +143,7 @@ const DashboardLayout = () => {
         <Box style={{ backgroundColor: '#ffffff', borderRadius: '8px', padding: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '34px', height: '34px' }}>
           <img 
             src="/logo.png" 
-            alt="Shoply.ai Logo" 
+            alt="VendSell.ai Logo" 
             style={{ width: '100%', height: '100%', objectFit: 'contain', mixBlendMode: 'multiply' }} 
           />
         </Box>
@@ -157,7 +157,7 @@ const DashboardLayout = () => {
             fontFamily: 'var(--font-family)'
           }}
         >
-          Shoply<span style={{ color: 'var(--primary, #00f2fe)' }}>.ai</span>
+          VendSell<span style={{ color: 'var(--primary, #00f2fe)' }}>.ai</span>
         </Typography>
       </Toolbar>
       

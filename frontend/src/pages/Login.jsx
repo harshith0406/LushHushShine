@@ -70,12 +70,12 @@ const Login = () => {
             >
               <img 
                 src="/logo.png" 
-                alt="Shoply.ai Logo" 
+                alt="VendSell.ai Logo" 
                 style={{ width: '100%', height: '100%', objectFit: 'contain', mixBlendMode: 'multiply' }} 
               />
             </Box>
             <Typography variant="h4" style={{ fontWeight: 800, fontFamily: 'var(--font-family)', color: '#0f172a', letterSpacing: '-0.02em' }}>
-              Shoply<span style={{ color: 'var(--primary, #00f2fe)' }}>.ai</span>
+              VendSell<span style={{ color: 'var(--primary, #00f2fe)' }}>.ai</span>
             </Typography>
           </Box>
 

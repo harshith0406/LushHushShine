@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = FastAPI(
-    title="Shoply.ai Retail Intelligence AI Engine",
+    title="VendSell.ai Retail Intelligence AI Engine",
     description="Python FastAPI Microservice integrating Hugging Face Models for predictive retail analytics.",
     version="2.0.0"
 )
@@ -217,7 +217,7 @@ class ChatRequest(BaseModel):
 def read_root():
     return {
         "status": "healthy",
-        "service": "shoply-ai-engine",
+        "service": "vendsell-ai-engine",
         "provider": "Hugging Face Serverless",
         "model": HF_MODEL
     }
@@ -588,12 +588,12 @@ async def chat_agent(req: Request, data: ChatRequest):
             if db_context:
                 messages_history.insert(0, {
                     "role": "system", 
-                    "content": f"You are Shoply.ai's AI Assistant. Database search results for tool '{tool_name}':\n{db_context}\nAnswer the user's query utilizing ONLY this data. If the data is empty, state that no matching records were found. Do NOT hallucinate products. Be highly concise, direct, and use short bullet points. Do not exceed 250 words."
+                    "content": f"You are VendSell.ai's AI Assistant. Database search results for tool '{tool_name}':\n{db_context}\nAnswer the user's query utilizing ONLY this data. If the data is empty, state that no matching records were found. Do NOT hallucinate products. Be highly concise, direct, and use short bullet points. Do not exceed 250 words."
                 })
             else:
                 messages_history.insert(0, {
                     "role": "system",
-                    "content": "You are Shoply.ai's AI Assistant powered by Hugging Face (meta-llama/Llama-3.1-8B). Answer the user accurately. If asked for specific store data like inventory, you may need to use a tool. Be highly concise, direct, and use short bullet points. Do not exceed 250 words."
+                    "content": "You are VendSell.ai's AI Assistant powered by Hugging Face (meta-llama/Llama-3.1-8B). Answer the user accurately. If asked for specific store data like inventory, you may need to use a tool. Be highly concise, direct, and use short bullet points. Do not exceed 250 words."
                 })
 
             def event_generator():
@@ -669,10 +669,10 @@ def generate_intelligent_fallback(lower_msg: str, db_context: str = "") -> str:
         return "📈 **Sales Velocity Summary**: Current sales throughput is growing at +8.2% vs yesterday. Master checkout invoices are logged in real-time."
     # 2. Strict word-level greeting check
     elif any(w in words for w in ["hi", "hello", "hey", "greetings"]):
-        return "Hello! 👋 I am your Shoply.ai Assistant powered by Hugging Face (Llama-3.1-8B). Ask me about low stock alerts, product expiries, sales trends, or vendor contacts!"
+        return "Hello! 👋 I am your VendSell.ai Assistant powered by Hugging Face (Llama-3.1-8B). Ask me about low stock alerts, product expiries, sales trends, or vendor contacts!"
     else:
         # Fallback to a generic response if LLM API completely fails and we don't have a specific hardcoded reply
-        return "I am Shoply.ai's AI Assistant, powered by Hugging Face. The AI engine seems to be currently unavailable. Please check your API token or internet connection, but feel free to ask about your store's inventory, sales invoices, expiry tracking, and supplier contacts!"
+        return "I am VendSell.ai's AI Assistant, powered by Hugging Face. The AI engine seems to be currently unavailable. Please check your API token or internet connection, but feel free to ask about your store's inventory, sales invoices, expiry tracking, and supplier contacts!"
 
 # ══════════════════════════════════════════════════════════════════════════════
 # NEW ML ENDPOINTS

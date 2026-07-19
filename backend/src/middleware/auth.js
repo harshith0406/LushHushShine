@@ -16,12 +16,12 @@ const authenticateToken = async (req, res, next) => {
   if (token === 'mock-token-admin-uid-123') {
     req.user = {
       uid: 'STORE-MAIN-001',
-      email: 'admin@shoply.ai',
-      name: 'Shoply Admin',
+      email: 'admin@vendsell.ai',
+      name: 'VendSell Admin',
       companyName: 'City Mart Supermarket',
       role: 'Selling Place',
       phone: '1234567890',
-      address: '123 Shoply Way',
+      address: '123 VendSell Way',
       licenseNo: ''
     };
     return next();

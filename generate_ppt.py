@@ -9,7 +9,7 @@ slide_layout = prs.slide_layouts[0]
 slide = prs.slides.add_slide(slide_layout)
 title = slide.shapes.title
 subtitle = slide.placeholders[1]
-title.text = "LushHushShine"
+title.text = "VendSell.ai"
 subtitle.text = "AI-Powered Retail Intel & Supply Chain Engine\nPitch Deck for AI Hackathon"
 
 # Function to add slide
@@ -35,7 +35,7 @@ add_slide("The Problem in Modern Retail", [
 ])
 
 # Slide 3: Our Solution
-add_slide("Our Solution: LushHushShine", [
+add_slide("Our Solution: VendSell.ai", [
     "A state-of-the-art Supply Chain Platform connecting Retailers and Vendors seamlessly.",
     "Automated Inventory Optimization driven by machine learning.",
     "Predictive Analytics highlighting Expiry risks and Stockout dates.",
@@ -75,5 +75,5 @@ add_slide("Impact & Future Roadmap", [
     "Thank You! Let's revolutionize retail."
 ])
 
-prs.save("LushHushShine_Pitch_Deck.pptx")
-print("Presentation generated successfully as LushHushShine_Pitch_Deck.pptx")
+prs.save("VendSell.ai_Pitch_Deck.pptx")
+print("Presentation generated successfully as VendSell.ai_Pitch_Deck.pptx")

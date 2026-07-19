@@ -1,4 +1,4 @@
-# 🏬 Retail Intel & Supply Chain AI Engine (LushHushShine)
+# 🏬 Retail Intel & Supply Chain AI Engine (VendSell.ai)
 
 > A state-of-the-art, AI-powered Retail Analytics & Supply Chain Management platform integrating **Hugging Face Llama-3.1-8B**, Neon Serverless Postgres, predictive inventory analytics (ABC/XYZ, Risk Matrix), and high-contrast glassmorphic dashboards. Built for the modern retail ecosystem.
 
@@ -61,8 +61,8 @@ The platform utilizes a structured relational database model:
 ### 1. Installation
 Clone the repository and install dependencies across all microservices:
 ```bash
-git clone https://github.com/harshith0406/LushHushShine.git
-cd LushHushShine
+git clone https://github.com/harshith0406/VendSell.ai.git
+cd VendSell.ai
 
 # Install Express backend dependencies
 cd backend && npm install
@@ -111,4 +111,4 @@ In your Vercel Project Settings $\rightarrow$ Environment Variables, you must co
 ---
 
 ## 📜 License
-MIT License © 2026 LushHushShine Team.
+MIT License © 2026 VendSell.ai Team.
