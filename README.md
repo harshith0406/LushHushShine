@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/harshith0406/VendSell.ai/main/public/logo.png" alt="VendSell.ai Logo" width="120" />
+  <img src="frontend/public/logo.png" alt="VendSell.ai Logo" width="120" />
   <h1> VendSell.ai</h1>
   <p><b>Retail Intelligence & Autonomous Supply Chain AI Engine</b></p>
   <p>
