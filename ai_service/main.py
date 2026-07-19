@@ -360,7 +360,7 @@ def ocr_scan(data: ImageScanRequest):
             }
         ]
         
-        vision_model = os.environ.get("HF_VISION_MODEL")
+        vision_model = "Qwen/Qwen2.5-VL-72B-Instruct"
         res = call_hf_api(messages, max_tokens=300, stream=False, model=vision_model)
         if res.status_code == 200:
             result_text = res.json()["choices"][0]["message"]["content"].strip()
