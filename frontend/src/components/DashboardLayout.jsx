@@ -140,11 +140,11 @@ const DashboardLayout = () => {
       }}
     >
       <Toolbar style={{ display: 'flex', alignItems: 'center', padding: '16px 20px', gap: '10px' }}>
-        <Box style={{ backgroundColor: '#ffffff', borderRadius: '8px', padding: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '34px', height: '34px' }}>
+        <Box style={{ borderRadius: '10px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '36px', height: '36px' }}>
           <img 
             src="/logo.png" 
             alt="VendSell.ai Logo" 
-            style={{ width: '100%', height: '100%', objectFit: 'contain', mixBlendMode: 'multiply' }} 
+            style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '10px' }} 
           />
         </Box>
         <Typography 

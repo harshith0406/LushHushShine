@@ -61,15 +61,13 @@ const Register = () => {
                 overflow: 'hidden', 
                 display: 'flex', 
                 alignItems: 'center', 
-                justifyContent: 'center',
-                backgroundColor: '#ffffff',
-                border: '1px solid #e2e8f0'
+                justifyContent: 'center'
               }}
             >
               <img 
                 src="/logo.png" 
                 alt="VendSell.ai Logo" 
-                style={{ width: '100%', height: '100%', objectFit: 'contain', mixBlendMode: 'multiply' }} 
+                style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '10px' }} 
               />
             </Box>
             <Typography variant="h4" style={{ fontWeight: 800, fontFamily: 'var(--font-family)', color: '#0f172a', letterSpacing: '-0.02em' }}>
