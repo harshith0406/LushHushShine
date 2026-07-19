@@ -74,6 +74,13 @@ const SellingPlaceDashboard = () => {
   const [recentSales, setRecentSales] = useState([]);
   const [activeTab, setActiveTab] = useState('Overview');
 
+  const [searchQuery, setSearchQuery] = useState('');
+  const filterData = (dataArray) => {
+    if (!searchQuery) return dataArray;
+    const lowerQuery = searchQuery.toLowerCase();
+    return (dataArray || []).filter(item => JSON.stringify(item).toLowerCase().includes(lowerQuery));
+  };
+
   // Expiry & Batch state variables
   const [batches, setBatches] = useState([]);
   const [expiryChartData, setExpiryChartData] = useState([]);
@@ -369,6 +376,8 @@ const SellingPlaceDashboard = () => {
             placeholder="Search catalog, suppliers, orders..."
             variant="outlined"
             size="small"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -686,7 +695,7 @@ const SellingPlaceDashboard = () => {
                     No active batches recorded. Add products to generate batches.
                   </Typography>
                 ) : (
-                  batches.map((b) => (
+                  filterData(batches).map((b) => (
                     <Box 
                       key={b.batchNo} 
                       style={{ 
@@ -754,7 +763,7 @@ const SellingPlaceDashboard = () => {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {[...stockoutData].sort((a,b) => b.riskScore - a.riskScore).map((row, idx) => (
+                        {filterData([...stockoutData].sort((a,b) => b.riskScore - a.riskScore)).map((row, idx) => (
                           <TableRow key={row.productId || idx}>
                             <TableCell style={{ fontWeight: 600, color: '#f8fafc' }}>{row.productName}</TableCell>
                             <TableCell style={{ color: '#f8fafc' }}>{row.availableQty}</TableCell>
@@ -824,7 +833,7 @@ const SellingPlaceDashboard = () => {
                         </TableCell>
                       </TableRow>
                     ) : (
-                      lowStockItems.map((row) => (
+                      filterData(lowStockItems).map((row) => (
                         <TableRow key={row.productId}>
                           <TableCell style={{ fontWeight: 600, color: '#f8fafc' }}>{row.productName}</TableCell>
                           <TableCell style={{ fontWeight: 700, color: row.stock === 0 ? '#ff4b72' : '#f59e0b' }}>
@@ -862,7 +871,7 @@ const SellingPlaceDashboard = () => {
                         </TableCell>
                       </TableRow>
                     ) : (
-                      recentSales.map((row) => (
+                      filterData(recentSales).map((row) => (
                         <TableRow key={row.id}>
                           <TableCell style={{ fontFamily: 'monospace', fontWeight: 600, color: '#00f2fe' }}>
                             {row.id.substring(0, 10)}
